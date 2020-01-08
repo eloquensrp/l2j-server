@@ -25,11 +25,11 @@ import java.util.Map;
 import org.l2jmobius.Config;
 
 /**
- * @author Anarchy
+ * @author andrei
  */
-public class Topzone extends VoteSystem
+public class L2top extends VoteSystem
 {
-	public Topzone(int votesDiff, boolean allowReport, int boxes, Map<Integer, Integer> rewards, int checkMins)
+	public L2top(int votesDiff, boolean allowReport, int boxes, Map<Integer, Integer> rewards, int checkMins)
 	{
 		super(votesDiff, allowReport, boxes, rewards, checkMins);
 	}
@@ -48,15 +48,18 @@ public class Topzone extends VoteSystem
 		
 		try
 		{
-			final URLConnection con = new URL(Config.TOPZONE_SERVER_LINK).openConnection();
-			con.addRequestProperty("User-Agent", "L2TopZone");
+			final URLConnection con = new URL(Config.L2TOP_SERVER_LINK).openConnection();
+			con.addRequestProperty("User-Agent", "Mozilla/5.0");
 			isr = new InputStreamReader(con.getInputStream());
 			br = new BufferedReader(isr);
 			
 			String line;
 			while ((line = br.readLine()) != null)
 			{
-				return Integer.parseInt(line.split("fa-thumbs-up\"></i>")[1].split("</span>")[0]);
+				if (line.matches("\\s+\\d+</li>"))
+				{
+					return Integer.valueOf(line.replace("</li>", "").replaceAll("\t", ""));
+				}
 			}
 			
 			br.close();
@@ -73,6 +76,6 @@ public class Topzone extends VoteSystem
 	@Override
 	public String getSiteName()
 	{
-		return "Topzone.com";
+		return "L2top.co";
 	}
 }
