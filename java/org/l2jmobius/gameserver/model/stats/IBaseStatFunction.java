@@ -14,36 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.model.actor.instance;
+package org.l2jmobius.gameserver.model.stats;
 
-import org.l2jmobius.gameserver.enums.InstanceType;
-import org.l2jmobius.gameserver.model.actor.templates.NpcTemplate;
+import org.l2jmobius.gameserver.model.actor.Creature;
 
-public class TrainerInstance extends NpcInstance
+/**
+ * @author Mobius
+ */
+public interface IBaseStatFunction
 {
-	/**
-	 * Creates a trainer.
-	 * @param template the trainer NPC template
-	 */
-	public TrainerInstance(NpcTemplate template)
-	{
-		super(template);
-		setInstanceType(InstanceType.TrainerInstance);
-	}
-	
-	@Override
-	public String getHtmlPath(int npcId, int value)
-	{
-		String pom = "";
-		if (value == 0)
-		{
-			pom = Integer.toString(npcId);
-		}
-		else
-		{
-			pom = npcId + "-" + value;
-		}
-		
-		return "data/html/trainer/" + pom + ".htm";
-	}
+	double calcBonus(Creature actor);
 }

@@ -33,7 +33,7 @@ import org.l2jmobius.gameserver.model.actor.Creature;
 /**
  * @author DS
  */
-public enum BaseStats
+public enum BaseStat
 {
 	STR(new STR()),
 	INT(new INT()),
@@ -43,7 +43,7 @@ public enum BaseStats
 	MEN(new MEN()),
 	NONE(new NONE());
 	
-	private static final Logger LOGGER = Logger.getLogger(BaseStats.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(BaseStat.class.getName());
 	
 	public static final int MAX_STAT_VALUE = 100;
 	
@@ -54,14 +54,14 @@ public enum BaseStats
 	protected static final double[] CONbonus = new double[MAX_STAT_VALUE];
 	protected static final double[] MENbonus = new double[MAX_STAT_VALUE];
 	
-	private final BaseStat _stat;
+	private final IBaseStatFunction _stat;
 	
 	public String getValue()
 	{
 		return _stat.getClass().getSimpleName();
 	}
 	
-	private BaseStats(BaseStat s)
+	private BaseStat(IBaseStatFunction s)
 	{
 		_stat = s;
 	}
@@ -76,10 +76,10 @@ public enum BaseStats
 		return 1;
 	}
 	
-	public static BaseStats valueOfXml(String name)
+	public static BaseStat valueOfXml(String name)
 	{
 		name = name.intern();
-		for (BaseStats s : values())
+		for (BaseStat s : values())
 		{
 			if (s.getValue().equalsIgnoreCase(name))
 			{
@@ -89,12 +89,7 @@ public enum BaseStats
 		throw new NoSuchElementException("Unknown name '" + name + "' for enum BaseStats");
 	}
 	
-	private interface BaseStat
-	{
-		double calcBonus(Creature actor);
-	}
-	
-	protected static final class STR implements BaseStat
+	protected static final class STR implements IBaseStatFunction
 	{
 		@Override
 		public double calcBonus(Creature actor)
@@ -103,7 +98,7 @@ public enum BaseStats
 		}
 	}
 	
-	protected static final class INT implements BaseStat
+	protected static final class INT implements IBaseStatFunction
 	{
 		@Override
 		public double calcBonus(Creature actor)
@@ -112,7 +107,7 @@ public enum BaseStats
 		}
 	}
 	
-	protected static final class DEX implements BaseStat
+	protected static final class DEX implements IBaseStatFunction
 	{
 		@Override
 		public double calcBonus(Creature actor)
@@ -121,7 +116,7 @@ public enum BaseStats
 		}
 	}
 	
-	protected static final class WIT implements BaseStat
+	protected static final class WIT implements IBaseStatFunction
 	{
 		@Override
 		public double calcBonus(Creature actor)
@@ -130,7 +125,7 @@ public enum BaseStats
 		}
 	}
 	
-	protected static final class CON implements BaseStat
+	protected static final class CON implements IBaseStatFunction
 	{
 		@Override
 		public double calcBonus(Creature actor)
@@ -139,7 +134,7 @@ public enum BaseStats
 		}
 	}
 	
-	protected static final class MEN implements BaseStat
+	protected static final class MEN implements IBaseStatFunction
 	{
 		@Override
 		public double calcBonus(Creature actor)
@@ -148,7 +143,7 @@ public enum BaseStats
 		}
 	}
 	
-	protected static final class NONE implements BaseStat
+	protected static final class NONE implements IBaseStatFunction
 	{
 		@Override
 		public double calcBonus(Creature actor)

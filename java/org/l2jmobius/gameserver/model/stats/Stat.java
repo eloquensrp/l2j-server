@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
  * Enum of basic stats.
  * @author mkizub
  */
-public enum Stats
+public enum Stat
 {
 	// Base stats, for each in Calculator a slot is allocated
 	
@@ -204,15 +204,15 @@ public enum Stats
 		return _value;
 	}
 	
-	private Stats(String s)
+	private Stat(String s)
 	{
 		_value = s;
 	}
 	
-	public static Stats valueOfXml(String name)
+	public static Stat valueOfXml(String name)
 	{
 		name = name.intern();
-		for (Stats s : values())
+		for (Stat s : values())
 		{
 			if (s.getValue().equals(name))
 			{
