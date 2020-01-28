@@ -30,7 +30,7 @@ import org.l2jmobius.gameserver.model.skills.Skill;
 /**
  * @author Nyaran
  */
-public class SummonEffectsTable
+public class SummonEffectTable
 {
 	/** Servitors **/
 	// Map tree
@@ -171,13 +171,13 @@ public class SummonEffectsTable
 		}
 	}
 	
-	public static SummonEffectsTable getInstance()
+	public static SummonEffectTable getInstance()
 	{
 		return SingletonHolder.INSTANCE;
 	}
 	
 	private static class SingletonHolder
 	{
-		protected static final SummonEffectsTable INSTANCE = new SummonEffectsTable();
+		protected static final SummonEffectTable INSTANCE = new SummonEffectTable();
 	}
 }

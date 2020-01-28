@@ -73,7 +73,7 @@ import org.l2jmobius.gameserver.model.skills.Skill;
  * For XML schema please refer to skillTrees.xsd in datapack in xsd folder and for parameters documentation refer to documentation.txt in skillTrees folder.<br>
  * @author Zoey76
  */
-public class SkillTreesData implements IXmlReader
+public class SkillTreeData implements IXmlReader
 {
 	// ClassId, Map of Skill Hash Code, SkillLearn
 	private final Map<ClassId, Map<Integer, SkillLearn>> _classSkillTrees = new ConcurrentHashMap<>();
@@ -105,7 +105,7 @@ public class SkillTreesData implements IXmlReader
 	/**
 	 * Instantiates a new skill trees data.
 	 */
-	protected SkillTreesData()
+	protected SkillTreeData()
 	{
 		load();
 	}
@@ -1347,7 +1347,7 @@ public class SkillTreesData implements IXmlReader
 	 * Gets the single instance of SkillTreesData.
 	 * @return the only instance of this class
 	 */
-	public static SkillTreesData getInstance()
+	public static SkillTreeData getInstance()
 	{
 		return SingletonHolder.INSTANCE;
 	}
@@ -1357,6 +1357,6 @@ public class SkillTreesData implements IXmlReader
 	 */
 	private static class SingletonHolder
 	{
-		protected static final SkillTreesData INSTANCE = new SkillTreesData();
+		protected static final SkillTreeData INSTANCE = new SkillTreeData();
 	}
 }

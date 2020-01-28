@@ -32,14 +32,14 @@ import org.l2jmobius.gameserver.model.holders.SkillHolder;
  * Loads armor set bonuses.
  * @author godson, Luno, UnAfraid
  */
-public class ArmorSetsData implements IXmlReader
+public class ArmorSetData implements IXmlReader
 {
 	private final Map<Integer, ArmorSet> _armorSets = new ConcurrentHashMap<>();
 	
 	/**
 	 * Instantiates a new armor sets data.
 	 */
-	protected ArmorSetsData()
+	protected ArmorSetData()
 	{
 		load();
 	}
@@ -183,13 +183,13 @@ public class ArmorSetsData implements IXmlReader
 	 * Gets the single instance of ArmorSetsData.
 	 * @return single instance of ArmorSetsData
 	 */
-	public static ArmorSetsData getInstance()
+	public static ArmorSetData getInstance()
 	{
 		return SingletonHolder.INSTANCE;
 	}
 	
 	private static class SingletonHolder
 	{
-		protected static final ArmorSetsData INSTANCE = new ArmorSetsData();
+		protected static final ArmorSetData INSTANCE = new ArmorSetData();
 	}
 }

@@ -36,9 +36,9 @@ import org.l2jmobius.gameserver.model.holders.SellBuffHolder;
 import org.l2jmobius.gameserver.network.Disconnection;
 import org.l2jmobius.gameserver.network.GameClient;
 
-public class OfflineTradersTable
+public class OfflineTraderTable
 {
-	private static final Logger LOGGER = Logger.getLogger(OfflineTradersTable.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(OfflineTraderTable.class.getName());
 	
 	// SQL DEFINITIONS
 	private static final String SAVE_OFFLINE_STATUS = "INSERT INTO character_offline_trade (`charId`,`time`,`type`,`title`) VALUES (?,?,?,?)";
@@ -50,7 +50,7 @@ public class OfflineTradersTable
 	private static final String LOAD_OFFLINE_STATUS = "SELECT * FROM character_offline_trade";
 	private static final String LOAD_OFFLINE_ITEMS = "SELECT * FROM character_offline_trade_items WHERE `charId`=?";
 	
-	protected OfflineTradersTable()
+	protected OfflineTraderTable()
 	{
 	}
 	
@@ -475,13 +475,13 @@ public class OfflineTradersTable
 	 * Gets the single instance of OfflineTradersTable.
 	 * @return single instance of OfflineTradersTable
 	 */
-	public static OfflineTradersTable getInstance()
+	public static OfflineTraderTable getInstance()
 	{
 		return SingletonHolder.INSTANCE;
 	}
 	
 	private static class SingletonHolder
 	{
-		protected static final OfflineTradersTable INSTANCE = new OfflineTradersTable();
+		protected static final OfflineTraderTable INSTANCE = new OfflineTraderTable();
 	}
 }
