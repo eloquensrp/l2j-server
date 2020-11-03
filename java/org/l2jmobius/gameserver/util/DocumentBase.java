@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.engines;
+package org.l2jmobius.gameserver.util;
 
 import java.io.File;
 import java.util.ArrayList;

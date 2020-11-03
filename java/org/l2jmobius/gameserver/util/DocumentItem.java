@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.engines.items;
+package org.l2jmobius.gameserver.util;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import org.l2jmobius.gameserver.engines.DocumentBase;
 import org.l2jmobius.gameserver.model.StatSet;
 import org.l2jmobius.gameserver.model.conditions.Condition;
 import org.l2jmobius.gameserver.model.items.Item;
@@ -36,8 +35,17 @@ import org.l2jmobius.gameserver.model.items.Item;
  */
 public class DocumentItem extends DocumentBase
 {
-	private ItemDataHolder _currentItem = null;
+	private DocumentItemDataHolder _currentItem = null;
 	private final List<Item> _itemsInFile = new ArrayList<>();
+	
+	private class DocumentItemDataHolder
+	{
+		int id;
+		String type;
+		StatSet set;
+		int currentLevel;
+		Item item;
+	}
 	
 	/**
 	 * @param file
@@ -78,7 +86,7 @@ public class DocumentItem extends DocumentBase
 					{
 						try
 						{
-							_currentItem = new ItemDataHolder();
+							_currentItem = new DocumentItemDataHolder();
 							parseItem(d);
 							_itemsInFile.add(_currentItem.item);
 							resetTable();
@@ -93,7 +101,7 @@ public class DocumentItem extends DocumentBase
 		}
 	}
 	
-	protected void parseItem(Node node) throws InvocationTargetException
+	private void parseItem(Node node) throws InvocationTargetException
 	{
 		Node n = node;
 		final int itemId = Integer.parseInt(n.getAttributes().getNamedItem("id").getNodeValue());
@@ -101,7 +109,6 @@ public class DocumentItem extends DocumentBase
 		final String itemName = n.getAttributes().getNamedItem("name").getNodeValue();
 		
 		_currentItem.id = itemId;
-		_currentItem.name = itemName;
 		_currentItem.type = className;
 		_currentItem.set = new StatSet();
 		_currentItem.set.set("item_id", itemId);

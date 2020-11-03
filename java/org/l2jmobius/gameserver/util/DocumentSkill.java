@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.engines.skills;
+package org.l2jmobius.gameserver.util;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,7 +26,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import org.l2jmobius.gameserver.data.xml.impl.EnchantSkillGroupsData;
-import org.l2jmobius.gameserver.engines.DocumentBase;
 import org.l2jmobius.gameserver.model.StatSet;
 import org.l2jmobius.gameserver.model.conditions.Condition;
 import org.l2jmobius.gameserver.model.skills.EffectScope;
@@ -37,15 +36,33 @@ import org.l2jmobius.gameserver.model.skills.Skill;
  */
 public class DocumentSkill extends DocumentBase
 {
-	private SkillDataHolder _currentSkill;
+	private DocumentSkillDataHolder _currentSkill;
 	private final List<Skill> _skillsInFile = new ArrayList<>();
+	
+	private class DocumentSkillDataHolder
+	{
+		public int id;
+		public String name;
+		public StatSet[] sets;
+		public StatSet[] enchsets1;
+		public StatSet[] enchsets2;
+		public StatSet[] enchsets3;
+		public StatSet[] enchsets4;
+		public StatSet[] enchsets5;
+		public StatSet[] enchsets6;
+		public StatSet[] enchsets7;
+		public StatSet[] enchsets8;
+		public int currentLevel;
+		public List<Skill> skills = new ArrayList<>();
+		public List<Skill> currentSkills = new ArrayList<>();
+	}
 	
 	public DocumentSkill(File file)
 	{
 		super(file);
 	}
 	
-	private void setCurrentSkill(SkillDataHolder skill)
+	private void setCurrentSkill(DocumentSkillDataHolder skill)
 	{
 		_currentSkill = skill;
 	}
@@ -54,11 +71,6 @@ public class DocumentSkill extends DocumentBase
 	protected StatSet getStatSet()
 	{
 		return _currentSkill.sets[_currentSkill.currentLevel];
-	}
-	
-	public List<Skill> getSkills()
-	{
-		return _skillsInFile;
 	}
 	
 	@Override
@@ -100,7 +112,7 @@ public class DocumentSkill extends DocumentBase
 				{
 					if ("skill".equalsIgnoreCase(d.getNodeName()))
 					{
-						setCurrentSkill(new SkillDataHolder());
+						setCurrentSkill(new DocumentSkillDataHolder());
 						parseSkill(d);
 						_skillsInFile.addAll(_currentSkill.skills);
 						resetTable();
@@ -109,14 +121,14 @@ public class DocumentSkill extends DocumentBase
 			}
 			else if ("skill".equalsIgnoreCase(n.getNodeName()))
 			{
-				setCurrentSkill(new SkillDataHolder());
+				setCurrentSkill(new DocumentSkillDataHolder());
 				parseSkill(n);
 				_skillsInFile.addAll(_currentSkill.skills);
 			}
 		}
 	}
 	
-	protected void parseSkill(Node node)
+	private void parseSkill(Node node)
 	{
 		Node n = node;
 		final NamedNodeMap attrs = n.getAttributes();
@@ -1654,5 +1666,10 @@ public class DocumentSkill extends DocumentBase
 				LOGGER.log(Level.SEVERE, "Skill id=" + set.getInt("skill_id") + "level" + set.getInt("level"), e);
 			}
 		}
+	}
+	
+	public List<Skill> getSkills()
+	{
+		return _skillsInFile;
 	}
 }
