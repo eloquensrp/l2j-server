@@ -16,38 +16,41 @@
  */
 package org.l2jmobius.gameserver.geoengine.geodata;
 
+import java.nio.ByteBuffer;
+
 /**
- * @author Hasha
+ * @author HorridoJoho
  */
-public interface IGeoObject
+public class FlatBlock implements IBlock
 {
-	/**
-	 * Returns geodata X coordinate of the {@link IGeoObject}.
-	 * @return int : Geodata X coordinate.
-	 */
-	int getGeoX();
+	private final short _height;
 	
-	/**
-	 * Returns geodata Y coordinate of the {@link IGeoObject}.
-	 * @return int : Geodata Y coordinate.
-	 */
-	int getGeoY();
+	public FlatBlock(ByteBuffer bb)
+	{
+		_height = bb.getShort();
+	}
 	
-	/**
-	 * Returns geodata Z coordinate of the {@link IGeoObject}.
-	 * @return int : Geodata Z coordinate.
-	 */
-	int getGeoZ();
+	@Override
+	public boolean checkNearestNswe(int geoX, int geoY, int worldZ, int nswe)
+	{
+		return true;
+	}
 	
-	/**
-	 * Returns height of the {@link IGeoObject}.
-	 * @return int : Height.
-	 */
-	int getHeight();
+	@Override
+	public int getNearestZ(int geoX, int geoY, int worldZ)
+	{
+		return _height;
+	}
 	
-	/**
-	 * Returns {@link IGeoObject} data.
-	 * @return byte[][] : {@link IGeoObject} data.
-	 */
-	byte[][] getObjectGeoData();
+	@Override
+	public int getNextLowerZ(int geoX, int geoY, int worldZ)
+	{
+		return _height <= worldZ ? _height : worldZ;
+	}
+	
+	@Override
+	public int getNextHigherZ(int geoX, int geoY, int worldZ)
+	{
+		return _height >= worldZ ? _height : worldZ;
+	}
 }

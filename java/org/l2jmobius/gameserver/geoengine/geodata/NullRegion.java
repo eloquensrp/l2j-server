@@ -16,52 +16,40 @@
  */
 package org.l2jmobius.gameserver.geoengine.geodata;
 
-import org.l2jmobius.gameserver.geoengine.GeoEngine;
-import org.l2jmobius.gameserver.model.Location;
-
 /**
- * @author Hasha
+ * @author HorridoJoho
  */
-public class GeoLocation extends Location
+public final class NullRegion implements IRegion
 {
-	private byte _nswe;
+	public static final NullRegion INSTANCE = new NullRegion();
 	
-	public GeoLocation(int x, int y, int z)
+	@Override
+	public boolean checkNearestNswe(int geoX, int geoY, int worldZ, int nswe)
 	{
-		super(x, y, GeoEngine.getInstance().getHeightNearest(x, y, z));
-		_nswe = GeoEngine.getInstance().getNsweNearest(x, y, z);
-	}
-	
-	public void set(int x, int y, short z)
-	{
-		super.setXYZ(x, y, GeoEngine.getInstance().getHeightNearest(x, y, z));
-		_nswe = GeoEngine.getInstance().getNsweNearest(x, y, z);
-	}
-	
-	public int getGeoX()
-	{
-		return _x;
-	}
-	
-	public int getGeoY()
-	{
-		return _y;
+		return true;
 	}
 	
 	@Override
-	public int getX()
+	public int getNearestZ(int geoX, int geoY, int worldZ)
 	{
-		return GeoEngine.getWorldX(_x);
+		return worldZ;
 	}
 	
 	@Override
-	public int getY()
+	public int getNextLowerZ(int geoX, int geoY, int worldZ)
 	{
-		return GeoEngine.getWorldY(_y);
+		return worldZ;
 	}
 	
-	public byte getNSWE()
+	@Override
+	public int getNextHigherZ(int geoX, int geoY, int worldZ)
 	{
-		return _nswe;
+		return worldZ;
+	}
+	
+	@Override
+	public boolean hasGeo()
+	{
+		return false;
 	}
 }

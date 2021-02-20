@@ -17,23 +17,26 @@
 package org.l2jmobius.gameserver.geoengine.geodata;
 
 /**
- * @author Hasha
+ * @author HorridoJoho
  */
-public enum GeoFormat
+public interface IBlock
 {
-	L2J("%d_%d.l2j"),
-	L2OFF("%d_%d_conv.dat"),
-	L2D("%d_%d.l2d");
+	int TYPE_FLAT = 0;
+	int TYPE_COMPLEX = 1;
+	int TYPE_MULTILAYER = 2;
 	
-	private final String _filename;
+	/** Cells in a block on the x axis */
+	int BLOCK_CELLS_X = 8;
+	/** Cells in a block on the y axis */
+	int BLOCK_CELLS_Y = 8;
+	/** Cells in a block */
+	int BLOCK_CELLS = BLOCK_CELLS_X * BLOCK_CELLS_Y;
 	
-	private GeoFormat(String filename)
-	{
-		_filename = filename;
-	}
+	boolean checkNearestNswe(int geoX, int geoY, int worldZ, int nswe);
 	
-	public String getFilename()
-	{
-		return _filename;
-	}
+	int getNearestZ(int geoX, int geoY, int worldZ);
+	
+	int getNextLowerZ(int geoX, int geoY, int worldZ);
+	
+	int getNextHigherZ(int geoX, int geoY, int worldZ);
 }
