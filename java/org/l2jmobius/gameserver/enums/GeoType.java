@@ -14,43 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.geoengine.geodata;
+package org.l2jmobius.gameserver.enums;
 
-import java.nio.ByteBuffer;
-
-/**
- * @author HorridoJoho
- */
-public class FlatBlock implements IBlock
+public enum GeoType
 {
-	private final short _height;
+	L2J("%d_%d.l2j"),
+	L2OFF("%d_%d_conv.dat");
 	
-	public FlatBlock(ByteBuffer bb)
+	private final String _filename;
+	
+	private GeoType(String filename)
 	{
-		_height = bb.getShort();
+		_filename = filename;
 	}
 	
-	@Override
-	public boolean checkNearestNswe(int geoX, int geoY, int worldZ, int nswe)
+	public String getFilename()
 	{
-		return true;
-	}
-	
-	@Override
-	public int getNearestZ(int geoX, int geoY, int worldZ)
-	{
-		return _height;
-	}
-	
-	@Override
-	public int getNextLowerZ(int geoX, int geoY, int worldZ)
-	{
-		return _height <= worldZ ? _height : worldZ;
-	}
-	
-	@Override
-	public int getNextHigherZ(int geoX, int geoY, int worldZ)
-	{
-		return _height >= worldZ ? _height : worldZ;
+		return _filename;
 	}
 }
