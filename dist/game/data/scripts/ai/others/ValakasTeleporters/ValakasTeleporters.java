@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ai.others.GrandBossTeleporters;
+package ai.others.ValakasTeleporters;
 
 import org.l2jmobius.Config;
 import org.l2jmobius.gameserver.data.xml.DoorData;
@@ -36,7 +36,7 @@ import ai.bosses.Valakas.Valakas;
  * Original python script by Emperorc.
  * @author Plim
  */
-public class GrandBossTeleporters extends AbstractNpcAI
+public class ValakasTeleporters extends AbstractNpcAI
 {
 	// NPCs
 	private static final int[] NPCs =
@@ -56,7 +56,7 @@ public class GrandBossTeleporters extends AbstractNpcAI
 	
 	private static int playerCount = 0;
 	
-	private GrandBossTeleporters()
+	private ValakasTeleporters()
 	{
 		addStartNpc(NPCs);
 		addTalkId(NPCs);
@@ -192,6 +192,6 @@ public class GrandBossTeleporters extends AbstractNpcAI
 	
 	public static void main(String[] args)
 	{
-		new GrandBossTeleporters();
+		new ValakasTeleporters();
 	}
 }
