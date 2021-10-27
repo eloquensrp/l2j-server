@@ -14,12 +14,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.commons.concurrent;
+package org.l2jmobius.commons.threads;
 
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Logger;
+
+import org.l2jmobius.Config;
 
 /**
  * @author NB4L1
@@ -29,22 +31,22 @@ public class RejectedExecutionHandlerImpl implements RejectedExecutionHandler
 	private static final Logger LOGGER = Logger.getLogger(RejectedExecutionHandlerImpl.class.getName());
 	
 	@Override
-	public void rejectedExecution(Runnable r, ThreadPoolExecutor executor)
+	public void rejectedExecution(Runnable runnable, ThreadPoolExecutor executor)
 	{
 		if (executor.isShutdown())
 		{
 			return;
 		}
 		
-		LOGGER.warning(r + " from " + executor + " " + new RejectedExecutionException());
+		LOGGER.warning(runnable.getClass().getSimpleName() + Config.EOL + runnable + " from " + executor + " " + new RejectedExecutionException());
 		
 		if (Thread.currentThread().getPriority() > Thread.NORM_PRIORITY)
 		{
-			new Thread(r).start();
+			new Thread(runnable).start();
 		}
 		else
 		{
-			r.run();
+			runnable.run();
 		}
 	}
 }

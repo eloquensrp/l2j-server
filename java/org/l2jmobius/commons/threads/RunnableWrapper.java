@@ -14,13 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.commons.concurrent;
+package org.l2jmobius.commons.threads;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 
-/**
- * @author Mobius
- */
 public class RunnableWrapper implements Runnable
 {
 	private final Runnable _runnable;
