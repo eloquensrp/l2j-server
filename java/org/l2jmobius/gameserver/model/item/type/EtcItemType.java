@@ -14,38 +14,55 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.model.items.type;
+package org.l2jmobius.gameserver.model.item.type;
 
 /**
- * Armor Type enumerated.
+ * EtcItem Type enumerated.
  */
-public enum ArmorType implements ItemType
+public enum EtcItemType implements ItemType
 {
 	NONE,
-	LIGHT,
-	HEAVY,
-	MAGIC,
-	SIGIL,
+	ARROW,
+	POTION,
+	SCRL_ENCHANT_WP,
+	SCRL_ENCHANT_AM,
+	SCROLL,
+	RECIPE,
+	MATERIAL,
+	PET_COLLAR,
+	CASTLE_GUARD,
+	LOTTO,
+	RACE_TICKET,
+	DYE,
+	SEED,
+	CROP,
+	MATURECROP,
+	HARVEST,
+	SEED2,
+	TICKET_OF_LORD,
+	LURE,
+	BLESS_SCRL_ENCHANT_WP,
+	BLESS_SCRL_ENCHANT_AM,
+	COUPON,
+	ELIXIR,
+	SCRL_ENCHANT_ATTR,
+	BOLT,
+	SCRL_INC_ENCHANT_PROP_WP,
+	SCRL_INC_ENCHANT_PROP_AM,
+	ANCIENT_CRYSTAL_ENCHANT_WP,
+	ANCIENT_CRYSTAL_ENCHANT_AM,
+	RUNE_SELECT,
+	RUNE,
 	
-	// L2J CUSTOM
-	SHIELD;
-	
-	final int _mask;
+	// L2J CUSTOM, BACKWARD COMPATIBILITY
+	SHOT;
 	
 	/**
-	 * Constructor of the ArmorType.
-	 */
-	ArmorType()
-	{
-		_mask = 1 << (ordinal() + WeaponType.values().length);
-	}
-	
-	/**
-	 * @return the ID of the ArmorType after applying a mask.
+	 * @return the ID of the item after applying the mask.
 	 */
 	@Override
 	public int mask()
 	{
-		return _mask;
+		return 0;
 	}
 }

@@ -14,14 +14,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.model.items.enchant;
+package org.l2jmobius.gameserver.model.item.type;
 
 /**
- * @author UnAfraid
+ * Material Type enumerated.
+ * @author Adry_85
  */
-public enum EnchantResultType
+public enum MaterialType
 {
-	ERROR,
-	SUCCESS,
-	FAILURE
+	STEEL,
+	FINE_STEEL,
+	COTTON,
+	BLOOD_STEEL,
+	BRONZE,
+	SILVER,
+	GOLD,
+	MITHRIL,
+	ORIHARUKON,
+	PAPER,
+	WOOD,
+	CLOTH,
+	LEATHER,
+	BONE,
+	HORN,
+	DAMASCUS,
+	ADAMANTAITE,
+	CHRYSOLITE,
+	CRYSTAL,
+	LIQUID,
+	SCALE_OF_DRAGON,
+	DYESTUFF,
+	COBWEB,
+	SEED,
+	FISH,
+	RUNE_XP,
+	RUNE_SP,
+	RUNE_REMOVE_PENALTY;
 }

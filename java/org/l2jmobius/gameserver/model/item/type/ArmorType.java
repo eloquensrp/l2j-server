@@ -14,27 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.model.items.enchant;
-
-import org.l2jmobius.gameserver.model.StatSet;
-import org.l2jmobius.gameserver.model.items.type.EtcItemType;
+package org.l2jmobius.gameserver.model.item.type;
 
 /**
- * @author UnAfraid
+ * Armor Type enumerated.
  */
-public class EnchantSupportItem extends AbstractEnchantItem
+public enum ArmorType implements ItemType
 {
-	private final boolean _isWeapon;
+	NONE,
+	LIGHT,
+	HEAVY,
+	MAGIC,
+	SIGIL,
 	
-	public EnchantSupportItem(StatSet set)
+	// L2J CUSTOM
+	SHIELD;
+	
+	final int _mask;
+	
+	/**
+	 * Constructor of the ArmorType.
+	 */
+	ArmorType()
 	{
-		super(set);
-		_isWeapon = getItem().getItemType() == EtcItemType.SCRL_INC_ENCHANT_PROP_WP;
+		_mask = 1 << (ordinal() + WeaponType.values().length);
 	}
 	
+	/**
+	 * @return the ID of the ArmorType after applying a mask.
+	 */
 	@Override
-	public boolean isWeapon()
+	public int mask()
 	{
-		return _isWeapon;
+		return _mask;
 	}
 }
