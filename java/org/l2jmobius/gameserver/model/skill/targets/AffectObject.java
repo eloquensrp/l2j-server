@@ -14,19 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.model.skills;
+package org.l2jmobius.gameserver.model.skill.targets;
 
 /**
- * @author NosBit
+ * Affect object enumerated.
+ * @author Zoey76
  */
-public enum EffectScope
+public enum AffectObject
 {
-	GENERAL,
-	START,
-	SELF,
-	PASSIVE,
-	CHANNELING,
-	PVP,
-	PVE,
-	END
+	ALL,
+	CLAN,
+	FRIEND,
+	HIDDEN_PLACE,
+	INVISIBLE,
+	NOE,
+	NOT_FRIEND,
+	OBJECT_DEAD_NPC_BODY,
+	UNDEAD_REAL_ENEMY,
+	WYVERN_OBJECT
 }
