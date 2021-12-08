@@ -14,30 +14,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.network.clientpackets;
+package org.l2jmobius.gameserver.network;
 
-import org.l2jmobius.commons.network.PacketReader;
-import org.l2jmobius.gameserver.network.GameClient;
-import org.l2jmobius.gameserver.network.PacketLogger;
+import java.util.logging.Logger;
 
 /**
- * Format: (ch) S
- * @author -Wooden- TODO: GodKratos: This packet is wrong in Gracia Final!!
+ * @author Mobius
  */
-public class RequestPCCafeCouponUse implements IClientIncomingPacket
+public class PacketLogger
 {
-	private String _str;
+	private static final Logger LOGGER = Logger.getLogger(PacketLogger.class.getName());
 	
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public static synchronized void warning(String message)
 	{
-		_str = packet.readS();
-		return true;
+		LOGGER.warning(message);
 	}
 	
-	@Override
-	public void run(GameClient client)
+	public static synchronized void info(String message)
 	{
-		PacketLogger.info("C5: RequestPCCafeCouponUse: S: " + _str);
+		LOGGER.info(message);
+	}
+	
+	public static synchronized void finer(String message)
+	{
+		LOGGER.finer(message);
 	}
 }
