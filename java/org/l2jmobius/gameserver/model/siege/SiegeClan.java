@@ -14,11 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.model;
+package org.l2jmobius.gameserver.model.siege;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.l2jmobius.gameserver.enums.SiegeClanType;
 import org.l2jmobius.gameserver.model.actor.Npc;
 
 public class SiegeClan
@@ -26,14 +27,6 @@ public class SiegeClan
 	private int _clanId = 0;
 	private final Set<Npc> _flag = ConcurrentHashMap.newKeySet();
 	private SiegeClanType _type;
-	
-	public enum SiegeClanType
-	{
-		OWNER,
-		DEFENDER,
-		ATTACKER,
-		DEFENDER_PENDING
-	}
 	
 	public SiegeClan(int clanId, SiegeClanType type)
 	{
