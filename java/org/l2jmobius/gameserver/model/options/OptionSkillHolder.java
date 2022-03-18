@@ -16,12 +16,41 @@
  */
 package org.l2jmobius.gameserver.model.options;
 
+import org.l2jmobius.gameserver.model.skill.Skill;
+
 /**
- * @author UnAfraid
+ * @author UnAfraid, Mobius
  */
-public enum OptionsSkillType
+public class OptionSkillHolder
 {
-	ATTACK,
-	MAGIC,
-	CRITICAL
+	private final Skill _skill;
+	private final double _chance;
+	private final OptionSkillType _type;
+	
+	/**
+	 * @param skill
+	 * @param type
+	 * @param chance
+	 */
+	public OptionSkillHolder(Skill skill, double chance, OptionSkillType type)
+	{
+		_skill = skill;
+		_chance = chance;
+		_type = type;
+	}
+	
+	public Skill getSkill()
+	{
+		return _skill;
+	}
+	
+	public double getChance()
+	{
+		return _chance;
+	}
+	
+	public OptionSkillType getSkillType()
+	{
+		return _type;
+	}
 }
