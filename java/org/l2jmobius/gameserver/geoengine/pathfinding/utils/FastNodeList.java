@@ -14,22 +14,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.l2jmobius.gameserver.enums;
+package org.l2jmobius.gameserver.geoengine.pathfinding.utils;
 
-public enum GeoType
+import java.util.ArrayList;
+
+import org.l2jmobius.gameserver.geoengine.pathfinding.AbstractNode;
+
+/**
+ * @author -Nemesiss-
+ */
+public class FastNodeList
 {
-	L2J("%d_%d.l2j"),
-	L2OFF("%d_%d_conv.dat");
+	private final ArrayList<AbstractNode<?>> _list;
 	
-	private final String _filename;
-	
-	private GeoType(String filename)
+	public FastNodeList(int size)
 	{
-		_filename = filename;
+		_list = new ArrayList<>(size);
 	}
 	
-	public String getFilename()
+	public void add(AbstractNode<?> n)
 	{
-		return _filename;
+		_list.add(n);
+	}
+	
+	public boolean contains(AbstractNode<?> n)
+	{
+		return _list.contains(n);
+	}
+	
+	public boolean containsRev(AbstractNode<?> n)
+	{
+		return _list.lastIndexOf(n) != -1;
 	}
 }

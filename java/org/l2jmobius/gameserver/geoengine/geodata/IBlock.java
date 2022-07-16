@@ -16,53 +16,27 @@
  */
 package org.l2jmobius.gameserver.geoengine.geodata;
 
-public class BlockNull extends ABlock
+/**
+ * @author HorridoJoho
+ */
+public interface IBlock
 {
-	@Override
-	public boolean hasGeoPos()
-	{
-		return false;
-	}
+	int TYPE_FLAT = 0;
+	int TYPE_COMPLEX = 1;
+	int TYPE_MULTILAYER = 2;
 	
-	@Override
-	public short getHeightNearest(int geoX, int geoY, int worldZ)
-	{
-		return (short) worldZ;
-	}
+	/** Cells in a block on the x axis */
+	int BLOCK_CELLS_X = 8;
+	/** Cells in a block on the y axis */
+	int BLOCK_CELLS_Y = 8;
+	/** Cells in a block */
+	int BLOCK_CELLS = BLOCK_CELLS_X * BLOCK_CELLS_Y;
 	
-	@Override
-	public byte getNsweNearest(int geoX, int geoY, int worldZ)
-	{
-		return GeoStructure.CELL_FLAG_ALL;
-	}
+	boolean checkNearestNswe(int geoX, int geoY, int worldZ, int nswe);
 	
-	@Override
-	public int getIndexNearest(int geoX, int geoY, int worldZ)
-	{
-		return 0;
-	}
+	int getNearestZ(int geoX, int geoY, int worldZ);
 	
-	@Override
-	public int getIndexAbove(int geoX, int geoY, int worldZ)
-	{
-		return 0;
-	}
+	int getNextLowerZ(int geoX, int geoY, int worldZ);
 	
-	@Override
-	public int getIndexBelow(int geoX, int geoY, int worldZ)
-	{
-		return 0;
-	}
-	
-	@Override
-	public short getHeight(int index)
-	{
-		return 0;
-	}
-	
-	@Override
-	public byte getNswe(int index)
-	{
-		return GeoStructure.CELL_FLAG_ALL;
-	}
+	int getNextHigherZ(int geoX, int geoY, int worldZ);
 }
