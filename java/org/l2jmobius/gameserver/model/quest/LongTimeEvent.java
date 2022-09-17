@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -46,6 +47,10 @@ import org.l2jmobius.gameserver.model.Location;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.announce.EventAnnouncement;
+import org.l2jmobius.gameserver.model.events.Containers;
+import org.l2jmobius.gameserver.model.events.EventType;
+import org.l2jmobius.gameserver.model.events.impl.OnServerStart;
+import org.l2jmobius.gameserver.model.events.listeners.ConsumerEventListener;
 import org.l2jmobius.gameserver.model.holders.EventDropHolder;
 import org.l2jmobius.gameserver.script.DateRange;
 import org.l2jmobius.gameserver.util.Broadcast;
@@ -66,13 +71,13 @@ public class LongTimeEvent extends Quest
 	protected String _endMsg = "";
 	protected int _enterAnnounceId = -1;
 	
-	// NPCs to spawm and their spawn points
+	// NPCs to spawn and their spawn points
 	protected final List<NpcSpawn> _spawnList = new ArrayList<>();
 	
 	// Drop data for event
 	protected final List<EventDropHolder> _dropList = new ArrayList<>();
 	
-	// Items to destroy when event ends.
+	// Items to destroy when event ends
 	protected final List<Integer> _destroyItemsOnEnd = new ArrayList<>();
 	
 	protected class NpcSpawn
@@ -319,11 +324,10 @@ public class LongTimeEvent extends Quest
 		// Add event drops.
 		EventDropManager.getInstance().addDrops(this, _dropList);
 		
-		// Add spawns.
-		final Long millisToEventEnd = _eventPeriod.getEndDate().getTime() - System.currentTimeMillis();
-		for (NpcSpawn spawn : _spawnList)
+		// Add spawns on server start.
+		if (!_spawnList.isEmpty())
 		{
-			addSpawn(spawn.npcId, spawn.loc.getX(), spawn.loc.getY(), spawn.loc.getZ(), spawn.loc.getHeading(), false, millisToEventEnd, false);
+			Containers.Global().addListener(new ConsumerEventListener(Containers.Global(), EventType.ON_SERVER_START, _spawnNpcs, this));
 		}
 		
 		// Event enter announcement.
@@ -339,8 +343,23 @@ public class LongTimeEvent extends Quest
 		}
 		
 		// Schedule event end.
+		final Long millisToEventEnd = _eventPeriod.getEndDate().getTime() - System.currentTimeMillis();
 		ThreadPool.schedule(new ScheduleEnd(), millisToEventEnd);
 	}
+	
+	/**
+	 * Event spawns must initialize after server loads scripts.
+	 */
+	private final Consumer<OnServerStart> _spawnNpcs = event ->
+	{
+		final Long millisToEventEnd = _eventPeriod.getEndDate().getTime() - System.currentTimeMillis();
+		for (NpcSpawn spawn : _spawnList)
+		{
+			addSpawn(spawn.npcId, spawn.loc.getX(), spawn.loc.getY(), spawn.loc.getZ(), spawn.loc.getHeading(), false, millisToEventEnd, false);
+		}
+		
+		Containers.Global().removeListenerIf(EventType.ON_SERVER_START, listener -> listener.getOwner() == this);
+	};
 	
 	protected class ScheduleEnd implements Runnable
 	{
