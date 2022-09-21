@@ -43,13 +43,12 @@ public class Decoy extends Creature
 	private Future<?> _decoyLifeTask;
 	private Future<?> _hateSpam;
 	
-	/**
-	 * Creates a decoy.
-	 * @param template the decoy NPC template
-	 * @param owner the owner
-	 * @param totalLifeTime the total life time
-	 */
 	public Decoy(NpcTemplate template, Player owner, int totalLifeTime)
+	{
+		this(template, owner, totalLifeTime, true);
+	}
+	
+	public Decoy(NpcTemplate template, Player owner, int totalLifeTime, boolean aggressive)
 	{
 		super(template);
 		setInstanceType(InstanceType.Decoy);
@@ -58,9 +57,123 @@ public class Decoy extends Creature
 		setInvul(false);
 		_totalLifeTime = totalLifeTime;
 		_timeRemaining = _totalLifeTime;
-		final int skilllevel = getTemplate().getDisplayId() - 13070;
 		_decoyLifeTask = ThreadPool.scheduleAtFixedRate(new DecoyLifetime(getOwner(), this), 1000, 1000);
-		_hateSpam = ThreadPool.scheduleAtFixedRate(new HateSpam(this, SkillData.getInstance().getSkill(5272, skilllevel)), 2000, 5000);
+		if (aggressive)
+		{
+			final int hateSpamSkillId = 5272;
+			final int skilllevel = Math.min(getTemplate().getDisplayId() - 13070, SkillData.getInstance().getMaxLevel(hateSpamSkillId));
+			_hateSpam = ThreadPool.scheduleAtFixedRate(new HateSpam(this, SkillData.getInstance().getSkill(hateSpamSkillId, skilllevel)), 2000, 5000);
+		}
+	}
+	
+	@Override
+	public boolean doDie(Creature killer)
+	{
+		if (!super.doDie(killer))
+		{
+			return false;
+		}
+		if (_hateSpam != null)
+		{
+			_hateSpam.cancel(true);
+			_hateSpam = null;
+		}
+		_totalLifeTime = 0;
+		DecayTaskManager.getInstance().add(this);
+		return true;
+	}
+	
+	static class DecoyLifetime implements Runnable
+	{
+		private final Player _player;
+		
+		private final Decoy _decoy;
+		
+		DecoyLifetime(Player player, Decoy decoy)
+		{
+			_player = player;
+			_decoy = decoy;
+		}
+		
+		@Override
+		public void run()
+		{
+			try
+			{
+				_decoy.decTimeRemaining(1000);
+				final double newTimeRemaining = _decoy.getTimeRemaining();
+				if (newTimeRemaining < 0)
+				{
+					_decoy.unSummon(_player);
+				}
+			}
+			catch (Exception e)
+			{
+				LOGGER.log(Level.SEVERE, "Decoy Error: ", e);
+			}
+		}
+	}
+	
+	private static class HateSpam implements Runnable
+	{
+		private final Decoy _player;
+		private final Skill _skill;
+		
+		HateSpam(Decoy player, Skill hate)
+		{
+			_player = player;
+			_skill = hate;
+		}
+		
+		@Override
+		public void run()
+		{
+			try
+			{
+				_player.setTarget(_player);
+				_player.doCast(_skill);
+			}
+			catch (Throwable e)
+			{
+				LOGGER.log(Level.SEVERE, "Decoy Error: ", e);
+			}
+		}
+	}
+	
+	public synchronized void unSummon(Player owner)
+	{
+		if (_decoyLifeTask != null)
+		{
+			_decoyLifeTask.cancel(true);
+			_decoyLifeTask = null;
+		}
+		if (_hateSpam != null)
+		{
+			_hateSpam.cancel(true);
+			_hateSpam = null;
+		}
+		
+		if (isSpawned() && !isDead())
+		{
+			ZoneManager.getInstance().getRegion(this).removeFromZones(this);
+			owner.setDecoy(null);
+			decayMe();
+		}
+	}
+	
+	public void decTimeRemaining(int value)
+	{
+		_timeRemaining -= value;
+	}
+	
+	public int getTimeRemaining()
+	{
+		return _timeRemaining;
+	}
+	
+	public int getTotalLifeTime()
+	{
+		return _totalLifeTime;
 	}
 	
 	@Override
@@ -141,29 +254,6 @@ public class Decoy extends Creature
 		owner.setDecoy(null);
 	}
 	
-	public synchronized void unSummon(Player owner)
-	{
-		if (_decoyLifeTask != null)
-		{
-			_decoyLifeTask.cancel(true);
-			_decoyLifeTask = null;
-		}
-		if (_hateSpam != null)
-		{
-			_hateSpam.cancel(true);
-			_hateSpam = null;
-		}
-		
-		if (!isSpawned() || isDead())
-		{
-			return;
-		}
-		
-		ZoneManager.getInstance().getRegion(this).removeFromZones(this);
-		owner.setDecoy(null);
-		decayMe();
-	}
-	
 	public Player getOwner()
 	{
 		return _owner;
@@ -203,94 +293,5 @@ public class Decoy extends Creature
 		{
 			_owner.sendPacket(id);
 		}
-	}
-	
-	@Override
-	public boolean doDie(Creature killer)
-	{
-		if (!super.doDie(killer))
-		{
-			return false;
-		}
-		if (_hateSpam != null)
-		{
-			_hateSpam.cancel(true);
-			_hateSpam = null;
-		}
-		_totalLifeTime = 0;
-		DecayTaskManager.getInstance().add(this);
-		return true;
-	}
-	
-	static class DecoyLifetime implements Runnable
-	{
-		private final Player _player;
-		
-		private final Decoy _decoy;
-		
-		DecoyLifetime(Player player, Decoy decoy)
-		{
-			_player = player;
-			_decoy = decoy;
-		}
-		
-		@Override
-		public void run()
-		{
-			try
-			{
-				_decoy.decTimeRemaining(1000);
-				final double newTimeRemaining = _decoy.getTimeRemaining();
-				if (newTimeRemaining < 0)
-				{
-					_decoy.unSummon(_player);
-				}
-			}
-			catch (Exception e)
-			{
-				LOGGER.log(Level.SEVERE, "Decoy Error: ", e);
-			}
-		}
-	}
-	
-	private static class HateSpam implements Runnable
-	{
-		private final Decoy _player;
-		private final Skill _skill;
-		
-		HateSpam(Decoy player, Skill hate)
-		{
-			_player = player;
-			_skill = hate;
-		}
-		
-		@Override
-		public void run()
-		{
-			try
-			{
-				_player.setTarget(_player);
-				_player.doCast(_skill);
-			}
-			catch (Throwable e)
-			{
-				LOGGER.log(Level.SEVERE, "Decoy Error: ", e);
-			}
-		}
-	}
-	
-	public void decTimeRemaining(int value)
-	{
-		_timeRemaining -= value;
-	}
-	
-	public int getTimeRemaining()
-	{
-		return _timeRemaining;
-	}
-	
-	public int getTotalLifeTime()
-	{
-		return _totalLifeTime;
 	}
 }
