@@ -593,6 +593,7 @@ public class Config
 	public static boolean USE_SAY_FILTER;
 	public static String CHAT_FILTER_CHARS;
 	public static Set<ChatType> BAN_CHAT_CHANNELS;
+	public static boolean OLYMPIAD_ENABLED;
 	public static int ALT_OLY_START_TIME;
 	public static int ALT_OLY_MIN;
 	public static int ALT_OLY_MAX_BUFFS;
@@ -2472,6 +2473,7 @@ public class Config
 			
 			// Load Olympiad config file (if exists)
 			final PropertiesParser olympiadConfig = new PropertiesParser(OLYMPIAD_CONFIG_FILE);
+			OLYMPIAD_ENABLED = olympiadConfig.getBoolean("OlympiadEnabled", true);
 			ALT_OLY_START_TIME = olympiadConfig.getInt("AltOlyStartTime", 18);
 			ALT_OLY_MIN = olympiadConfig.getInt("AltOlyMin", 0);
 			ALT_OLY_MAX_BUFFS = olympiadConfig.getInt("AltOlyMaxBuffs", 5);
