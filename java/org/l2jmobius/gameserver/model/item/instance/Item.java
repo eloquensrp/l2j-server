@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 
 import org.l2jmobius.Config;
 import org.l2jmobius.commons.database.DatabaseFactory;
+import org.l2jmobius.commons.util.StringUtil;
 import org.l2jmobius.gameserver.data.ItemTable;
 import org.l2jmobius.gameserver.data.xml.EnchantItemOptionsData;
 import org.l2jmobius.gameserver.data.xml.OptionData;
@@ -293,29 +294,43 @@ public class Item extends WorldObject
 	{
 		setOwnerId(ownerId);
 		
-		if (Config.LOG_ITEMS)
+		if (Config.LOG_ITEMS && (!Config.LOG_ITEMS_SMALL_LOG || (Config.LOG_ITEMS_SMALL_LOG && (_itemTemplate.isEquipable() || (_itemTemplate.getId() == ADENA_ID)))))
 		{
-			if (!Config.LOG_ITEMS_SMALL_LOG || (Config.LOG_ITEMS_SMALL_LOG && (_itemTemplate.isEquipable() || (_itemTemplate.getId() == ADENA_ID))))
+			if (_enchantLevel > 0)
 			{
-				if (_enchantLevel > 0)
-				{
-					LOG_ITEMS.info("SETOWNER:" + String.valueOf(process) // in case of null
-						+ ", item " + getObjectId() //
-						+ ":+" + _enchantLevel //
-						+ " " + _itemTemplate.getName() //
-						+ "(" + _count + "), " //
-						+ String.valueOf(creator) + ", " // in case of null
-						+ String.valueOf(reference)); // in case of null
-				}
-				else
-				{
-					LOG_ITEMS.info("SETOWNER:" + String.valueOf(process) // in case of null
-						+ ", item " + getObjectId() //
-						+ ":" + _itemTemplate.getName() //
-						+ "(" + _count + "), " //
-						+ String.valueOf(creator) + ", " // in case of null
-						+ String.valueOf(reference)); // in case of null
-				}
+				final StringBuilder sb = new StringBuilder();
+				sb.append("SETOWNER:");
+				sb.append(String.valueOf(process)); // in case of null
+				sb.append(", item ");
+				sb.append(getObjectId());
+				sb.append(":+");
+				sb.append(_enchantLevel);
+				sb.append(" ");
+				sb.append(_itemTemplate.getName());
+				sb.append("(");
+				sb.append(_count);
+				sb.append("), ");
+				sb.append(String.valueOf(creator)); // in case of null
+				sb.append(", ");
+				sb.append(String.valueOf(reference)); // in case of null
+				LOG_ITEMS.info(sb.toString());
+			}
+			else
+			{
+				final StringBuilder sb = new StringBuilder();
+				sb.append("SETOWNER:");
+				sb.append(String.valueOf(process)); // in case of null
+				sb.append(", item ");
+				sb.append(getObjectId());
+				sb.append(":");
+				sb.append(_itemTemplate.getName());
+				sb.append("(");
+				sb.append(_count);
+				sb.append("), ");
+				sb.append(String.valueOf(creator)); // in case of null
+				sb.append(", ");
+				sb.append(String.valueOf(reference)); // in case of null
+				LOG_ITEMS.info(sb.toString());
 			}
 		}
 		
@@ -333,7 +348,14 @@ public class Item extends WorldObject
 			final String targetName = creator.getTarget() != null ? creator.getTarget().getName() : "no-target";
 			if (Config.GMAUDIT)
 			{
-				GMAudit.auditGMAction(creator.getName() + " [" + creator.getObjectId() + "]", process + "(id: " + _itemId + " name: " + getName() + ")", targetName, "Object referencing this action is: " + referenceName);
+				final StringBuilder sb = new StringBuilder();
+				sb.append(process);
+				sb.append("(id: ");
+				sb.append(_itemId);
+				sb.append(" name: ");
+				sb.append(getName());
+				sb.append(")");
+				GMAudit.auditGMAction(creator.toString(), sb.toString(), targetName, StringUtil.concat("Object referencing this action is: ", referenceName));
 			}
 		}
 	}
@@ -465,31 +487,47 @@ public class Item extends WorldObject
 		
 		_storedInDb = false;
 		
-		if (Config.LOG_ITEMS && (process != null))
+		if (Config.LOG_ITEMS && (process != null) && (!Config.LOG_ITEMS_SMALL_LOG || (Config.LOG_ITEMS_SMALL_LOG && (_itemTemplate.isEquipable() || (_itemTemplate.getId() == ADENA_ID)))))
 		{
-			if (!Config.LOG_ITEMS_SMALL_LOG || (Config.LOG_ITEMS_SMALL_LOG && (_itemTemplate.isEquipable() || (_itemTemplate.getId() == ADENA_ID))))
+			if (_enchantLevel > 0)
 			{
-				if (_enchantLevel > 0)
-				{
-					LOG_ITEMS.info("CHANGE:" + String.valueOf(process) // in case of null
-						+ ", item " + getObjectId() //
-						+ ":+" + _enchantLevel //
-						+ " " + _itemTemplate.getName() //
-						+ "(" + _count + "), PrevCount(" //
-						+ String.valueOf(old) + "), " // in case of null
-						+ String.valueOf(creator) + ", " // in case of null
-						+ String.valueOf(reference)); // in case of null
-				}
-				else
-				{
-					LOG_ITEMS.info("CHANGE:" + String.valueOf(process) // in case of null
-						+ ", item " + getObjectId() //
-						+ ":" + _itemTemplate.getName() //
-						+ "(" + _count + "), PrevCount(" //
-						+ String.valueOf(old) + "), " // in case of null
-						+ String.valueOf(creator) + ", " // in case of null
-						+ String.valueOf(reference)); // in case of null
-				}
+				final StringBuilder sb = new StringBuilder();
+				sb.append("CHANGE:");
+				sb.append(String.valueOf(process)); // in case of null
+				sb.append(", item ");
+				sb.append(getObjectId());
+				sb.append(":+");
+				sb.append(_enchantLevel);
+				sb.append(" ");
+				sb.append(_itemTemplate.getName());
+				sb.append("(");
+				sb.append(_count);
+				sb.append("), PrevCount(");
+				sb.append(String.valueOf(old)); // in case of null
+				sb.append("), ");
+				sb.append(String.valueOf(creator)); // in case of null
+				sb.append(", ");
+				sb.append(String.valueOf(reference)); // in case of null
+				LOG_ITEMS.info(sb.toString());
+			}
+			else
+			{
+				final StringBuilder sb = new StringBuilder();
+				sb.append("CHANGE:");
+				sb.append(String.valueOf(process)); // in case of null
+				sb.append(", item ");
+				sb.append(getObjectId());
+				sb.append(":");
+				sb.append(_itemTemplate.getName());
+				sb.append("(");
+				sb.append(_count);
+				sb.append("), PrevCount(");
+				sb.append(String.valueOf(old)); // in case of null
+				sb.append("), ");
+				sb.append(String.valueOf(creator)); // in case of null
+				sb.append(", ");
+				sb.append(String.valueOf(reference)); // in case of null
+				LOG_ITEMS.info(sb.toString());
 			}
 		}
 		
@@ -507,7 +545,18 @@ public class Item extends WorldObject
 			final String targetName = creator.getTarget() != null ? creator.getTarget().getName() : "no-target";
 			if (Config.GMAUDIT)
 			{
-				GMAudit.auditGMAction(creator.getName() + " [" + creator.getObjectId() + "]", process + "(id: " + _itemId + " objId: " + getObjectId() + " name: " + getName() + " count: " + count + ")", targetName, "Object referencing this action is: " + referenceName);
+				final StringBuilder sb = new StringBuilder();
+				sb.append(process);
+				sb.append("(id: ");
+				sb.append(_itemId);
+				sb.append(" objId: ");
+				sb.append(getObjectId());
+				sb.append(" name: ");
+				sb.append(getName());
+				sb.append(" count: ");
+				sb.append(count);
+				sb.append(")");
+				GMAudit.auditGMAction(creator.toString(), sb.toString(), targetName, StringUtil.concat("Object referencing this action is: ", referenceName));
 			}
 		}
 	}
