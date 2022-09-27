@@ -63,7 +63,7 @@ public class MovementTaskManager extends Thread
 			}
 			catch (InterruptedException e)
 			{
-				// Ingore.
+				// Ignore.
 			}
 		}
 	}
