@@ -909,16 +909,6 @@ public abstract class ItemTemplate extends ListenersContainer implements IIdenti
 	}
 	
 	/**
-	 * Returns the name of the item followed by the item ID.
-	 * @return the name and the ID of the item
-	 */
-	@Override
-	public String toString()
-	{
-		return _name + "(" + _itemId + ")";
-	}
-	
-	/**
 	 * Verifies if the item has effects immediately.<br>
 	 * <i>Used for herbs mostly.</i>
 	 * @return {@code true} if the item applies effects immediately, {@code false} otherwise
@@ -991,5 +981,20 @@ public abstract class ItemTemplate extends ListenersContainer implements IIdenti
 	public Skill getEnchant4Skill()
 	{
 		return null;
+	}
+	
+	/**
+	 * Returns the name of the item followed by the item ID.
+	 * @return the name and the ID of the item
+	 */
+	@Override
+	public String toString()
+	{
+		final StringBuilder sb = new StringBuilder();
+		sb.append(_name);
+		sb.append("(");
+		sb.append(_itemId);
+		sb.append(")");
+		return sb.toString();
 	}
 }

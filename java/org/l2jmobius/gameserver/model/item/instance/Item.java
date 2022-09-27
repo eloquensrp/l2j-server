@@ -1735,16 +1735,6 @@ public class Item extends WorldObject
 		}
 	}
 	
-	/**
-	 * Returns the item in String format
-	 * @return String
-	 */
-	@Override
-	public String toString()
-	{
-		return _itemTemplate + "[" + getObjectId() + "]";
-	}
-	
 	public void resetOwnerTimer()
 	{
 		if (_itemLootShedule != null)
@@ -2174,6 +2164,21 @@ public class Item extends WorldObject
 				LOGGER.log(Level.INFO, "applyEnchantStats: Couldn't find option: " + id);
 			}
 		}
+	}
+	
+	/**
+	 * Returns the item in String format
+	 * @return String
+	 */
+	@Override
+	public String toString()
+	{
+		final StringBuilder sb = new StringBuilder();
+		sb.append(_itemTemplate);
+		sb.append("[");
+		sb.append(getObjectId());
+		sb.append("]");
+		return sb.toString();
 	}
 	
 	@Override

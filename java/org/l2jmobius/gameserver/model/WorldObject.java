@@ -946,6 +946,13 @@ public abstract class WorldObject extends ListenersContainer implements IIdentif
 	@Override
 	public String toString()
 	{
-		return getClass().getSimpleName() + ":" + _name + "[" + _objectId + "]";
+		final StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		sb.append(":");
+		sb.append(_name);
+		sb.append("[");
+		sb.append(_objectId);
+		sb.append("]");
+		return sb.toString();
 	}
 }
