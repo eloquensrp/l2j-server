@@ -35,6 +35,7 @@ import java.util.logging.Logger;
 import org.l2jmobius.Config;
 import org.l2jmobius.commons.database.DatabaseFactory;
 import org.l2jmobius.commons.threads.ThreadPool;
+import org.l2jmobius.commons.util.StringUtil;
 import org.l2jmobius.commons.util.file.filter.XMLFilter;
 import org.l2jmobius.gameserver.data.xml.EnchantItemHPBonusData;
 import org.l2jmobius.gameserver.enums.ItemLocation;
@@ -63,6 +64,12 @@ public class ItemTable
 {
 	private static final Logger LOGGER = Logger.getLogger(ItemTable.class.getName());
 	private static final Logger LOGGER_ITEMS = Logger.getLogger("item");
+	
+	private ItemTemplate[] _allTemplates;
+	private final Map<Integer, EtcItem> _etcItems = new HashMap<>();
+	private final Map<Integer, Armor> _armors = new HashMap<>();
+	private final Map<Integer, Weapon> _weapons = new HashMap<>();
+	private final List<File> _itemFiles = new ArrayList<>();
 	
 	public static final Map<String, Integer> SLOTS = new HashMap<>();
 	static
@@ -95,6 +102,7 @@ public class ItemTable
 		SLOTS.put("strider", ItemTemplate.SLOT_STRIDER);
 		SLOTS.put("babypet", ItemTemplate.SLOT_BABYPET);
 		SLOTS.put("none", ItemTemplate.SLOT_NONE);
+		
 		// retail compatibility
 		SLOTS.put("onepiece", ItemTemplate.SLOT_FULL_ARMOR);
 		SLOTS.put("hair2", ItemTemplate.SLOT_HAIR2);
@@ -103,11 +111,6 @@ public class ItemTable
 		SLOTS.put("deco1", ItemTemplate.SLOT_DECO);
 		SLOTS.put("waist", ItemTemplate.SLOT_BELT);
 	}
-	private ItemTemplate[] _allTemplates;
-	private final Map<Integer, EtcItem> _etcItems = new HashMap<>();
-	private final Map<Integer, Armor> _armors = new HashMap<>();
-	private final Map<Integer, Weapon> _weapons = new HashMap<>();
-	private final List<File> _itemFiles = new ArrayList<>();
 	
 	protected ItemTable()
 	{
@@ -135,11 +138,7 @@ public class ItemTable
 		}
 	}
 	
-	/**
-	 * Return created items
-	 * @return List of {@link ItemTemplate}
-	 */
-	public Collection<ItemTemplate> loadItems()
+	private Collection<ItemTemplate> loadItems()
 	{
 		final Collection<ItemTemplate> list = ConcurrentHashMap.newKeySet();
 		if (Config.THREADS_FOR_LOADING)
@@ -303,22 +302,39 @@ public class ItemTable
 		{
 			if (item.getEnchantLevel() > 0)
 			{
-				LOGGER_ITEMS.info("CREATE:" + String.valueOf(process) // in case of null
-					+ ", item " + item.getObjectId() //
-					+ ":+" + item.getEnchantLevel() //
-					+ " " + item.getTemplate().getName() //
-					+ "(" + item.getCount() //
-					+ "), " + String.valueOf(actor) // in case of null
-					+ ", " + String.valueOf(reference)); // in case of null
+				final StringBuilder sb = new StringBuilder();
+				sb.append("CREATE:");
+				sb.append(String.valueOf(process)); // in case of null
+				sb.append(", item ");
+				sb.append(item.getObjectId());
+				sb.append(":+");
+				sb.append(item.getEnchantLevel());
+				sb.append(" ");
+				sb.append(item.getTemplate().getName());
+				sb.append("(");
+				sb.append(item.getCount());
+				sb.append("), ");
+				sb.append(String.valueOf(actor)); // in case of null
+				sb.append(", ");
+				sb.append(String.valueOf(reference)); // in case of null
+				LOGGER_ITEMS.info(sb.toString());
 			}
 			else
 			{
-				LOGGER_ITEMS.info("CREATE:" + String.valueOf(process) // in case of null
-					+ ", item " + item.getObjectId() //
-					+ ":" + item.getTemplate().getName() //
-					+ "(" + item.getCount() //
-					+ "), " + String.valueOf(actor) // in case of null
-					+ ", " + String.valueOf(reference)); // in case of null
+				final StringBuilder sb = new StringBuilder();
+				sb.append("CREATE:");
+				sb.append(String.valueOf(process)); // in case of null
+				sb.append(", item ");
+				sb.append(item.getObjectId());
+				sb.append(":");
+				sb.append(item.getTemplate().getName());
+				sb.append("(");
+				sb.append(item.getCount());
+				sb.append("), ");
+				sb.append(String.valueOf(actor)); // in case of null
+				sb.append(", ");
+				sb.append(String.valueOf(reference)); // in case of null
+				LOGGER_ITEMS.info(sb.toString());
 			}
 		}
 		
@@ -336,14 +352,18 @@ public class ItemTable
 			final String targetName = (actor.getTarget() != null ? actor.getTarget().getName() : "no-target");
 			if (Config.GMAUDIT)
 			{
-				GMAudit.auditGMAction(actor.getName() + " [" + actor.getObjectId() + "]" //
-					, String.valueOf(process) // in case of null
-						+ "(id: " + itemId //
-						+ " count: " + count //
-						+ " name: " + item.getItemName() //
-						+ " objId: " + item.getObjectId() + ")" //
-					, targetName //
-					, "Object referencing this action is: " + referenceName);
+				final StringBuilder sb = new StringBuilder();
+				sb.append(String.valueOf(process)); // in case of null
+				sb.append("(id: ");
+				sb.append(itemId);
+				sb.append(" count: ");
+				sb.append(count);
+				sb.append(" name: ");
+				sb.append(item.getItemName());
+				sb.append(" objId: ");
+				sb.append(item.getObjectId());
+				sb.append(")");
+				GMAudit.auditGMAction(actor.toString(), sb.toString(), targetName, StringUtil.concat("Object referencing this action is: ", referenceName));
 			}
 		}
 		
@@ -388,31 +408,47 @@ public class ItemTable
 			World.getInstance().removeObject(item);
 			IdManager.getInstance().releaseId(item.getObjectId());
 			
-			if (Config.LOG_ITEMS)
+			if (Config.LOG_ITEMS && (!Config.LOG_ITEMS_SMALL_LOG || (Config.LOG_ITEMS_SMALL_LOG && (item.isEquipable() || (item.getId() == ADENA_ID)))))
 			{
-				if (!Config.LOG_ITEMS_SMALL_LOG || (Config.LOG_ITEMS_SMALL_LOG && (item.isEquipable() || (item.getId() == ADENA_ID))))
+				if (item.getEnchantLevel() > 0)
 				{
-					if (item.getEnchantLevel() > 0)
-					{
-						LOGGER_ITEMS.info("DELETE:" + String.valueOf(process) // in case of null
-							+ ", item " + item.getObjectId() //
-							+ ":+" + item.getEnchantLevel() //
-							+ " " + item.getTemplate().getName() //
-							+ "(" + item.getCount() //
-							+ "), PrevCount(" + old //
-							+ "), " + String.valueOf(actor) // in case of null
-							+ ", " + String.valueOf(reference)); // in case of null
-					}
-					else
-					{
-						LOGGER_ITEMS.info("DELETE:" + String.valueOf(process) // in case of null
-							+ ", item " + item.getObjectId() //
-							+ ":" + item.getTemplate().getName() //
-							+ "(" + item.getCount() //
-							+ "), PrevCount(" + old //
-							+ "), " + String.valueOf(actor) // in case of null
-							+ ", " + String.valueOf(reference)); // in case of null
-					}
+					final StringBuilder sb = new StringBuilder();
+					sb.append("DELETE:");
+					sb.append(String.valueOf(process)); // in case of null
+					sb.append(", item ");
+					sb.append(item.getObjectId());
+					sb.append(":+");
+					sb.append(item.getEnchantLevel());
+					sb.append(" ");
+					sb.append(item.getTemplate().getName());
+					sb.append("(");
+					sb.append(item.getCount());
+					sb.append("), PrevCount(");
+					sb.append(old);
+					sb.append("), ");
+					sb.append(String.valueOf(actor)); // in case of null
+					sb.append(", ");
+					sb.append(String.valueOf(reference)); // in case of null
+					LOGGER_ITEMS.info(sb.toString());
+				}
+				else
+				{
+					final StringBuilder sb = new StringBuilder();
+					sb.append("DELETE:");
+					sb.append(String.valueOf(process)); // in case of null
+					sb.append(", item ");
+					sb.append(item.getObjectId());
+					sb.append(":");
+					sb.append(item.getTemplate().getName());
+					sb.append("(");
+					sb.append(item.getCount());
+					sb.append("), PrevCount(");
+					sb.append(old);
+					sb.append("), ");
+					sb.append(String.valueOf(actor)); // in case of null
+					sb.append(", ");
+					sb.append(String.valueOf(reference)); // in case of null
+					LOGGER_ITEMS.info(sb.toString());
 				}
 			}
 			
