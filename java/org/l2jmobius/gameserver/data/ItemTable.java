@@ -466,14 +466,16 @@ public class ItemTable
 				final String targetName = (actor.getTarget() != null ? actor.getTarget().getName() : "no-target");
 				if (Config.GMAUDIT)
 				{
-					GMAudit.auditGMAction(actor.getName() + " [" + actor.getObjectId() + "]" //
-						, String.valueOf(process) // in case of null
-							+ "(id: " + item.getId() //
-							+ " count: " + item.getCount() //
-							+ " itemObjId: " //
-							+ item.getObjectId() + ")" //
-						, targetName //
-						, "Object referencing this action is: " + referenceName);
+					final StringBuilder sb = new StringBuilder();
+					sb.append(String.valueOf(process)); // in case of null
+					sb.append("(id: ");
+					sb.append(item.getId());
+					sb.append(" count: ");
+					sb.append(item.getCount());
+					sb.append(" itemObjId: ");
+					sb.append(item.getObjectId());
+					sb.append(")");
+					GMAudit.auditGMAction(actor.toString(), sb.toString(), targetName, StringUtil.concat("Object referencing this action is: ", referenceName));
 				}
 			}
 			
