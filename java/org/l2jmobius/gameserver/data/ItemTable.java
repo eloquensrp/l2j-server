@@ -338,8 +338,22 @@ public class ItemTable
 			}
 		}
 		
-		if ((actor != null) && actor.isGM())
+		if ((actor != null) && actor.isGM() && Config.GMAUDIT)
 		{
+			final StringBuilder sb = new StringBuilder();
+			sb.append(process);
+			sb.append("(id: ");
+			sb.append(itemId);
+			sb.append(" count: ");
+			sb.append(count);
+			sb.append(" name: ");
+			sb.append(item.getItemName());
+			sb.append(" objId: ");
+			sb.append(item.getObjectId());
+			sb.append(")");
+			
+			final String targetName = (actor.getTarget() != null ? actor.getTarget().getName() : "no-target");
+			
 			String referenceName = "no-reference";
 			if (reference instanceof WorldObject)
 			{
@@ -349,22 +363,8 @@ public class ItemTable
 			{
 				referenceName = (String) reference;
 			}
-			final String targetName = (actor.getTarget() != null ? actor.getTarget().getName() : "no-target");
-			if (Config.GMAUDIT)
-			{
-				final StringBuilder sb = new StringBuilder();
-				sb.append(process);
-				sb.append("(id: ");
-				sb.append(itemId);
-				sb.append(" count: ");
-				sb.append(count);
-				sb.append(" name: ");
-				sb.append(item.getItemName());
-				sb.append(" objId: ");
-				sb.append(item.getObjectId());
-				sb.append(")");
-				GMAudit.auditGMAction(actor.toString(), sb.toString(), targetName, StringUtil.concat("Object referencing this action is: ", referenceName));
-			}
+			
+			GMAudit.auditGMAction(actor.toString(), sb.toString(), targetName, StringUtil.concat("Object referencing this action is: ", referenceName));
 		}
 		
 		// Notify to scripts
@@ -452,8 +452,20 @@ public class ItemTable
 				}
 			}
 			
-			if ((actor != null) && actor.isGM())
+			if ((actor != null) && actor.isGM() && Config.GMAUDIT)
 			{
+				final StringBuilder sb = new StringBuilder();
+				sb.append(process);
+				sb.append("(id: ");
+				sb.append(item.getId());
+				sb.append(" count: ");
+				sb.append(item.getCount());
+				sb.append(" itemObjId: ");
+				sb.append(item.getObjectId());
+				sb.append(")");
+				
+				final String targetName = (actor.getTarget() != null ? actor.getTarget().getName() : "no-target");
+				
 				String referenceName = "no-reference";
 				if (reference instanceof WorldObject)
 				{
@@ -463,20 +475,8 @@ public class ItemTable
 				{
 					referenceName = (String) reference;
 				}
-				final String targetName = (actor.getTarget() != null ? actor.getTarget().getName() : "no-target");
-				if (Config.GMAUDIT)
-				{
-					final StringBuilder sb = new StringBuilder();
-					sb.append(process);
-					sb.append("(id: ");
-					sb.append(item.getId());
-					sb.append(" count: ");
-					sb.append(item.getCount());
-					sb.append(" itemObjId: ");
-					sb.append(item.getObjectId());
-					sb.append(")");
-					GMAudit.auditGMAction(actor.toString(), sb.toString(), targetName, StringUtil.concat("Object referencing this action is: ", referenceName));
-				}
+				
+				GMAudit.auditGMAction(actor.toString(), sb.toString(), targetName, StringUtil.concat("Object referencing this action is: ", referenceName));
 			}
 			
 			// if it's a pet control item, delete the pet as well
