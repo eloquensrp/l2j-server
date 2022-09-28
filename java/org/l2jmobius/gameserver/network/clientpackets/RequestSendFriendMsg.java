@@ -68,7 +68,14 @@ public class RequestSendFriendMsg implements IClientIncomingPacket
 		
 		if (Config.LOG_CHAT)
 		{
-			LOGGER_CHAT.info("PRIV_MSG [" + player + " to " + targetPlayer + "] " + _message);
+			final StringBuilder sb = new StringBuilder();
+			sb.append("PRIV_MSG [");
+			sb.append(player);
+			sb.append(" to ");
+			sb.append(targetPlayer);
+			sb.append("] ");
+			sb.append(_message);
+			LOGGER_CHAT.info(sb.toString());
 		}
 		
 		targetPlayer.sendPacket(new L2FriendSay(player.getName(), _reciever, _message));

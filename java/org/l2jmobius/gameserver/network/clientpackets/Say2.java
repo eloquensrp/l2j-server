@@ -172,13 +172,23 @@ public class Say2 implements IClientIncomingPacket
 		
 		if (Config.LOG_CHAT)
 		{
+			final StringBuilder sb = new StringBuilder();
+			sb.append(chatType.name());
+			sb.append(" [");
+			sb.append(player);
 			if (chatType == ChatType.WHISPER)
 			{
-				LOGGER_CHAT.info(chatType.name() + " [" + player + " to " + _target + "] " + _text);
+				sb.append(" to ");
+				sb.append(_target);
+				sb.append("] ");
+				sb.append(_text);
+				LOGGER_CHAT.info(sb.toString());
 			}
 			else
 			{
-				LOGGER_CHAT.info(chatType.name() + " [" + player + "] " + _text);
+				sb.append("] ");
+				sb.append(_text);
+				LOGGER_CHAT.info(sb.toString());
 			}
 		}
 		
