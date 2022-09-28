@@ -22,7 +22,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
@@ -60,10 +59,9 @@ public class IdManager
 	private static final int LAST_OID = 0x7FFFFFFF;
 	private static final int FREE_OBJECT_ID_SIZE = LAST_OID - FIRST_OID;
 	
-	private static BitSet _freeIds;
-	private static AtomicInteger _freeIdCount;
-	private static AtomicInteger _nextFreeId;
-	private static boolean _initialized;
+	private BitSet _freeIds;
+	private AtomicInteger _freeIdCount;
+	private AtomicInteger _nextFreeId;
 	
 	public IdManager()
 	{
@@ -214,13 +212,17 @@ public class IdManager
 			try (Connection con = DatabaseFactory.getConnection();
 				Statement statement = con.createStatement())
 			{
-				String extractUsedObjectIdsQuery = "";
+				final StringBuilder extractUsedObjectIdsQuery = new StringBuilder();
 				for (String[] tblClmn : ID_EXTRACTS)
 				{
-					extractUsedObjectIdsQuery += "SELECT " + tblClmn[1] + " FROM " + tblClmn[0] + " UNION ";
+					extractUsedObjectIdsQuery.append("SELECT ");
+					extractUsedObjectIdsQuery.append(tblClmn[1]);
+					extractUsedObjectIdsQuery.append(" FROM ");
+					extractUsedObjectIdsQuery.append(tblClmn[0]);
+					extractUsedObjectIdsQuery.append(" UNION ");
 				}
-				extractUsedObjectIdsQuery = extractUsedObjectIdsQuery.substring(0, extractUsedObjectIdsQuery.length() - 7); // Remove the last " UNION "
-				try (ResultSet result = statement.executeQuery(extractUsedObjectIdsQuery))
+				extractUsedObjectIdsQuery.setLength(Math.max(extractUsedObjectIdsQuery.length() - 7, 0)); // Remove the last " UNION "
+				try (ResultSet result = statement.executeQuery(extractUsedObjectIdsQuery.toString()))
 				{
 					while (result.next())
 					{
@@ -228,7 +230,6 @@ public class IdManager
 					}
 				}
 			}
-			Collections.sort(usedIds);
 			
 			// Register used ids.
 			for (int usedObjectId : usedIds)
@@ -239,74 +240,70 @@ public class IdManager
 					LOGGER.warning("IdManager: Object ID " + usedObjectId + " in DB is less than minimum ID of " + FIRST_OID);
 					continue;
 				}
-				_freeIds.set(usedObjectId - FIRST_OID);
+				_freeIds.set(objectId);
 				_freeIdCount.decrementAndGet();
 			}
 			
 			_nextFreeId = new AtomicInteger(_freeIds.nextClearBit(0));
-			_initialized = true;
 		}
 		catch (Exception e)
 		{
-			_initialized = false;
 			LOGGER.severe("IdManager: Could not be initialized properly: " + e.getMessage());
 		}
 		
 		// Schedule increase capacity task.
 		ThreadPool.scheduleAtFixedRate(() ->
 		{
-			synchronized (_nextFreeId)
+			if (PrimeFinder.nextPrime((usedIdCount() * 11) / 10) > _freeIds.size())
 			{
-				if (PrimeFinder.nextPrime((usedIdCount() * 11) / 10) > _freeIds.size())
-				{
-					increaseBitSetCapacity();
-				}
+				increaseBitSetCapacity();
 			}
 		}, 30000, 30000);
 		
 		LOGGER.info("IdManager: " + _freeIds.size() + " id's available.");
 	}
 	
-	public void releaseId(int objectId)
+	public synchronized void releaseId(int objectId)
 	{
-		synchronized (_nextFreeId)
+		if ((objectId - FIRST_OID) > -1)
 		{
-			if ((objectId - FIRST_OID) > -1)
+			_freeIds.clear(objectId - FIRST_OID);
+			_freeIdCount.incrementAndGet();
+		}
+		else
+		{
+			LOGGER.warning("IdManager: Release objectID " + objectId + " failed (< " + FIRST_OID + ")");
+		}
+	}
+	
+	public synchronized int getNextId()
+	{
+		final int newId = _nextFreeId.get();
+		_freeIds.set(newId);
+		_freeIdCount.decrementAndGet();
+		
+		int nextFree = _freeIds.nextClearBit(newId);
+		if (nextFree < 0)
+		{
+			nextFree = _freeIds.nextClearBit(0);
+		}
+		if (nextFree < 0)
+		{
+			if (_freeIds.size() < FREE_OBJECT_ID_SIZE)
 			{
-				_freeIds.clear(objectId - FIRST_OID);
-				_freeIdCount.incrementAndGet();
+				increaseBitSetCapacity();
 			}
 			else
 			{
-				LOGGER.warning("IdManager: Release objectID " + objectId + " failed (< " + FIRST_OID + ")");
+				throw new NullPointerException("IdManager: Ran out of valid ids.");
 			}
 		}
+		_nextFreeId.set(nextFree);
+		
+		return newId + FIRST_OID;
 	}
 	
-	public int getNextId()
-	{
-		synchronized (_nextFreeId)
-		{
-			final int newId = _nextFreeId.get();
-			_freeIds.set(newId);
-			_freeIdCount.decrementAndGet();
-			
-			final int nextFree = _freeIds.nextClearBit(newId) < 0 ? _freeIds.nextClearBit(0) : _freeIds.nextClearBit(newId);
-			if (nextFree < 0)
-			{
-				if (_freeIds.size() >= FREE_OBJECT_ID_SIZE)
-				{
-					throw new NullPointerException("IdManager: Ran out of valid ids.");
-				}
-				increaseBitSetCapacity();
-			}
-			_nextFreeId.set(nextFree);
-			
-			return newId + FIRST_OID;
-		}
-	}
-	
-	private void increaseBitSetCapacity()
+	private synchronized void increaseBitSetCapacity()
 	{
 		final BitSet newBitSet = new BitSet(PrimeFinder.nextPrime((usedIdCount() * 11) / 10));
 		newBitSet.or(_freeIds);
@@ -318,14 +315,9 @@ public class IdManager
 		return _freeIdCount.get() - FIRST_OID;
 	}
 	
-	public static int size()
+	public int size()
 	{
 		return _freeIdCount.get();
-	}
-	
-	public static boolean hasInitialized()
-	{
-		return _initialized;
 	}
 	
 	public static IdManager getInstance()
