@@ -21,8 +21,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.BitSet;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
@@ -208,7 +208,7 @@ public class IdManager
 			_freeIdCount = new AtomicInteger(FREE_OBJECT_ID_SIZE);
 			
 			// Collect already used ids.
-			final Set<Integer> usedIds = new HashSet<>();
+			final List<Integer> usedIds = new LinkedList<>();
 			try (Connection con = DatabaseFactory.getConnection();
 				Statement statement = con.createStatement())
 			{
