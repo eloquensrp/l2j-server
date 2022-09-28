@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.l2jmobius.Config;
@@ -25,9 +24,9 @@ import org.l2jmobius.commons.util.Rnd;
 import org.l2jmobius.gameserver.data.xml.EnchantSkillGroupsData;
 import org.l2jmobius.gameserver.data.xml.SkillData;
 import org.l2jmobius.gameserver.model.EnchantSkillGroup.EnchantSkillHolder;
+import org.l2jmobius.gameserver.model.EnchantSkillLearn;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.instance.Item;
-import org.l2jmobius.gameserver.model.EnchantSkillLearn;
 import org.l2jmobius.gameserver.model.itemcontainer.Inventory;
 import org.l2jmobius.gameserver.model.skill.Skill;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -158,7 +157,8 @@ public class RequestExEnchantSkill implements IClientIncomingPacket
 			{
 				if (Config.LOG_SKILL_ENCHANTS)
 				{
-					LOGGER_ENCHANT.log(Level.INFO, "Success, Character:" + player.getName() + " [" + player.getObjectId() + "] Account:" + player.getAccountName() + " IP:" + player.getIPAddress() + ", Skill:" + skill + ", SPB:" + spb + ", Rate:" + rate);
+					final StringBuilder sb = new StringBuilder();
+					LOGGER_ENCHANT.info(sb.append("Success, Character:").append(player.getName()).append(" [").append(player.getObjectId()).append("] Account:").append(player.getAccountName()).append(" IP:").append(player.getIPAddress()).append(", Skill:").append(skill).append(", SPB:").append(spb).append(", Rate:").append(rate).toString());
 				}
 				
 				player.addSkill(skill, true);
@@ -176,7 +176,8 @@ public class RequestExEnchantSkill implements IClientIncomingPacket
 				
 				if (Config.LOG_SKILL_ENCHANTS)
 				{
-					LOGGER_ENCHANT.log(Level.INFO, "Failed, Character:" + player.getName() + " [" + player.getObjectId() + "] Account:" + player.getAccountName() + " IP:" + player.getIPAddress() + ", Skill:" + skill + ", SPB:" + spb + ", Rate:" + rate);
+					final StringBuilder sb = new StringBuilder();
+					LOGGER_ENCHANT.info(sb.append("Failed, Character:").append(player.getName()).append(" [").append(player.getObjectId()).append("] Account:").append(player.getAccountName()).append(" IP:").append(player.getIPAddress()).append(", Skill:").append(skill).append(", SPB:").append(spb).append(", Rate:").append(rate).toString());
 				}
 			}
 			
