@@ -1028,7 +1028,7 @@ public class CrystalCaverns extends AbstractInstance
 		if (tmpworld instanceof CCWorld)
 		{
 			final CCWorld world = (CCWorld) tmpworld;
-			if ((world.getStatus() != 4) && (attacker != null))
+			if (world.getStatus() != 4)
 			{
 				// Lucky cheater, the code only kicks his/her ass out of the dungeon
 				teleportPlayer(attacker, new Location(149361, 172327, -945), 0);
