@@ -115,7 +115,7 @@ public class DrChaos extends AbstractNpcAI
 			addSpawn(DOCTOR_CHAOS, 96320, -110912, -3328, 8191, false, 0, false);
 		}
 		// despawn the live Dr. Chaos after 30 minutes of inactivity
-		else if (event.equalsIgnoreCase("golem_despawn") && (npc != null))
+		else if (event.equalsIgnoreCase("golem_despawn"))
 		{
 			if ((npc.getId() == CHAOS_GOLEM) && ((_lastAttackVsGolem + 1800000) < System.currentTimeMillis()))
 			{
