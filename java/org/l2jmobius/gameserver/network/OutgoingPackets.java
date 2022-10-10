@@ -16,6 +16,7 @@
  */
 package org.l2jmobius.gameserver.network;
 
+import org.l2jmobius.Config;
 import org.l2jmobius.commons.network.PacketWriter;
 
 /**
@@ -537,6 +538,15 @@ public enum OutgoingPackets
 	
 	public void writeId(PacketWriter packet)
 	{
+		if (Config.DEBUG_OUTGOING_PACKETS)
+		{
+			final String name = packet.getClass().getSimpleName();
+			if (!Config.ALT_DEV_EXCLUDED_PACKETS.contains(name))
+			{
+				PacketLogger.info((_id2 > 0 ? "[S EX] " : "[S] ") + name);
+			}
+		}
+		
 		packet.writeC(_id1);
 		if (_id2 > 0)
 		{

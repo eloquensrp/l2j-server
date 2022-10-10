@@ -217,39 +217,27 @@ public class GameClient extends ChannelInboundHandler<GameClient>
 			return;
 		}
 		
-		if (_player != null)
+		// TODO: Set as parameter to packets used?
+		if ((_player != null) && Config.MULTILANG_ENABLE)
 		{
-			if (Config.DEBUG_OUTGOING_PACKETS)
+			final String lang = _player.getLang();
+			if ((lang != null) && !lang.equals("en"))
 			{
-				final String name = packet.getClass().getSimpleName();
-				if (!Config.ALT_DEV_EXCLUDED_PACKETS.contains(name))
+				if (packet instanceof SystemMessage)
 				{
-					PacketLogger.info("[S] " + name);
+					((SystemMessage) packet).setLang(lang);
 				}
-			}
-			
-			// TODO: Set as parameter to packets used?
-			if (Config.MULTILANG_ENABLE)
-			{
-				final String lang = _player.getLang();
-				if ((lang != null) && !lang.equals("en"))
+				else if (packet instanceof NpcSay)
 				{
-					if (packet instanceof SystemMessage)
-					{
-						((SystemMessage) packet).setLang(lang);
-					}
-					else if (packet instanceof NpcSay)
-					{
-						((NpcSay) packet).setLang(lang);
-					}
-					else if (packet instanceof ExShowScreenMessage)
-					{
-						((ExShowScreenMessage) packet).setLang(lang);
-					}
-					else if (packet instanceof NpcInfo)
-					{
-						((NpcInfo) packet).setLang(lang);
-					}
+					((NpcSay) packet).setLang(lang);
+				}
+				else if (packet instanceof ExShowScreenMessage)
+				{
+					((ExShowScreenMessage) packet).setLang(lang);
+				}
+				else if (packet instanceof NpcInfo)
+				{
+					((NpcInfo) packet).setLang(lang);
 				}
 			}
 		}
