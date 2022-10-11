@@ -32,8 +32,8 @@
 	<zone name="aden_castle_battlefield_territory" type="SiegeZone" shape="NPoly" minZ="-13184" maxZ="16816">
 		<stat name="castleId" val="5" />
 		<node X="142431" Y="362" />
-		<node X="152319" Y="344" />
-		<node X="152282" Y="15197" />
+		<node X="152263" Y="1" />
+		<node X="152710" Y="15356" />
 		<node X="142393" Y="15215" />
 	</zone>
 	<zone name="innadrile_castle_battlefield_territory" type="SiegeZone" shape="NPoly" minZ="-12738" maxZ="14000">

@@ -7267,8 +7267,8 @@
 	<zone name="no_bookmark_aden_castle" type="ConditionZone" shape="NPoly" minZ="-3184" maxZ="6816">
 		<stat name="NoBookmark" val="true" />
 		<node X="142431" Y="362" />
-		<node X="152319" Y="344" />
-		<node X="152282" Y="15197" />
+		<node X="152263" Y="1" />
+		<node X="152710" Y="15356" />
 		<node X="142393" Y="15215" />
 	</zone>
 	<zone name="no_bookmark_innadrile_castle" type="ConditionZone" shape="NPoly" minZ="-2738" maxZ="4000">
