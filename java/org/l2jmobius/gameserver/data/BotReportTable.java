@@ -77,7 +77,7 @@ public class BotReportTable
 	private Map<Integer, ReportedCharData> _reports;
 	private Map<Integer, PunishHolder> _punishments;
 	
-	BotReportTable()
+	protected BotReportTable()
 	{
 		if (Config.BOTREPORT_ENABLE)
 		{
@@ -120,17 +120,17 @@ public class BotReportTable
 			long lastResetTime = 0;
 			try
 			{
-				final String[] hour = Config.BOTREPORT_RESETPOINT_HOUR;
-				final Calendar c = Calendar.getInstance();
-				c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour[0]));
-				c.set(Calendar.MINUTE, Integer.parseInt(hour[1]));
-				
-				if (System.currentTimeMillis() < c.getTimeInMillis())
+				final int hour = Integer.parseInt(Config.BOTREPORT_RESETPOINT_HOUR[0]);
+				final int minute = Integer.parseInt(Config.BOTREPORT_RESETPOINT_HOUR[1]);
+				final long currentTime = System.currentTimeMillis();
+				final Calendar calendar = Calendar.getInstance();
+				calendar.set(Calendar.HOUR_OF_DAY, hour);
+				calendar.set(Calendar.MINUTE, minute);
+				if (calendar.getTimeInMillis() < currentTime)
 				{
-					c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) - 1);
+					calendar.add(Calendar.DAY_OF_YEAR, 1);
 				}
-				
-				lastResetTime = c.getTimeInMillis();
+				lastResetTime = currentTime;
 			}
 			catch (Exception e)
 			{
@@ -220,7 +220,6 @@ public class BotReportTable
 		}
 		
 		final Creature bot = ((Creature) target);
-		
 		if ((!bot.isPlayer() && !bot.isFakePlayer()) || (bot.isFakePlayer() && !((Npc) bot).getTemplate().isFakePlayerTalkable()) || (target.getObjectId() == reporter.getObjectId()))
 		{
 			return false;
@@ -304,14 +303,12 @@ public class BotReportTable
 			}
 			
 			final long curTime = System.currentTimeMillis();
-			
 			if (rcd == null)
 			{
 				rcd = new ReportedCharData();
 				_reports.put(bot.getObjectId(), rcd);
 			}
 			rcd.addReporter(reporterId, curTime);
-			
 			if (rcdRep == null)
 			{
 				rcdRep = new ReporterCharData();
@@ -418,17 +415,17 @@ public class BotReportTable
 	{
 		try
 		{
-			final String[] hour = Config.BOTREPORT_RESETPOINT_HOUR;
-			final Calendar c = Calendar.getInstance();
-			c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour[0]));
-			c.set(Calendar.MINUTE, Integer.parseInt(hour[1]));
-			
-			if (System.currentTimeMillis() > c.getTimeInMillis())
+			final int hour = Integer.parseInt(Config.BOTREPORT_RESETPOINT_HOUR[0]);
+			final int minute = Integer.parseInt(Config.BOTREPORT_RESETPOINT_HOUR[1]);
+			final long currentTime = System.currentTimeMillis();
+			final Calendar calendar = Calendar.getInstance();
+			calendar.set(Calendar.HOUR_OF_DAY, hour);
+			calendar.set(Calendar.MINUTE, minute);
+			if (calendar.getTimeInMillis() < currentTime)
 			{
-				c.set(Calendar.DAY_OF_YEAR, c.get(Calendar.DAY_OF_YEAR) + 1);
+				calendar.add(Calendar.DAY_OF_YEAR, 1);
 			}
-			
-			ThreadPool.schedule(new ResetPointTask(), c.getTimeInMillis() - System.currentTimeMillis());
+			ThreadPool.schedule(new ResetPointTask(), calendar.getTimeInMillis() - currentTime);
 		}
 		catch (Exception e)
 		{
@@ -456,7 +453,6 @@ public class BotReportTable
 		{
 			rawIp[i] = Integer.parseInt(rawByte[i]);
 		}
-		
 		return rawIp[0] | (rawIp[1] << 8) | (rawIp[2] << 16) | (rawIp[3] << 24);
 	}
 	
