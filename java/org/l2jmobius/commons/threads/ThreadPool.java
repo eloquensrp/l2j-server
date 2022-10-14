@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.l2jmobius.Config;
+import org.l2jmobius.commons.util.CommonUtil;
 
 /**
  * This class handles thread pooling system.<br>
@@ -40,6 +41,7 @@ public class ThreadPool
 	
 	private static final ScheduledThreadPoolExecutor[] SCHEDULED_POOLS = new ScheduledThreadPoolExecutor[Config.SCHEDULED_THREAD_POOL_COUNT];
 	private static final ThreadPoolExecutor[] INSTANT_POOLS = new ThreadPoolExecutor[Config.INSTANT_THREAD_POOL_COUNT];
+	private static final long MAX_DELAY = 3155695200000L; // One hundred years.
 	private static int SCHEDULED_THREAD_RANDOMIZER = 0;
 	private static int INSTANT_THREAD_RANDOMIZER = 0;
 	
@@ -104,7 +106,7 @@ public class ThreadPool
 	{
 		try
 		{
-			return SCHEDULED_POOLS[SCHEDULED_THREAD_RANDOMIZER++ % Config.SCHEDULED_THREAD_POOL_COUNT].schedule(new RunnableWrapper(runnable), delay, TimeUnit.MILLISECONDS);
+			return SCHEDULED_POOLS[SCHEDULED_THREAD_RANDOMIZER++ % Config.SCHEDULED_THREAD_POOL_COUNT].schedule(new RunnableWrapper(runnable), validate(delay), TimeUnit.MILLISECONDS);
 		}
 		catch (Exception e)
 		{
@@ -124,7 +126,7 @@ public class ThreadPool
 	{
 		try
 		{
-			return SCHEDULED_POOLS[SCHEDULED_THREAD_RANDOMIZER++ % Config.SCHEDULED_THREAD_POOL_COUNT].scheduleAtFixedRate(new RunnableWrapper(runnable), initialDelay, period, TimeUnit.MILLISECONDS);
+			return SCHEDULED_POOLS[SCHEDULED_THREAD_RANDOMIZER++ % Config.SCHEDULED_THREAD_POOL_COUNT].scheduleAtFixedRate(new RunnableWrapper(runnable), validate(initialDelay), validate(period), TimeUnit.MILLISECONDS);
 		}
 		catch (Exception e)
 		{
@@ -147,6 +149,29 @@ public class ThreadPool
 		{
 			LOGGER.warning(runnable.getClass().getSimpleName() + Config.EOL + e.getMessage() + Config.EOL + e.getStackTrace());
 		}
+	}
+	
+	/**
+	 * @param delay : the delay to validate.
+	 * @return a valid value, from 0 to MAX_DELAY.
+	 */
+	private static long validate(long delay)
+	{
+		if (delay < 0)
+		{
+			final Exception e = new Exception();
+			LOGGER.warning("ThreadPool found delay " + delay + "!");
+			LOGGER.warning(CommonUtil.getStackTrace(e));
+			return 0;
+		}
+		if (delay > MAX_DELAY)
+		{
+			final Exception e = new Exception();
+			LOGGER.warning("ThreadPool found delay " + delay + "!");
+			LOGGER.warning(CommonUtil.getStackTrace(e));
+			return MAX_DELAY;
+		}
+		return delay;
 	}
 	
 	public static String[] getStats()
