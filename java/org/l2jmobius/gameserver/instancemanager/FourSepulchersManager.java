@@ -197,7 +197,7 @@ public class FourSepulchersManager
 	protected void timeSelector()
 	{
 		timeCalculator();
-		final long currentTime = Calendar.getInstance().getTimeInMillis();
+		final long currentTime = System.currentTimeMillis();
 		// if current time >= time of entry beginning and if current time < time of entry beginning + time of entry end
 		if ((currentTime >= _coolDownTimeEnd) && (currentTime < _entryTimeEnd)) // entry time check
 		{

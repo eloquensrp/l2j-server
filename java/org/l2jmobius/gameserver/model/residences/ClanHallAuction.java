@@ -367,17 +367,18 @@ public class ClanHallAuction
 				}
 			}
 			
+			final long currentTime = System.currentTimeMillis();
 			_highestBidderId = bidder.getClanId();
 			_highestBidderMaxBid = bid;
 			_highestBidderName = bidder.getClan().getLeaderName();
 			if (_bidders.get(_highestBidderId) == null)
 			{
-				_bidders.put(_highestBidderId, new Bidder(_highestBidderName, bidder.getClan().getName(), bid, Calendar.getInstance().getTimeInMillis()));
+				_bidders.put(_highestBidderId, new Bidder(_highestBidderName, bidder.getClan().getName(), bid, currentTime));
 			}
 			else
 			{
 				_bidders.get(_highestBidderId).setBid(bid);
-				_bidders.get(_highestBidderId).setTimeBid(Calendar.getInstance().getTimeInMillis());
+				_bidders.get(_highestBidderId).setTimeBid(currentTime);
 			}
 			bidder.sendPacket(SystemMessageId.YOUR_BID_HAS_BEEN_SUCCESSFULLY_PLACED);
 		}

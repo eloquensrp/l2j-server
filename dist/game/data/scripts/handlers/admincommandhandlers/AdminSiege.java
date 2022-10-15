@@ -285,56 +285,57 @@ public class AdminSiege implements IAdminCommandHandler
 					{
 						if (st.hasMoreTokens())
 						{
-							final Calendar cal = Calendar.getInstance();
-							cal.setTimeInMillis(castle.getSiegeDate().getTimeInMillis());
+							final long currentTime = System.currentTimeMillis();
+							final Calendar calendar = Calendar.getInstance();
+							calendar.setTimeInMillis(castle.getSiegeDate().getTimeInMillis());
 							val = st.nextToken();
 							if ("month".equals(val))
 							{
-								final int month = cal.get(Calendar.MONTH) + Integer.parseInt(st.nextToken());
-								if ((cal.getActualMinimum(Calendar.MONTH) > month) || (cal.getActualMaximum(Calendar.MONTH) < month))
+								final int month = calendar.get(Calendar.MONTH) + Integer.parseInt(st.nextToken());
+								if ((calendar.getActualMinimum(Calendar.MONTH) > month) || (calendar.getActualMaximum(Calendar.MONTH) < month))
 								{
-									BuilderUtil.sendSysMessage(activeChar, "Unable to change Siege Date - Incorrect month value only " + cal.getActualMinimum(Calendar.MONTH) + "-" + cal.getActualMaximum(Calendar.MONTH) + " is accepted!");
+									BuilderUtil.sendSysMessage(activeChar, "Unable to change Siege Date - Incorrect month value only " + calendar.getActualMinimum(Calendar.MONTH) + "-" + calendar.getActualMaximum(Calendar.MONTH) + " is accepted!");
 									return false;
 								}
-								cal.set(Calendar.MONTH, month);
+								calendar.set(Calendar.MONTH, month);
 							}
 							else if ("day".equals(val))
 							{
 								final int day = Integer.parseInt(st.nextToken());
-								if ((cal.getActualMinimum(Calendar.DAY_OF_MONTH) > day) || (cal.getActualMaximum(Calendar.DAY_OF_MONTH) < day))
+								if ((calendar.getActualMinimum(Calendar.DAY_OF_MONTH) > day) || (calendar.getActualMaximum(Calendar.DAY_OF_MONTH) < day))
 								{
-									BuilderUtil.sendSysMessage(activeChar, "Unable to change Siege Date - Incorrect day value only " + cal.getActualMinimum(Calendar.DAY_OF_MONTH) + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " is accepted!");
+									BuilderUtil.sendSysMessage(activeChar, "Unable to change Siege Date - Incorrect day value only " + calendar.getActualMinimum(Calendar.DAY_OF_MONTH) + "-" + calendar.getActualMaximum(Calendar.DAY_OF_MONTH) + " is accepted!");
 									return false;
 								}
-								cal.set(Calendar.DAY_OF_MONTH, day);
+								calendar.set(Calendar.DAY_OF_MONTH, day);
 							}
 							else if ("hour".equals(val))
 							{
 								final int hour = Integer.parseInt(st.nextToken());
-								if ((cal.getActualMinimum(Calendar.HOUR_OF_DAY) > hour) || (cal.getActualMaximum(Calendar.HOUR_OF_DAY) < hour))
+								if ((calendar.getActualMinimum(Calendar.HOUR_OF_DAY) > hour) || (calendar.getActualMaximum(Calendar.HOUR_OF_DAY) < hour))
 								{
-									BuilderUtil.sendSysMessage(activeChar, "Unable to change Siege Date - Incorrect hour value only " + cal.getActualMinimum(Calendar.HOUR_OF_DAY) + "-" + cal.getActualMaximum(Calendar.HOUR_OF_DAY) + " is accepted!");
+									BuilderUtil.sendSysMessage(activeChar, "Unable to change Siege Date - Incorrect hour value only " + calendar.getActualMinimum(Calendar.HOUR_OF_DAY) + "-" + calendar.getActualMaximum(Calendar.HOUR_OF_DAY) + " is accepted!");
 									return false;
 								}
-								cal.set(Calendar.HOUR_OF_DAY, hour);
+								calendar.set(Calendar.HOUR_OF_DAY, hour);
 							}
 							else if ("min".equals(val))
 							{
 								final int min = Integer.parseInt(st.nextToken());
-								if ((cal.getActualMinimum(Calendar.MINUTE) > min) || (cal.getActualMaximum(Calendar.MINUTE) < min))
+								if ((calendar.getActualMinimum(Calendar.MINUTE) > min) || (calendar.getActualMaximum(Calendar.MINUTE) < min))
 								{
-									BuilderUtil.sendSysMessage(activeChar, "Unable to change Siege Date - Incorrect minute value only " + cal.getActualMinimum(Calendar.MINUTE) + "-" + cal.getActualMaximum(Calendar.MINUTE) + " is accepted!");
+									BuilderUtil.sendSysMessage(activeChar, "Unable to change Siege Date - Incorrect minute value only " + calendar.getActualMinimum(Calendar.MINUTE) + "-" + calendar.getActualMaximum(Calendar.MINUTE) + " is accepted!");
 									return false;
 								}
-								cal.set(Calendar.MINUTE, min);
+								calendar.set(Calendar.MINUTE, min);
 							}
-							if (cal.getTimeInMillis() < Calendar.getInstance().getTimeInMillis())
+							if (calendar.getTimeInMillis() < currentTime)
 							{
 								BuilderUtil.sendSysMessage(activeChar, "Unable to change Siege Date");
 							}
-							else if (cal.getTimeInMillis() != castle.getSiegeDate().getTimeInMillis())
+							else if (calendar.getTimeInMillis() != castle.getSiegeDate().getTimeInMillis())
 							{
-								castle.getSiegeDate().setTimeInMillis(cal.getTimeInMillis());
+								castle.getSiegeDate().setTimeInMillis(calendar.getTimeInMillis());
 								castle.getSiege().saveSiegeDate();
 								BuilderUtil.sendSysMessage(activeChar, "Castle siege time for castle " + castle.getName() + " has been changed.");
 							}

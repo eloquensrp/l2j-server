@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import java.util.Calendar;
 import java.util.List;
 
 import org.l2jmobius.commons.network.PacketWriter;
@@ -38,8 +37,8 @@ public class ExShowDominionRegistry implements IClientOutgoingPacket
 	private int _mercReq = 0x00;
 	private int _isMercRegistered = 0x00;
 	private int _isClanRegistered = 0x00;
-	private int _warTime = (int) (Calendar.getInstance().getTimeInMillis() / 1000);
-	private final int _currentTime = (int) (Calendar.getInstance().getTimeInMillis() / 1000);
+	private int _warTime = (int) (System.currentTimeMillis() / 1000);
+	private final int _currentTime = (int) (System.currentTimeMillis() / 1000);
 	
 	public ExShowDominionRegistry(int castleId, Player player)
 	{

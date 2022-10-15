@@ -17,7 +17,6 @@
 package org.l2jmobius.gameserver.communitybbs.Manager;
 
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -87,11 +86,12 @@ public class TopicBBSManager extends BaseBBSManager
 			}
 			else
 			{
+				final long currentTime = System.currentTimeMillis();
 				f.vload();
-				final Topic t = new Topic(TopicConstructorType.CREATE, getInstance().getMaxID(f) + 1, Integer.parseInt(ar2), ar5, Calendar.getInstance().getTimeInMillis(), player.getName(), player.getObjectId(), Topic.MEMO, 0);
+				final Topic t = new Topic(TopicConstructorType.CREATE, getInstance().getMaxID(f) + 1, Integer.parseInt(ar2), ar5, currentTime, player.getName(), player.getObjectId(), Topic.MEMO, 0);
 				f.addTopic(t);
 				getInstance().setMaxID(t.getID(), f);
-				final Post p = new Post(player.getName(), player.getObjectId(), Calendar.getInstance().getTimeInMillis(), t.getID(), f.getID(), ar4);
+				final Post p = new Post(player.getName(), player.getObjectId(), currentTime, t.getID(), f.getID(), ar4);
 				PostBBSManager.getInstance().addPostByTopic(p, t);
 				parsecmd("_bbsmemo", player);
 			}

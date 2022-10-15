@@ -17,7 +17,6 @@
 package quests.Q00655_AGrandPlanForTamingWildBeasts;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 import org.l2jmobius.gameserver.cache.HtmCache;
 import org.l2jmobius.gameserver.enums.QuestSound;
@@ -192,7 +191,7 @@ public class Q00655_AGrandPlanForTamingWildBeasts extends Quest
 	private static long getMinutesToSiege()
 	{
 		final SiegableHall hall = CHSiegeManager.getInstance().getSiegableHall(ClanHallSiegeEngine.BEAST_FARM);
-		return hall != null ? (hall.getNextSiegeTime() - Calendar.getInstance().getTimeInMillis()) / 3600 : -1;
+		return hall != null ? (hall.getNextSiegeTime() - System.currentTimeMillis()) / 3600 : -1;
 	}
 	
 	/**

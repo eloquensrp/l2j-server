@@ -57,6 +57,7 @@ public class AdminTerritoryWar implements IAdminCommandHandler
 		{
 			if (st.hasMoreTokens())
 			{
+				final long currentTime = System.currentTimeMillis();
 				final Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(TerritoryWarManager.getInstance().getTWStartTimeInMillis());
 				
@@ -102,7 +103,7 @@ public class AdminTerritoryWar implements IAdminCommandHandler
 					cal.set(Calendar.MINUTE, min);
 				}
 				
-				if (cal.getTimeInMillis() < Calendar.getInstance().getTimeInMillis())
+				if (cal.getTimeInMillis() < currentTime)
 				{
 					BuilderUtil.sendSysMessage(activeChar, "Unable to change TW Date!");
 				}

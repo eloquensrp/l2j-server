@@ -821,7 +821,7 @@ public class FortSiege implements Siegable
 			return;
 		}
 		
-		final long delay = getFort().getSiegeDate().getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
+		final long delay = getFort().getSiegeDate().getTimeInMillis() - System.currentTimeMillis();
 		if (delay < 0)
 		{
 			// siege time in past

@@ -36,9 +36,9 @@ import org.l2jmobius.gameserver.enums.TeleportWhereType;
 import org.l2jmobius.gameserver.instancemanager.CastleManager;
 import org.l2jmobius.gameserver.model.AutoSpawnHandler;
 import org.l2jmobius.gameserver.model.AutoSpawnHandler.AutoSpawnInstance;
-import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.StatSet;
 import org.l2jmobius.gameserver.model.World;
+import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.siege.Castle;
 import org.l2jmobius.gameserver.model.skill.CommonSkill;
 import org.l2jmobius.gameserver.network.SystemMessageId;
@@ -598,7 +598,7 @@ public class SevenSigns
 		final long nextPeriodChange = getMilliToPeriodChange();
 		long nextQuestStart = 0;
 		long nextValidStart = 0;
-		long tillDate = date.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
+		long tillDate = date.getTimeInMillis() - System.currentTimeMillis();
 		while (((2 * PERIOD_MAJOR_LENGTH) + (2 * PERIOD_MINOR_LENGTH)) < tillDate)
 		{
 			tillDate -= ((2 * PERIOD_MAJOR_LENGTH) + (2 * PERIOD_MINOR_LENGTH));

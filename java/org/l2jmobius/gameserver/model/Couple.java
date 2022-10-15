@@ -72,15 +72,15 @@ public class Couple
 	
 	public Couple(Player player1, Player player2)
 	{
-		final int _tempPlayer1Id = player1.getObjectId();
-		final int _tempPlayer2Id = player2.getObjectId();
-		_player1Id = _tempPlayer1Id;
-		_player2Id = _tempPlayer2Id;
+		final long currentTime = System.currentTimeMillis();
+		_player1Id = player1.getObjectId();
+		_player2Id = player2.getObjectId();
+		
 		_affiancedDate = Calendar.getInstance();
-		_affiancedDate.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+		_affiancedDate.setTimeInMillis(currentTime);
 		
 		_weddingDate = Calendar.getInstance();
-		_weddingDate.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+		_weddingDate.setTimeInMillis(currentTime);
 		
 		try (Connection con = DatabaseFactory.getConnection();
 			PreparedStatement ps = con.prepareStatement("INSERT INTO mods_wedding (id, player1Id, player2Id, married, affianceDate, weddingDate) VALUES (?, ?, ?, ?, ?, ?)"))

@@ -34,15 +34,10 @@ public class FourSepulchersManagerSayTask implements Runnable
 		if (FourSepulchersManager.getInstance().isAttackTime())
 		{
 			final Calendar tmp = Calendar.getInstance();
-			tmp.setTimeInMillis(Calendar.getInstance().getTimeInMillis() - FourSepulchersManager.getInstance().getWarmUpTimeEnd());
+			tmp.setTimeInMillis(System.currentTimeMillis() - FourSepulchersManager.getInstance().getWarmUpTimeEnd());
 			if ((tmp.get(Calendar.MINUTE) + 5) < Config.FS_TIME_ATTACK)
 			{
-				FourSepulchersManager.getInstance().managerSay((byte) tmp.get(Calendar.MINUTE)); // byte
-				// because
-				// minute
-				// cannot be
-				// more than
-				// 59
+				FourSepulchersManager.getInstance().managerSay((byte) tmp.get(Calendar.MINUTE)); // byte because minute cannot be more than 59
 				ThreadPool.schedule(new FourSepulchersManagerSayTask(), 5 * 60000);
 			}
 			// attack time ending chat

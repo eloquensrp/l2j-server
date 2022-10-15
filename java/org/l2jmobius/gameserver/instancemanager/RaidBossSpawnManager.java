@@ -171,7 +171,7 @@ public class RaidBossSpawnManager
 			final int respawnMinDelay = (int) (boss.getSpawn().getRespawnMinDelay() * Config.RAID_MIN_RESPAWN_MULTIPLIER);
 			final int respawnMaxDelay = (int) (boss.getSpawn().getRespawnMaxDelay() * Config.RAID_MAX_RESPAWN_MULTIPLIER);
 			final int respawnDelay = Rnd.get(respawnMinDelay, respawnMaxDelay);
-			final long respawnTime = Calendar.getInstance().getTimeInMillis() + respawnDelay;
+			final long respawnTime = System.currentTimeMillis() + respawnDelay;
 			info.set("currentHP", boss.getMaxHp());
 			info.set("currentMP", boss.getMaxMp());
 			info.set("respawnTime", respawnTime);
@@ -211,9 +211,9 @@ public class RaidBossSpawnManager
 		}
 		
 		final int bossId = spawnDat.getId();
-		final long time = Calendar.getInstance().getTimeInMillis();
+		final long currentTime = System.currentTimeMillis();
 		SpawnTable.getInstance().addNewSpawn(spawnDat, false);
-		if ((respawnTime == 0) || (time > respawnTime))
+		if ((respawnTime == 0) || (currentTime > respawnTime))
 		{
 			final RaidBoss raidboss = bossId == 25328 ? DayNightSpawnManager.getInstance().handleBoss(spawnDat) : (RaidBoss) spawnDat.doSpawn();
 			if (raidboss != null)
@@ -233,7 +233,7 @@ public class RaidBossSpawnManager
 		}
 		else
 		{
-			_schedules.put(bossId, ThreadPool.schedule(new SpawnSchedule(bossId), respawnTime - Calendar.getInstance().getTimeInMillis()));
+			_schedules.put(bossId, ThreadPool.schedule(new SpawnSchedule(bossId), respawnTime - currentTime));
 		}
 		
 		_spawns.put(bossId, spawnDat);

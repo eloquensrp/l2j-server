@@ -1273,7 +1273,7 @@ public class TerritoryWarManager implements Siegable
 			_scheduledStartTWTask.cancel(false);
 			try
 			{
-				final long timeRemaining = _startTWDate.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
+				final long timeRemaining = _startTWDate.getTimeInMillis() - System.currentTimeMillis();
 				if (timeRemaining > 7200000)
 				{
 					_isRegistrationOver = false;
@@ -1352,7 +1352,7 @@ public class TerritoryWarManager implements Siegable
 			try
 			{
 				_scheduledEndTWTask.cancel(false);
-				final long timeRemaining = (_startTWDate.getTimeInMillis() + WARLENGTH) - Calendar.getInstance().getTimeInMillis();
+				final long timeRemaining = (_startTWDate.getTimeInMillis() + WARLENGTH) - System.currentTimeMillis();
 				if (timeRemaining > 3600000)
 				{
 					final SystemMessage sm = new SystemMessage(SystemMessageId.THE_TERRITORY_WAR_WILL_END_IN_S1_HOUR_S);

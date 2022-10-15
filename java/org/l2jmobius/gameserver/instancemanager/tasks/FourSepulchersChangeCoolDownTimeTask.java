@@ -39,6 +39,7 @@ public class FourSepulchersChangeCoolDownTimeTask implements Runnable
 		
 		manager.clean();
 		
+		final long currentTime = System.currentTimeMillis();
 		final Calendar time = Calendar.getInstance();
 		// one hour = 55th min to 55 min of next hour, so we check for this,
 		// also check for first launch
@@ -52,7 +53,7 @@ public class FourSepulchersChangeCoolDownTimeTask implements Runnable
 			manager.setFirstTimeRun(false);
 		}
 		
-		final long interval = time.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
+		final long interval = time.getTimeInMillis() - currentTime;
 		
 		manager.setChangeEntryTimeTask(ThreadPool.schedule(new FourSepulchersChangeEntryTimeTask(), interval));
 		final ScheduledFuture<?> changeCoolDownTimeTask = manager.getChangeCoolDownTimeTask();

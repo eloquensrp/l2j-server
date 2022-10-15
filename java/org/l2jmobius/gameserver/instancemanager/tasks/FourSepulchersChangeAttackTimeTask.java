@@ -45,9 +45,10 @@ public class FourSepulchersChangeAttackTimeTask implements Runnable
 		manager.spawnMysteriousBox(31923);
 		manager.spawnMysteriousBox(31924);
 		
+		final long currentTime = System.currentTimeMillis();
 		if (!manager.isFirstTimeRun())
 		{
-			manager.setWarmUpTimeEnd(Calendar.getInstance().getTimeInMillis());
+			manager.setWarmUpTimeEnd(currentTime);
 		}
 		
 		long interval = 0;
@@ -57,11 +58,15 @@ public class FourSepulchersChangeAttackTimeTask implements Runnable
 			for (double min = Calendar.getInstance().get(Calendar.MINUTE); min < manager.getCycleMin(); min++)
 			{
 				// looking for next shout time....
-				if ((min % 5) == 0)// check if min can be divided by 5
+				if ((min % 5) == 0) // check if min can be divided by 5
 				{
-					final Calendar inter = Calendar.getInstance();
-					inter.set(Calendar.MINUTE, (int) min);
-					ThreadPool.schedule(new FourSepulchersManagerSayTask(), inter.getTimeInMillis() - Calendar.getInstance().getTimeInMillis());
+					final Calendar calendar = Calendar.getInstance();
+					calendar.set(Calendar.MINUTE, (int) min);
+					if (calendar.getTimeInMillis() < currentTime)
+					{
+						calendar.add(Calendar.MINUTE, 1);
+					}
+					ThreadPool.schedule(new FourSepulchersManagerSayTask(), calendar.getTimeInMillis() - currentTime);
 					break;
 				}
 			}
@@ -76,7 +81,7 @@ public class FourSepulchersChangeAttackTimeTask implements Runnable
 		// and then launching change time task
 		if (manager.isFirstTimeRun())
 		{
-			interval = manager.getAttackTimeEnd() - Calendar.getInstance().getTimeInMillis();
+			interval = manager.getAttackTimeEnd() - currentTime;
 		}
 		else
 		{
