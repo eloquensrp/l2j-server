@@ -302,14 +302,18 @@ public class UseItem implements IClientIncomingPacket
 				// Binding next action to AI.
 				player.getAI().setNextAction(nextAction);
 			}
-			else if (player.isAttackingNow())
+			else // Equip or unEquip.
 			{
-				// Equip or unEquip.
-				ThreadPool.schedule(() -> player.useEquippableItem(item, false), TimeUnit.MILLISECONDS.convert(player.getAttackEndTime() - System.nanoTime(), TimeUnit.NANOSECONDS));
-			}
-			else
-			{
-				player.useEquippableItem(item, true);
+				final long currentTime = System.nanoTime();
+				final long attackEndTime = player.getAttackEndTime();
+				if (attackEndTime > currentTime)
+				{
+					ThreadPool.schedule(() -> player.useEquippableItem(item, false), TimeUnit.NANOSECONDS.toMillis(attackEndTime - currentTime));
+				}
+				else
+				{
+					player.useEquippableItem(item, true);
+				}
 			}
 		}
 		else

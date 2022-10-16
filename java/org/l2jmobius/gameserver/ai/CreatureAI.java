@@ -311,9 +311,11 @@ public class CreatureAI extends AbstractAI
 			return;
 		}
 		
-		if (_actor.getBowAttackEndTime() > GameTimeTaskManager.getInstance().getGameTicks())
+		final int gameTime = GameTimeTaskManager.getInstance().getGameTicks();
+		final int bowAttackEndTime = _actor.getBowAttackEndTime();
+		if (bowAttackEndTime > gameTime)
 		{
-			ThreadPool.schedule(new CastTask(_actor, skill, target), (_actor.getBowAttackEndTime() - GameTimeTaskManager.getInstance().getGameTicks()) * GameTimeTaskManager.MILLIS_IN_TICK);
+			ThreadPool.schedule(new CastTask(_actor, skill, target), (bowAttackEndTime - gameTime) * GameTimeTaskManager.MILLIS_IN_TICK);
 		}
 		else
 		{

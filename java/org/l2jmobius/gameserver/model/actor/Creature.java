@@ -284,7 +284,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 	/** Table of calculators containing all standard NPC calculator (ex : ACCURACY_COMBAT, EVASION_RATE) */
 	private static final Calculator[] NPC_STD_CALCULATOR = Formulas.getStdNPCCalculators();
 	
-	private CreatureAI _ai = null;
+	private volatile CreatureAI _ai = null;
 	
 	/** Future Skill Cast */
 	protected Future<?> _skillCast;
@@ -1104,6 +1104,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 			final Attack attack = new Attack(this, target, isChargedShot(ShotType.SOULSHOTS), (weaponItem != null) ? weaponItem.getCrystalTypePlus().getLevel() : 0);
 			setHeading(Util.calculateHeadingFrom(this, target));
 			final int reuse = calculateReuseTime(weaponItem);
+			final long currentTime = System.nanoTime();
 			boolean hitted = false;
 			switch (getAttackType())
 			{
@@ -1113,7 +1114,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 					{
 						return;
 					}
-					_attackEndTime = System.nanoTime() + TimeUnit.NANOSECONDS.convert(timeToHit + (reuse / 2), TimeUnit.MILLISECONDS);
+					_attackEndTime = currentTime + TimeUnit.MILLISECONDS.toNanos(timeToHit + (reuse / 2));
 					hitted = doAttackHitByBow(attack, target, timeAtk, reuse);
 					break;
 				}
@@ -1123,13 +1124,13 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 					{
 						return;
 					}
-					_attackEndTime = System.nanoTime() + TimeUnit.NANOSECONDS.convert(timeToHit + (reuse / 2), TimeUnit.MILLISECONDS);
+					_attackEndTime = currentTime + TimeUnit.MILLISECONDS.toNanos(timeToHit + (reuse / 2));
 					hitted = doAttackHitByCrossBow(attack, target, timeAtk, reuse);
 					break;
 				}
 				case POLE:
 				{
-					_attackEndTime = System.nanoTime() + TimeUnit.NANOSECONDS.convert(timeAtk, TimeUnit.MILLISECONDS);
+					_attackEndTime = currentTime + TimeUnit.MILLISECONDS.toNanos(timeAtk);
 					hitted = doAttackHitByPole(attack, target, timeToHit);
 					break;
 				}
@@ -1137,7 +1138,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 				{
 					if (!isPlayer())
 					{
-						_attackEndTime = System.nanoTime() + TimeUnit.NANOSECONDS.convert(timeAtk, TimeUnit.MILLISECONDS);
+						_attackEndTime = currentTime + TimeUnit.MILLISECONDS.toNanos(timeAtk);
 						hitted = doAttackHitSimple(attack, target, timeToHit);
 						break;
 					}
@@ -1147,16 +1148,22 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 				case DUALFIST:
 				case DUALDAGGER:
 				{
-					_attackEndTime = System.nanoTime() + TimeUnit.NANOSECONDS.convert(timeAtk, TimeUnit.MILLISECONDS);
+					_attackEndTime = currentTime + TimeUnit.MILLISECONDS.toNanos(timeAtk);
 					hitted = doAttackHitByDual(attack, target, timeToHit);
 					break;
 				}
 				default:
 				{
-					_attackEndTime = System.nanoTime() + TimeUnit.NANOSECONDS.convert(timeAtk, TimeUnit.MILLISECONDS);
+					_attackEndTime = currentTime + TimeUnit.MILLISECONDS.toNanos(timeAtk);
 					hitted = doAttackHitSimple(attack, target, timeToHit);
 					break;
 				}
+			}
+			
+			// Precaution. It has happened in the past. Probably impossible to happen now, but will not risk it.
+			if (_attackEndTime < currentTime)
+			{
+				_attackEndTime = currentTime + TimeUnit.MILLISECONDS.toNanos(Integer.MAX_VALUE);
 			}
 			
 			if (isFakePlayer() && (target.isPlayable() || target.isFakePlayer()))
@@ -1286,7 +1293,13 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 		ThreadPool.schedule(new HitTask(this, target, damage1, crit1, miss1, shld1, attack.hasSoulshot(), true), sAtk);
 		
 		// Calculate and set the disable delay of the bow in function of the Attack Speed
-		_disableBowAttackEndTime = ((sAtk + reuse) / GameTimeTaskManager.MILLIS_IN_TICK) + GameTimeTaskManager.getInstance().getGameTicks();
+		final int gameTime = GameTimeTaskManager.getInstance().getGameTicks();
+		_disableBowAttackEndTime = gameTime + ((sAtk + reuse) / GameTimeTaskManager.MILLIS_IN_TICK);
+		// Precaution. It happened in the past for _attackEndTime. Will not risk it.
+		if (_disableBowAttackEndTime < gameTime)
+		{
+			_disableBowAttackEndTime = Integer.MAX_VALUE;
+		}
 		
 		// Add this hit to the Server-Client packet Attack
 		attack.addHit(target, damage1, miss1, crit1, shld1);
@@ -1356,7 +1369,13 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 		ThreadPool.schedule(new HitTask(this, target, damage1, crit1, miss1, shld1, attack.hasSoulshot(), true), sAtk);
 		
 		// Calculate and set the disable delay of the bow in function of the Attack Speed
-		_disableBowAttackEndTime = ((sAtk + reuse) / GameTimeTaskManager.MILLIS_IN_TICK) + GameTimeTaskManager.getInstance().getGameTicks();
+		final int gameTime = GameTimeTaskManager.getInstance().getGameTicks();
+		_disableBowAttackEndTime = gameTime + ((sAtk + reuse) / GameTimeTaskManager.MILLIS_IN_TICK);
+		// Precaution. It happened in the past for _attackEndTime. Will not risk it.
+		if (_disableBowAttackEndTime < gameTime)
+		{
+			_disableBowAttackEndTime = Integer.MAX_VALUE;
+		}
 		
 		// Add this hit to the Server-Client packet Attack
 		attack.addHit(target, damage1, miss1, crit1, shld1);
@@ -4311,13 +4330,13 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 	}
 	
 	/**
-	 * Calculate movement data for a move to location action and add the Creature to movingObjects of GameTimeTaskManager (only called by AI Accessor).<br>
+	 * Calculate movement data for a move to location action and add the Creature to MOVING_OBJECTS of MovementTaskManager (only called by AI Accessor).<br>
 	 * <br>
 	 * <b><u>Concept</u>:</b><br>
 	 * <br>
 	 * At the beginning of the move action, all properties of the movement are stored in the MoveData object called <b>_move</b> of the Creature.<br>
 	 * The position of the start point and of the destination permit to estimated in function of the movement speed the time to achieve the destination.<br>
-	 * All Creature in movement are identified in <b>movingObjects</b> of GameTimeTaskManager that will call the updatePosition method of those Creature each 0.1s.<br>
+	 * All Creature in movement are identified in <b>MOVING_OBJECTS</b> of MovementTaskManager that will call the updatePosition method of those Creature each 0.1s.<br>
 	 * <br>
 	 * <b><u>Actions</u>:</b>
 	 * <ul>
@@ -4325,7 +4344,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 	 * <li>Calculate distance (dx,dy) between current position and destination including offset</li>
 	 * <li>Create and Init a MoveData object</li>
 	 * <li>Set the Creature _move object to MoveData object</li>
-	 * <li>Add the Creature to movingObjects of the GameTimeTaskManager</li>
+	 * <li>Add the Creature to MOVING_OBJECTS of the MovementTaskManager</li>
 	 * <li>Create a task to notify the AI that Creature arrives at a check point of the movement</li>
 	 * </ul>
 	 * <font color=#FF0000><b><u>Caution</u>: This method DOESN'T send Server->Client packet MoveToPawn/MoveToLocation.</b></font><br>
@@ -4631,7 +4650,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 		{
 			ThreadPool.schedule(new NotifyAITask(this, CtrlEvent.EVT_ARRIVED_REVALIDATE), 2000);
 		}
-		// the CtrlEvent.EVT_ARRIVED will be sent when the character will actually arrive to destination by GameTimeTaskManager
+		// the CtrlEvent.EVT_ARRIVED will be sent when the character will actually arrive to destination by MovementTaskManager
 	}
 	
 	public boolean moveToNextRoutePoint()
@@ -4701,7 +4720,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 		// Set the Creature _move object to MoveData object
 		_move = m;
 		
-		// Add the Creature to moving objects of the GameTimeTaskManager.
+		// Add the Creature to moving objects of the MovementTaskManager.
 		// The MovementTaskManager manages object movement.
 		MovementTaskManager.getInstance().registerMovingObject(this);
 		
@@ -4711,8 +4730,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 			ThreadPool.schedule(new NotifyAITask(this, CtrlEvent.EVT_ARRIVED_REVALIDATE), 2000);
 		}
 		
-		// the CtrlEvent.EVT_ARRIVED will be sent when the character will actually arrive
-		// to destination by GameTimeTaskManager
+		// the CtrlEvent.EVT_ARRIVED will be sent when the character will actually arrive to destination by MovementTaskManager
 		
 		// Send a Server->Client packet MoveToLocation to the actor and all Player in its _knownPlayers
 		broadcastMoveToLocation();
