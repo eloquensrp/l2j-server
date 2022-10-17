@@ -316,13 +316,26 @@ public class Olympiad extends ListenersContainer
 				milliToEnd = getMillisToValidationEnd();
 			}
 			
-			LOGGER.info("Olympiad System: " + (milliToEnd / 60000) + " minutes until period ends");
+			final double numSecs = (milliToEnd / 1000) % 60;
+			double countDown = ((milliToEnd / 1000.) - numSecs) / 60;
+			final int numMins = (int) Math.floor(countDown % 60);
+			countDown = (countDown - numMins) / 60;
+			final int numHours = (int) Math.floor(countDown % 24);
+			final int numDays = (int) Math.floor((countDown - numHours) / 24);
+			
+			LOGGER.info("Olympiad System: " + numDays + " days, " + numHours + " hours and " + numMins + " mins until period ends.");
 			
 			if (_period == 0)
 			{
 				milliToEnd = getMillisToWeekChange();
+				final double numSecs2 = (milliToEnd / 1000) % 60;
+				double countDown2 = ((milliToEnd / 1000.) - numSecs2) / 60;
+				final int numMins2 = (int) Math.floor(countDown % 60);
+				countDown2 = (countDown2 - numMins) / 60;
+				final int numHours2 = (int) Math.floor(countDown2 % 24);
+				final int numDays2 = (int) Math.floor((countDown2 - numHours) / 24);
 				
-				LOGGER.info("Olympiad System: Next weekly change is in " + (milliToEnd / 60000) + " minutes");
+				LOGGER.info("Olympiad System: Next weekly change is in " + numDays2 + " days, " + numHours2 + " hours and " + numMins2 + " mins.");
 			}
 		}
 		
