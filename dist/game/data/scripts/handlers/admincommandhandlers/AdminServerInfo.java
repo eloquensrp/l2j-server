@@ -60,7 +60,7 @@ public class AdminServerInfo implements IAdminCommandHandler
 			final MemoryUsage heapMemoryUsage = MEMORY_MX_BEAN.getHeapMemoryUsage();
 			final long freeMemory = heapMemoryUsage.getMax() - heapMemoryUsage.getUsed();
 			final int threadCount = THREAD_MX_BEAN.getThreadCount();
-			final int daemonCount = THREAD_MX_BEAN.getThreadCount();
+			final int daemonCount = THREAD_MX_BEAN.getDaemonThreadCount();
 			final int nonDaemonCount = threadCount - daemonCount;
 			final int peakCount = THREAD_MX_BEAN.getPeakThreadCount();
 			final long totalCount = THREAD_MX_BEAN.getTotalStartedThreadCount();
