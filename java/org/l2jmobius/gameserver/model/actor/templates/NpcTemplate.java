@@ -95,6 +95,7 @@ public class NpcTemplate extends CreatureTemplate implements IIdentifiable
 	private int _spiritShotChance;
 	private int _minSkillChance;
 	private int _maxSkillChance;
+	private int _baseAttackAngle;
 	private Map<Integer, Skill> _skills;
 	private Map<AISkillScope, List<Skill>> _aiSkillLists;
 	private Set<Integer> _clans;
@@ -177,6 +178,7 @@ public class NpcTemplate extends CreatureTemplate implements IIdentifiable
 		_spiritShotChance = set.getInt("spiritShotChance", 0);
 		_minSkillChance = set.getInt("minSkillChance", 7);
 		_maxSkillChance = set.getInt("maxSkillChance", 15);
+		_baseAttackAngle = set.getInt("width", 120);
 		_collisionRadiusGrown = set.getDouble("collisionRadiusGrown", 0);
 		_collisionHeightGrown = set.getDouble("collisionHeightGrown", 0);
 		if (Config.ENABLE_NPC_STAT_MULTIPLIERS) // Custom NPC Stat Multipliers
@@ -475,6 +477,11 @@ public class NpcTemplate extends CreatureTemplate implements IIdentifiable
 	public int getMaxSkillChance()
 	{
 		return _maxSkillChance;
+	}
+	
+	public int getBaseAttackAngle()
+	{
+		return _baseAttackAngle;
 	}
 	
 	@Override

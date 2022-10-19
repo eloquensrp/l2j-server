@@ -36,4 +36,10 @@ public class NpcStat extends CreatureStat
 	{
 		return (Npc) super.getActiveChar();
 	}
+	
+	@Override
+	public int getPhysicalAttackAngle()
+	{
+		return getActiveChar().getTemplate().getBaseAttackAngle();
+	}
 }

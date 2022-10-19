@@ -45,6 +45,7 @@ public class Weapon extends ItemTemplate
 	private int _spiritShotCount;
 	private int _mpConsume;
 	private int _baseAttackRange;
+	private int _baseAttackRadius;
 	private int _baseAttackAngle;
 	/**
 	 * Skill that activates when item is enchanted +4 (for duals).
@@ -91,13 +92,15 @@ public class Weapon extends ItemTemplate
 		_mpConsume = set.getInt("mp_consume", 0);
 		_baseAttackRange = set.getInt("attack_range", 40);
 		final String[] damageRange = set.getString("damage_range", "").split(";"); // 0?;0?;fan sector;base attack angle
-		if ((damageRange.length > 1) && Util.isDigit(damageRange[3]))
+		if ((damageRange.length > 1) && Util.isDigit(damageRange[2]) && Util.isDigit(damageRange[3]))
 		{
-			_baseAttackAngle = 360 - Integer.parseInt(damageRange[3]);
+			_baseAttackRadius = Integer.parseInt(damageRange[2]);
+			_baseAttackAngle = Integer.parseInt(damageRange[3]);
 		}
 		else
 		{
-			_baseAttackAngle = 240; // 360 - 120
+			_baseAttackRadius = 40;
+			_baseAttackAngle = 0;
 		}
 		
 		final String[] reducedSoulshots = set.getString("reduced_soulshot", "").split(",");
@@ -279,6 +282,11 @@ public class Weapon extends ItemTemplate
 	public int getBaseAttackRange()
 	{
 		return _baseAttackRange;
+	}
+	
+	public int getBaseAttackRadius()
+	{
+		return _baseAttackRadius;
 	}
 	
 	public int getBaseAttackAngle()

@@ -564,7 +564,7 @@ public class CreatureStat
 	
 	public int getPhysicalAttackAngle()
 	{
-		return 240; // 360 - 120
+		return 0;
 	}
 	
 	/**
