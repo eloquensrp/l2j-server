@@ -578,6 +578,9 @@
 	<admin command="admin_scan" accessLevel="30" />
 	<admin command="admin_deleteNpcByObjectId" accessLevel="100" confirmDlg="true" />
 
+	<!-- ADMIN SEARCH -->
+	<admin command="admin_search" accessLevel="30" />
+
 	<!-- ADMIN SERVERINFO -->
 	<admin command="admin_serverinfo" accessLevel="30" />
 
