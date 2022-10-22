@@ -34,6 +34,7 @@ import org.l2jmobius.gameserver.model.actor.Summon;
 import org.l2jmobius.gameserver.model.actor.templates.NpcTemplate;
 import org.l2jmobius.gameserver.model.skill.Skill;
 import org.l2jmobius.gameserver.network.serverpackets.NpcHtmlMessage;
+import org.l2jmobius.gameserver.util.MathUtil;
 import org.l2jmobius.gameserver.util.Util;
 
 public class SchemeBuffer extends Npc
@@ -314,7 +315,7 @@ public class SchemeBuffer extends Npc
 		}
 		
 		// Calculate page number.
-		final int max = countPagesNumber(skills.size(), PAGE_LIMIT);
+		final int max = MathUtil.countPagesNumber(skills.size(), PAGE_LIMIT);
 		int page = pageValue;
 		if (page > max)
 		{
@@ -433,11 +434,6 @@ public class SchemeBuffer extends Npc
 		}
 		
 		return fee;
-	}
-	
-	private static int countPagesNumber(int objectsSize, int pageSize)
-	{
-		return (objectsSize / pageSize) + ((objectsSize % pageSize) == 0 ? 0 : 1);
 	}
 	
 	private static int getCountOf(List<Integer> skills, boolean dances)
