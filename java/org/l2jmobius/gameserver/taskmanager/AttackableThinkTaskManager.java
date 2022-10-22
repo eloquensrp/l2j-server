@@ -26,60 +26,85 @@ import org.l2jmobius.gameserver.model.actor.Attackable;
 /**
  * @author Mobius
  */
-public class AttackableThinkTaskManager implements Runnable
+public class AttackableThinkTaskManager
 {
-	private static final Set<Attackable> ATTACKABLES = ConcurrentHashMap.newKeySet();
-	private static boolean _working = false;
+	private static final Set<Set<Attackable>> POOLS = ConcurrentHashMap.newKeySet();
+	private static final int POOL_SIZE = 1000;
+	private static final int TASK_DELAY = 1000;
 	
 	protected AttackableThinkTaskManager()
 	{
-		ThreadPool.scheduleAtFixedRate(this, 1000, 1000);
 	}
 	
-	@Override
-	public void run()
+	private class AttackableThink implements Runnable
 	{
-		if (_working)
-		{
-			return;
-		}
-		_working = true;
+		private final Set<Attackable> _attackables;
 		
-		CreatureAI ai;
-		for (Attackable attackable : ATTACKABLES)
+		public AttackableThink(Set<Attackable> attackables)
 		{
-			if (attackable.hasAI())
+			_attackables = attackables;
+		}
+		
+		@Override
+		public void run()
+		{
+			CreatureAI ai;
+			for (Attackable attackable : _attackables)
 			{
-				ai = attackable.getAI();
-				if (ai != null)
+				if (attackable.hasAI())
 				{
-					ai.onEvtThink();
+					ai = attackable.getAI();
+					if (ai != null)
+					{
+						ai.onEvtThink();
+					}
+					else
+					{
+						_attackables.remove(attackable);
+					}
 				}
 				else
 				{
-					remove(attackable);
+					_attackables.remove(attackable);
 				}
 			}
-			else
+		}
+	}
+	
+	public synchronized void add(Attackable attackable)
+	{
+		for (Set<Attackable> pool : POOLS)
+		{
+			if (pool.contains(attackable))
 			{
-				remove(attackable);
+				return;
 			}
 		}
 		
-		_working = false;
-	}
-	
-	public void add(Attackable attackable)
-	{
-		if (!ATTACKABLES.contains(attackable))
+		for (Set<Attackable> pool : POOLS)
 		{
-			ATTACKABLES.add(attackable);
+			if (pool.size() < POOL_SIZE)
+			{
+				pool.add(attackable);
+				return;
+			}
 		}
+		
+		final Set<Attackable> pool = ConcurrentHashMap.newKeySet(POOL_SIZE);
+		pool.add(attackable);
+		ThreadPool.scheduleAtFixedRate(new AttackableThink(pool), TASK_DELAY, TASK_DELAY);
+		POOLS.add(pool);
 	}
 	
 	public void remove(Attackable attackable)
 	{
-		ATTACKABLES.remove(attackable);
+		for (Set<Attackable> pool : POOLS)
+		{
+			if (pool.remove(attackable))
+			{
+				return;
+			}
+		}
 	}
 	
 	public static AttackableThinkTaskManager getInstance()

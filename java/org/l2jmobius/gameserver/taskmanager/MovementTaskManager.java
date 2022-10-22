@@ -19,53 +19,66 @@ package org.l2jmobius.gameserver.taskmanager;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.l2jmobius.commons.threads.ThreadPool;
 import org.l2jmobius.gameserver.model.actor.Creature;
 
 /**
  * Movement task manager class.
- * @author Forsaiken, Mobius
+ * @author Mobius
  */
-public class MovementTaskManager extends Thread
+public class MovementTaskManager
 {
-	private static final Set<Creature> MOVING_OBJECTS = ConcurrentHashMap.newKeySet();
+	private static final Set<Set<Creature>> POOLS = ConcurrentHashMap.newKeySet();
+	private static final int POOL_SIZE = 1000;
+	private static final int TASK_DELAY = 100;
 	
 	protected MovementTaskManager()
 	{
-		super("MovementTaskManager");
-		super.setDaemon(true);
-		super.setPriority(MAX_PRIORITY);
-		super.start();
+	}
+	
+	private class Movement implements Runnable
+	{
+		private final Set<Creature> _creatures;
+		
+		public Movement(Set<Creature> creatures)
+		{
+			_creatures = creatures;
+		}
+		
+		@Override
+		public void run()
+		{
+			_creatures.removeIf(Creature::updatePosition);
+		}
 	}
 	
 	/**
 	 * Add a Creature to moving objects of MovementTaskManager.
 	 * @param creature The Creature to add to moving objects of MovementTaskManager.
 	 */
-	public void registerMovingObject(Creature creature)
+	public synchronized void registerMovingObject(Creature creature)
 	{
-		if (creature == null)
+		for (Set<Creature> pool : POOLS)
 		{
-			return;
+			if (pool.contains(creature))
+			{
+				return;
+			}
 		}
 		
-		MOVING_OBJECTS.add(creature);
-	}
-	
-	@Override
-	public void run()
-	{
-		while (true)
+		for (Set<Creature> pool : POOLS)
 		{
-			try
+			if (pool.size() < POOL_SIZE)
 			{
-				MOVING_OBJECTS.removeIf(Creature::updatePosition);
-				Thread.sleep(100);
-			}
-			catch (InterruptedException e)
-			{
-				// Ignore.
+				pool.add(creature);
+				return;
 			}
 		}
+		
+		final Set<Creature> pool = ConcurrentHashMap.newKeySet(POOL_SIZE);
+		pool.add(creature);
+		ThreadPool.scheduleAtFixedRate(new Movement(pool), TASK_DELAY, TASK_DELAY);
+		POOLS.add(pool);
 	}
 	
 	public static final MovementTaskManager getInstance()
