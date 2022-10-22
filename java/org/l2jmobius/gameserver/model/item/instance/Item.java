@@ -2161,7 +2161,7 @@ public class Item extends WorldObject
 			}
 			else if (id != 0)
 			{
-				LOGGER.log(Level.INFO, "applyEnchantStats: Couldn't find option: " + id);
+				LOGGER.info("Item applyEnchantStats could not find option " + id + " " + this + " " + player);
 			}
 		}
 	}
