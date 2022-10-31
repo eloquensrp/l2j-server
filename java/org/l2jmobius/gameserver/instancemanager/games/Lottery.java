@@ -67,11 +67,6 @@ public class Lottery
 		}
 	}
 	
-	public static Lottery getInstance()
-	{
-		return SingletonHolder.INSTANCE;
-	}
-	
 	public int getId()
 	{
 		return _number;
@@ -185,8 +180,9 @@ public class Lottery
 				_enddate = finishtime.getTimeInMillis();
 			}
 			
-			ThreadPool.schedule(new stopSellingTickets(), _enddate - System.currentTimeMillis() - (10 * MINUTE));
-			ThreadPool.schedule(new finishLottery(), _enddate - System.currentTimeMillis());
+			final long endDate = _enddate - System.currentTimeMillis();
+			ThreadPool.schedule(new stopSellingTickets(), Math.max(endDate - (10 * MINUTE), 0));
+			ThreadPool.schedule(new finishLottery(), Math.max(endDate, 0));
 			
 			try (Connection con = DatabaseFactory.getConnection();
 				PreparedStatement ps = con.prepareStatement(INSERT_LOTTERY))
@@ -511,6 +507,11 @@ public class Lottery
 			LOGGER.log(Level.WARNING, "Lottery: Could not check lottery ticket #" + id + ": " + e.getMessage(), e);
 		}
 		return res;
+	}
+	
+	public static Lottery getInstance()
+	{
+		return SingletonHolder.INSTANCE;
 	}
 	
 	private static class SingletonHolder
