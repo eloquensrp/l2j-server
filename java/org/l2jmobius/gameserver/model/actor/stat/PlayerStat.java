@@ -204,7 +204,7 @@ public class PlayerStat extends PlayableStat
 			sm = new SystemMessage(SystemMessageId.YOU_HAVE_EARNED_S1_EXPERIENCE);
 			sm.addLong(finalExp);
 		}
-		else
+		else if ((finalExp > 0) || (finalSp > 0))
 		{
 			if ((addToExp - baseExp) > 0)
 			{
