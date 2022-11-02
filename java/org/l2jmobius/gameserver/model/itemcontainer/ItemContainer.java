@@ -534,15 +534,20 @@ public abstract class ItemContainer
 	 */
 	public void deleteMe()
 	{
-		if (getOwner() != null)
+		if ((this instanceof PlayerInventory) || (this instanceof PlayerWarehouse) || (getOwner() != null))
 		{
 			for (Item item : _items)
 			{
 				item.updateDatabase(true);
 				item.stopAllTasks();
-				World.getInstance().removeObject(item);
 			}
 		}
+		
+		for (Item item : _items)
+		{
+			World.getInstance().removeObject(item);
+		}
+		
 		_items.clear();
 	}
 	
