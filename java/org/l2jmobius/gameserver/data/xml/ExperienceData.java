@@ -70,9 +70,9 @@ public class ExperienceData implements IXmlReader
 		{
 			MAX_LEVEL = Config.PLAYER_MAXIMUM_LEVEL;
 		}
-		if (MAX_PET_LEVEL > MAX_LEVEL)
+		if (MAX_PET_LEVEL > (MAX_LEVEL + 1))
 		{
-			MAX_PET_LEVEL = MAX_LEVEL; // Pet level should not exceed owner level.
+			MAX_PET_LEVEL = (byte) (MAX_LEVEL + 1); // Pet level should not exceed owner level.
 		}
 		
 		int maxLevel = 0;

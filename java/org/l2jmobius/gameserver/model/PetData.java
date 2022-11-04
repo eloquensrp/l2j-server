@@ -40,6 +40,7 @@ public class PetData
 	private int _load = 20000;
 	private int _hungryLimit = 1;
 	private int _minLevel = Byte.MAX_VALUE;
+	private int _maxLevel = 0;
 	private boolean _syncLevel = false;
 	private final Set<Integer> _food = new HashSet<>();
 	
@@ -74,6 +75,10 @@ public class PetData
 		if (_minLevel > level)
 		{
 			_minLevel = level;
+		}
+		if (_maxLevel < level)
+		{
+			_maxLevel = level;
 		}
 		_levelStats.put(level, data);
 	}
@@ -117,6 +122,14 @@ public class PetData
 	public int getMinLevel()
 	{
 		return _minLevel;
+	}
+	
+	/**
+	 * @return the pet's maximum level.
+	 */
+	public int getMaxLevel()
+	{
+		return _maxLevel;
 	}
 	
 	/**
@@ -172,7 +185,6 @@ public class PetData
 	}
 	
 	/**
-	 * TODO: Simplify this.
 	 * @param skillId the skill Id.
 	 * @param petLvl the pet level.
 	 * @return the level of the skill for the given skill Id and pet level.
@@ -180,17 +192,19 @@ public class PetData
 	public int getAvailableLevel(int skillId, int petLvl)
 	{
 		int lvl = 0;
+		boolean found = false;
 		for (PetSkillLearn temp : _skills)
 		{
 			if (temp.getSkillId() != skillId)
 			{
 				continue;
 			}
+			found = true;
 			if (temp.getSkillLevel() == 0)
 			{
 				if (petLvl < 70)
 				{
-					lvl = petLvl / 10;
+					lvl = (petLvl / 10);
 					if (lvl <= 0)
 					{
 						lvl = 1;
@@ -198,7 +212,7 @@ public class PetData
 				}
 				else
 				{
-					lvl = 7 + ((petLvl - 70) / 5);
+					lvl = (7 + ((petLvl - 70) / 5));
 				}
 				
 				// formula usable for skill that have 10 or more skill levels
@@ -209,10 +223,14 @@ public class PetData
 				}
 				break;
 			}
-			if ((temp.getMinLevel() <= petLvl) && (temp.getSkillLevel() > lvl))
+			else if ((temp.getMinLevel() <= petLvl) && (temp.getSkillLevel() > lvl))
 			{
 				lvl = temp.getSkillLevel();
 			}
+		}
+		if (found && (lvl == 0))
+		{
+			return 1;
 		}
 		return lvl;
 	}

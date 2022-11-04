@@ -313,8 +313,9 @@ public class PlayerStat extends PlayableStat
 			final Pet pet = (Pet) getActiveChar().getSummon();
 			if (pet.getPetData().isSynchLevel() && (pet.getLevel() != getLevel()))
 			{
-				pet.getStat().setLevel(getLevel());
-				pet.getStat().getExpForLevel(getActiveChar().getLevel());
+				final byte availableLevel = (byte) Math.min(pet.getPetData().getMaxLevel(), getLevel());
+				pet.getStat().setLevel(availableLevel);
+				pet.getStat().getExpForLevel(availableLevel);
 				pet.setCurrentHp(pet.getMaxHp());
 				pet.setCurrentMp(pet.getMaxMp());
 				pet.broadcastPacket(new SocialAction(getActiveChar().getObjectId(), SocialAction.LEVEL_UP));

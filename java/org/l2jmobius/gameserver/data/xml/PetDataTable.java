@@ -174,7 +174,15 @@ public class PetDataTable implements IXmlReader
 	public PetLevelData getPetLevelData(int petId, int petLevel)
 	{
 		final PetData pd = getPetData(petId);
-		return pd != null ? pd.getPetLevelData(petLevel) : null;
+		if (pd != null)
+		{
+			if (petLevel > pd.getMaxLevel())
+			{
+				return pd.getPetLevelData(pd.getMaxLevel());
+			}
+			return pd.getPetLevelData(petLevel);
+		}
+		return null;
 	}
 	
 	/**
