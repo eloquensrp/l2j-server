@@ -19,11 +19,10 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.templates.PlayerTemplate;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class NewCharacterSuccess implements IClientOutgoingPacket
+public class NewCharacterSuccess extends ServerPacket
 {
 	private final List<PlayerTemplate> _chars = new ArrayList<>();
 	
@@ -33,10 +32,10 @@ public class NewCharacterSuccess implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.NEW_CHARACTER_SUCCESS.writeId(packet);
-		packet.writeD(_chars.size());
+		ServerPackets.NEW_CHARACTER_SUCCESS.writeId(this);
+		writeInt(_chars.size());
 		for (PlayerTemplate chr : _chars)
 		{
 			if (chr == null)
@@ -44,27 +43,26 @@ public class NewCharacterSuccess implements IClientOutgoingPacket
 				continue;
 			}
 			// TODO: Unhardcode these
-			packet.writeD(chr.getRace().ordinal());
-			packet.writeD(chr.getClassId().getId());
-			packet.writeD(0x46);
-			packet.writeD(chr.getBaseSTR());
-			packet.writeD(0x0A);
-			packet.writeD(0x46);
-			packet.writeD(chr.getBaseDEX());
-			packet.writeD(0x0A);
-			packet.writeD(0x46);
-			packet.writeD(chr.getBaseCON());
-			packet.writeD(0x0A);
-			packet.writeD(0x46);
-			packet.writeD(chr.getBaseINT());
-			packet.writeD(0x0A);
-			packet.writeD(0x46);
-			packet.writeD(chr.getBaseWIT());
-			packet.writeD(0x0A);
-			packet.writeD(0x46);
-			packet.writeD(chr.getBaseMEN());
-			packet.writeD(0x0A);
+			writeInt(chr.getRace().ordinal());
+			writeInt(chr.getClassId().getId());
+			writeInt(0x46);
+			writeInt(chr.getBaseSTR());
+			writeInt(0x0A);
+			writeInt(0x46);
+			writeInt(chr.getBaseDEX());
+			writeInt(0x0A);
+			writeInt(0x46);
+			writeInt(chr.getBaseCON());
+			writeInt(0x0A);
+			writeInt(0x46);
+			writeInt(chr.getBaseINT());
+			writeInt(0x0A);
+			writeInt(0x46);
+			writeInt(chr.getBaseWIT());
+			writeInt(0x0A);
+			writeInt(0x46);
+			writeInt(chr.getBaseMEN());
+			writeInt(0x0A);
 		}
-		return true;
 	}
 }

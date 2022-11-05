@@ -18,16 +18,15 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.instancemanager.FortSiegeManager;
 import org.l2jmobius.gameserver.model.FortSiegeSpawn;
 import org.l2jmobius.gameserver.model.siege.Fort;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExShowFortressSiegeInfo implements IClientOutgoingPacket
+public class ExShowFortressSiegeInfo extends ServerPacket
 {
 	private final int _fortId;
 	private final int _size;
@@ -47,11 +46,11 @@ public class ExShowFortressSiegeInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SHOW_FORTRESS_SIEGE_INFO.writeId(packet);
-		packet.writeD(_fortId); // Fortress Id
-		packet.writeD(_size); // Total Barracks Count
+		ServerPackets.EX_SHOW_FORTRESS_SIEGE_INFO.writeId(this);
+		writeInt(_fortId); // Fortress Id
+		writeInt(_size); // Total Barracks Count
 		if (_csize > 0)
 		{
 			switch (_csize)
@@ -62,22 +61,22 @@ public class ExShowFortressSiegeInfo implements IClientOutgoingPacket
 					{
 						case 0:
 						{
-							packet.writeD(3);
+							writeInt(3);
 							break;
 						}
 						case 1:
 						{
-							packet.writeD(2);
+							writeInt(2);
 							break;
 						}
 						case 2:
 						{
-							packet.writeD(1);
+							writeInt(1);
 							break;
 						}
 						case 3:
 						{
-							packet.writeD(0);
+							writeInt(0);
 							break;
 						}
 					}
@@ -87,30 +86,30 @@ public class ExShowFortressSiegeInfo implements IClientOutgoingPacket
 				{
 					switch (_csize2)
 					{
-						// TODO: once control room supported, update packet.writeD(0x0x) to support 5th room
+						// TODO: once control room supported, update writeInt(0x0x) to support 5th room
 						case 0:
 						{
-							packet.writeD(5);
+							writeInt(5);
 							break;
 						}
 						case 1:
 						{
-							packet.writeD(4);
+							writeInt(4);
 							break;
 						}
 						case 2:
 						{
-							packet.writeD(3);
+							writeInt(3);
 							break;
 						}
 						case 3:
 						{
-							packet.writeD(2);
+							writeInt(2);
 							break;
 						}
 						case 4:
 						{
-							packet.writeD(1);
+							writeInt(1);
 							break;
 						}
 					}
@@ -122,9 +121,8 @@ public class ExShowFortressSiegeInfo implements IClientOutgoingPacket
 		{
 			for (int i = 0; i < _size; i++)
 			{
-				packet.writeD(0);
+				writeInt(0);
 			}
 		}
-		return true;
 	}
 }

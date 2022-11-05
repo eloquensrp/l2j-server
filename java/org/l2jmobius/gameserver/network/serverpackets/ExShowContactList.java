@@ -18,14 +18,13 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Set;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author UnAfraid, mrTJO
  */
-public class ExShowContactList implements IClientOutgoingPacket
+public class ExShowContactList extends ServerPacket
 {
 	private final Set<String> _contacts;
 	
@@ -35,14 +34,13 @@ public class ExShowContactList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_RECEIVE_SHOW_POST_FRIEND.writeId(packet);
-		packet.writeD(_contacts.size());
+		ServerPackets.EX_RECEIVE_SHOW_POST_FRIEND.writeId(this);
+		writeInt(_contacts.size());
 		for (String name : _contacts)
 		{
-			packet.writeS(name);
+			writeString(name);
 		}
-		return true;
 	}
 }

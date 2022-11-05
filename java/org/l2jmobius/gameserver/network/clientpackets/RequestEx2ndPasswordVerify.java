@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.SecondaryAuthData;
 import org.l2jmobius.gameserver.network.GameClient;
 
@@ -24,15 +24,14 @@ import org.l2jmobius.gameserver.network.GameClient;
  * Format: (ch)S S: numerical password
  * @author mrTJO
  */
-public class RequestEx2ndPasswordVerify implements IClientIncomingPacket
+public class RequestEx2ndPasswordVerify implements ClientPacket
 {
 	private String _password;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_password = packet.readS();
-		return true;
+		_password = packet.readString();
 	}
 	
 	@Override

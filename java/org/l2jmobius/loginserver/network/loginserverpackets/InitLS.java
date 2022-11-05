@@ -16,13 +16,13 @@
  */
 package org.l2jmobius.loginserver.network.loginserverpackets;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 import org.l2jmobius.loginserver.LoginServer;
 
 /**
  * @author -Wooden-
  */
-public class InitLS extends BaseSendablePacket
+public class InitLS extends WritablePacket
 {
 	// ID 0x00
 	// format
@@ -32,15 +32,9 @@ public class InitLS extends BaseSendablePacket
 	
 	public InitLS(byte[] publickey)
 	{
-		writeC(0x00);
-		writeD(LoginServer.PROTOCOL_REV);
-		writeD(publickey.length);
-		writeB(publickey);
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
+		writeByte(0x00);
+		writeInt(LoginServer.PROTOCOL_REV);
+		writeInt(publickey.length);
+		writeBytes(publickey);
 	}
 }

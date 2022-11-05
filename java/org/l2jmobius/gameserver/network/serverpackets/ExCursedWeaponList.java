@@ -18,13 +18,12 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author -Wooden-
  */
-public class ExCursedWeaponList implements IClientOutgoingPacket
+public class ExCursedWeaponList extends ServerPacket
 {
 	private final List<Integer> _cursedWeaponIds;
 	
@@ -34,14 +33,13 @@ public class ExCursedWeaponList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_CURSED_WEAPON_LIST.writeId(packet);
-		packet.writeD(_cursedWeaponIds.size());
+		ServerPackets.EX_CURSED_WEAPON_LIST.writeId(this);
+		writeInt(_cursedWeaponIds.size());
 		for (int i : _cursedWeaponIds)
 		{
-			packet.writeD(i);
+			writeInt(i);
 		}
-		return true;
 	}
 }

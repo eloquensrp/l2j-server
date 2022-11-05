@@ -16,23 +16,17 @@
  */
 package org.l2jmobius.loginserver.network.loginserverpackets;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author -Wooden-
  */
-public class PlayerAuthResponse extends BaseSendablePacket
+public class PlayerAuthResponse extends WritablePacket
 {
 	public PlayerAuthResponse(String account, boolean response)
 	{
-		writeC(0x03);
-		writeS(account);
-		writeC(response ? 1 : 0);
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
+		writeByte(0x03);
+		writeString(account);
+		writeByte(response ? 1 : 0);
 	}
 }

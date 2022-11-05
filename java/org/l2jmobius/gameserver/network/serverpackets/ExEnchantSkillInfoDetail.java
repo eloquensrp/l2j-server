@@ -17,18 +17,17 @@
 package org.l2jmobius.gameserver.network.serverpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.xml.EnchantSkillGroupsData;
 import org.l2jmobius.gameserver.model.EnchantSkillGroup.EnchantSkillHolder;
 import org.l2jmobius.gameserver.model.EnchantSkillLearn;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.itemcontainer.Inventory;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExEnchantSkillInfoDetail implements IClientOutgoingPacket
+public class ExEnchantSkillInfoDetail extends ServerPacket
 {
 	private static final int TYPE_NORMAL_ENCHANT = 0;
 	private static final int TYPE_SAFE_ENCHANT = 1;
@@ -36,7 +35,7 @@ public class ExEnchantSkillInfoDetail implements IClientOutgoingPacket
 	private static final int TYPE_CHANGE_ENCHANT = 3;
 	
 	private int bookId = 0;
-	private int reqCount = 0;
+	private boolean reqCount = false;
 	private int multi = 1;
 	private final int _type;
 	private final int _skillId;
@@ -88,25 +87,25 @@ public class ExEnchantSkillInfoDetail implements IClientOutgoingPacket
 			case TYPE_NORMAL_ENCHANT:
 			{
 				bookId = EnchantSkillGroupsData.NORMAL_ENCHANT_BOOK;
-				reqCount = (((_skillLevel % 100) > 1) ? 0 : 1);
+				reqCount = (_skillLevel % 100) < 2;
 				break;
 			}
 			case TYPE_SAFE_ENCHANT:
 			{
 				bookId = EnchantSkillGroupsData.SAFE_ENCHANT_BOOK;
-				reqCount = 1;
+				reqCount = true;
 				break;
 			}
 			case TYPE_UNTRAIN_ENCHANT:
 			{
 				bookId = EnchantSkillGroupsData.UNTRAIN_ENCHANT_BOOK;
-				reqCount = 1;
+				reqCount = true;
 				break;
 			}
 			case TYPE_CHANGE_ENCHANT:
 			{
 				bookId = EnchantSkillGroupsData.CHANGE_ENCHANT_BOOK;
-				reqCount = 1;
+				reqCount = true;
 				break;
 			}
 			default:
@@ -116,24 +115,23 @@ public class ExEnchantSkillInfoDetail implements IClientOutgoingPacket
 		}
 		if ((type != TYPE_SAFE_ENCHANT) && !Config.ES_SP_BOOK_NEEDED)
 		{
-			reqCount = 0;
+			reqCount = false;
 		}
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_ENCHANT_SKILL_INFO_DETAIL.writeId(packet);
-		packet.writeD(_type);
-		packet.writeD(_skillId);
-		packet.writeD(_skillLevel);
-		packet.writeD(_sp * multi); // sp
-		packet.writeD(_chance); // exp
-		packet.writeD(2); // items count?
-		packet.writeD(Inventory.ADENA_ID); // Adena
-		packet.writeD(_adenacount); // Adena count
-		packet.writeD(bookId); // ItemId Required
-		packet.writeD(reqCount);
-		return true;
+		ServerPackets.EX_ENCHANT_SKILL_INFO_DETAIL.writeId(this);
+		writeInt(_type);
+		writeInt(_skillId);
+		writeInt(_skillLevel);
+		writeInt(_sp * multi); // sp
+		writeInt(_chance); // exp
+		writeInt(2); // items count?
+		writeInt(Inventory.ADENA_ID); // Adena
+		writeInt(_adenacount); // Adena count
+		writeInt(bookId); // ItemId Required
+		writeInt(reqCount);
 	}
 }

@@ -16,21 +16,20 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 
-public class RequestAnswerJoinAlly implements IClientIncomingPacket
+public class RequestAnswerJoinAlly implements ClientPacket
 {
 	private int _response;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_response = packet.readD();
-		return true;
+		_response = packet.readInt();
 	}
 	
 	@Override

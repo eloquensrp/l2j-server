@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.VehiclePathPoint;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ExAirShipTeleportList implements IClientOutgoingPacket
+public class ExAirShipTeleportList extends ServerPacket
 {
 	private final int _dockId;
 	private final VehiclePathPoint[][] _teleports;
@@ -34,30 +33,29 @@ public class ExAirShipTeleportList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_AIRSHIP_TELEPORT_LIST.writeId(packet);
-		packet.writeD(_dockId);
+		ServerPackets.EX_AIRSHIP_TELEPORT_LIST.writeId(this);
+		writeInt(_dockId);
 		if (_teleports != null)
 		{
-			packet.writeD(_teleports.length);
+			writeInt(_teleports.length);
 			VehiclePathPoint[] path;
 			VehiclePathPoint dst;
 			for (int i = 0; i < _teleports.length; i++)
 			{
-				packet.writeD(i - 1);
-				packet.writeD(_fuelConsumption[i]);
+				writeInt(i - 1);
+				writeInt(_fuelConsumption[i]);
 				path = _teleports[i];
 				dst = path[path.length - 1];
-				packet.writeD(dst.getX());
-				packet.writeD(dst.getY());
-				packet.writeD(dst.getZ());
+				writeInt(dst.getX());
+				writeInt(dst.getY());
+				writeInt(dst.getZ());
 			}
 		}
 		else
 		{
-			packet.writeD(0);
+			writeInt(0);
 		}
-		return true;
 	}
 }

@@ -19,15 +19,14 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.Calendar;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.sql.ClanTable;
 import org.l2jmobius.gameserver.instancemanager.CHSiegeManager;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.model.residences.ClanHall;
 import org.l2jmobius.gameserver.model.siege.Castle;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
 import org.l2jmobius.gameserver.network.PacketLogger;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Shows the Siege Info<br>
@@ -45,7 +44,7 @@ import org.l2jmobius.gameserver.network.PacketLogger;
  * d = (UNKNOW) Siege Time Select Related?
  * @author KenM
  */
-public class SiegeInfo implements IClientOutgoingPacket
+public class SiegeInfo extends ServerPacket
 {
 	private Castle _castle;
 	private ClanHall _hall;
@@ -64,24 +63,24 @@ public class SiegeInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.CASTLE_SIEGE_INFO.writeId(packet);
+		ServerPackets.CASTLE_SIEGE_INFO.writeId(this);
 		if (_castle != null)
 		{
-			packet.writeD(_castle.getResidenceId());
+			writeInt(_castle.getResidenceId());
 			final int ownerId = _castle.getOwnerId();
-			packet.writeD(((ownerId == _player.getClanId()) && (_player.isClanLeader())) ? 1 : 0);
-			packet.writeD(ownerId);
+			writeInt((ownerId == _player.getClanId()) && (_player.isClanLeader()));
+			writeInt(ownerId);
 			if (ownerId > 0)
 			{
 				final Clan owner = ClanTable.getInstance().getClan(ownerId);
 				if (owner != null)
 				{
-					packet.writeS(owner.getName()); // Clan Name
-					packet.writeS(owner.getLeaderName()); // Clan Leader Name
-					packet.writeD(owner.getAllyId()); // Ally ID
-					packet.writeS(owner.getAllyName()); // Ally Name
+					writeString(owner.getName()); // Clan Name
+					writeString(owner.getLeaderName()); // Clan Leader Name
+					writeInt(owner.getAllyId()); // Ally ID
+					writeString(owner.getAllyName()); // Ally Name
 				}
 				else
 				{
@@ -90,47 +89,47 @@ public class SiegeInfo implements IClientOutgoingPacket
 			}
 			else
 			{
-				packet.writeS(""); // Clan Name
-				packet.writeS(""); // Clan Leader Name
-				packet.writeD(0); // Ally ID
-				packet.writeS(""); // Ally Name
+				writeString(""); // Clan Name
+				writeString(""); // Clan Leader Name
+				writeInt(0); // Ally ID
+				writeString(""); // Ally Name
 			}
-			packet.writeD((int) (System.currentTimeMillis() / 1000));
+			writeInt((int) (System.currentTimeMillis() / 1000));
 			if (!_castle.isTimeRegistrationOver() && _player.isClanLeader() && (_player.getClanId() == _castle.getOwnerId()))
 			{
 				final Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(_castle.getSiegeDate().getTimeInMillis());
 				cal.set(Calendar.MINUTE, 0);
 				cal.set(Calendar.SECOND, 0);
-				packet.writeD(0);
-				packet.writeD(Config.SIEGE_HOUR_LIST.size());
+				writeInt(0);
+				writeInt(Config.SIEGE_HOUR_LIST.size());
 				for (int hour : Config.SIEGE_HOUR_LIST)
 				{
 					cal.set(Calendar.HOUR_OF_DAY, hour);
-					packet.writeD((int) (cal.getTimeInMillis() / 1000));
+					writeInt((int) (cal.getTimeInMillis() / 1000));
 				}
 			}
 			else
 			{
-				packet.writeD((int) (_castle.getSiegeDate().getTimeInMillis() / 1000));
-				packet.writeD(0);
+				writeInt((int) (_castle.getSiegeDate().getTimeInMillis() / 1000));
+				writeInt(0);
 			}
 		}
 		else
 		{
-			packet.writeD(_hall.getId());
+			writeInt(_hall.getId());
 			final int ownerId = _hall.getOwnerId();
-			packet.writeD(((ownerId == _player.getClanId()) && (_player.isClanLeader())) ? 1 : 0);
-			packet.writeD(ownerId);
+			writeInt(((ownerId == _player.getClanId()) && (_player.isClanLeader())));
+			writeInt(ownerId);
 			if (ownerId > 0)
 			{
 				final Clan owner = ClanTable.getInstance().getClan(ownerId);
 				if (owner != null)
 				{
-					packet.writeS(owner.getName()); // Clan Name
-					packet.writeS(owner.getLeaderName()); // Clan Leader Name
-					packet.writeD(owner.getAllyId()); // Ally ID
-					packet.writeS(owner.getAllyName()); // Ally Name
+					writeString(owner.getName()); // Clan Name
+					writeString(owner.getLeaderName()); // Clan Leader Name
+					writeInt(owner.getAllyId()); // Ally ID
+					writeString(owner.getAllyName()); // Ally Name
 				}
 				else
 				{
@@ -139,15 +138,14 @@ public class SiegeInfo implements IClientOutgoingPacket
 			}
 			else
 			{
-				packet.writeS(""); // Clan Name
-				packet.writeS(""); // Clan Leader Name
-				packet.writeD(0); // Ally ID
-				packet.writeS(""); // Ally Name
+				writeString(""); // Clan Name
+				writeString(""); // Clan Leader Name
+				writeInt(0); // Ally ID
+				writeString(""); // Ally Name
 			}
-			packet.writeD((int) (System.currentTimeMillis() / 1000));
-			packet.writeD((int) ((CHSiegeManager.getInstance().getSiegableHall(_hall.getId()).getNextSiegeTime()) / 1000));
-			packet.writeD(0); // number of choices?
+			writeInt((int) (System.currentTimeMillis() / 1000));
+			writeInt((int) ((CHSiegeManager.getInstance().getSiegableHall(_hall.getId()).getNextSiegeTime()) / 1000));
+			writeInt(0); // number of choices?
 		}
-		return true;
 	}
 }

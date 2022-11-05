@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.ItemTable;
 import org.l2jmobius.gameserver.instancemanager.CastleManorManager;
 import org.l2jmobius.gameserver.model.CropProcure;
@@ -38,36 +38,35 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 /**
  * @author l3x
  */
-public class RequestProcureCropList implements IClientIncomingPacket
+public class RequestProcureCropList implements ClientPacket
 {
 	private static final int BATCH_LENGTH = 20; // length of the one item
 	
 	private List<CropHolder> _items = null;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		final int count = packet.readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getReadableBytes()))
+		final int count = packet.readInt();
+		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getRemainingLength()))
 		{
-			return false;
+			return;
 		}
 		
 		_items = new ArrayList<>(count);
 		for (int i = 0; i < count; i++)
 		{
-			final int objId = packet.readD();
-			final int itemId = packet.readD();
-			final int manorId = packet.readD();
-			final long cnt = packet.readQ();
+			final int objId = packet.readInt();
+			final int itemId = packet.readInt();
+			final int manorId = packet.readInt();
+			final long cnt = packet.readLong();
 			if ((objId < 1) || (itemId < 1) || (manorId < 0) || (cnt < 0))
 			{
 				_items = null;
-				return false;
+				return;
 			}
 			_items.add(new CropHolder(objId, itemId, cnt, manorId));
 		}
-		return true;
 	}
 	
 	@Override

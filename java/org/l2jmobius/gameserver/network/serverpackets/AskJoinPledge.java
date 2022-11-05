@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class AskJoinPledge implements IClientOutgoingPacket
+public class AskJoinPledge extends ServerPacket
 {
 	private final int _requestorObjId;
 	private final String _subPledgeName;
@@ -35,19 +34,18 @@ public class AskJoinPledge implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.ASK_JOIN_PLEDGE.writeId(packet);
-		packet.writeD(_requestorObjId);
+		ServerPackets.ASK_JOIN_PLEDGE.writeId(this);
+		writeInt(_requestorObjId);
 		if (_subPledgeName != null)
 		{
-			packet.writeS(_pledgeType > 0 ? _subPledgeName : _pledgeName);
+			writeString(_pledgeType > 0 ? _subPledgeName : _pledgeName);
 		}
 		if (_pledgeType != 0)
 		{
-			packet.writeD(_pledgeType);
+			writeInt(_pledgeType);
 		}
-		packet.writeS(_pledgeName);
-		return true;
+		writeString(_pledgeName);
 	}
 }

@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class TradeOtherDone implements IClientOutgoingPacket
+public class TradeOtherDone extends ServerPacket
 {
 	public static final TradeOtherDone STATIC_PACKET = new TradeOtherDone();
 	
@@ -28,9 +27,8 @@ public class TradeOtherDone implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.TRADE_PRESS_OTHER_OK.writeId(packet);
-		return true;
+		ServerPackets.TRADE_PRESS_OTHER_OK.writeId(this);
 	}
 }

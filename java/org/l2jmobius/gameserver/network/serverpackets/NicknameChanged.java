@@ -16,14 +16,13 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Creature;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author devScarlet
  */
-public class NicknameChanged implements IClientOutgoingPacket
+public class NicknameChanged extends ServerPacket
 {
 	private final String _title;
 	private final int _objectId;
@@ -35,11 +34,10 @@ public class NicknameChanged implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.NICK_NAME_CHANGED.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeS(_title);
-		return true;
+		ServerPackets.NICK_NAME_CHANGED.writeId(this);
+		writeInt(_objectId);
+		writeString(_title);
 	}
 }

@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.AdminData;
 import org.l2jmobius.gameserver.enums.PlayerCondOverride;
 import org.l2jmobius.gameserver.enums.PrivateStoreType;
@@ -40,7 +40,7 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * @version $Revision: 1.11.2.1.2.7 $ $Date: 2005/04/02 21:25:21 $
  */
-public class RequestDropItem implements IClientIncomingPacket
+public class RequestDropItem implements ClientPacket
 {
 	private int _objectId;
 	private long _count;
@@ -49,14 +49,13 @@ public class RequestDropItem implements IClientIncomingPacket
 	private int _z;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_objectId = packet.readD();
-		_count = packet.readQ();
-		_x = packet.readD();
-		_y = packet.readD();
-		_z = packet.readD();
-		return true;
+		_objectId = packet.readInt();
+		_count = packet.readLong();
+		_x = packet.readInt();
+		_y = packet.readInt();
+		_z = packet.readInt();
 	}
 	
 	@Override

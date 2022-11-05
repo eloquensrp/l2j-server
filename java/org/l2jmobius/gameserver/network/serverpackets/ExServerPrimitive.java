@@ -20,16 +20,15 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.interfaces.ILocational;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * A packet used to draw points and lines on client.<br/>
  * <b>Note:</b> Names in points and lines are bugged they will appear even when not looking at them.
  * @author NosBit
  */
-public class ExServerPrimitive implements IClientOutgoingPacket
+public class ExServerPrimitive extends ServerPacket
 {
 	private final String _name;
 	private final int _x;
@@ -382,46 +381,45 @@ public class ExServerPrimitive implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SERVER_PRIMITIVE.writeId(packet);
-		packet.writeS(_name);
-		packet.writeD(_x);
-		packet.writeD(_y);
-		packet.writeD(_z);
-		packet.writeD(65535); // has to do something with display range and angle
-		packet.writeD(65535); // has to do something with display range and angle
-		packet.writeD(_points.size() + _lines.size());
+		ServerPackets.EX_SERVER_PRIMITIVE.writeId(this);
+		writeString(_name);
+		writeInt(_x);
+		writeInt(_y);
+		writeInt(_z);
+		writeInt(65535); // has to do something with display range and angle
+		writeInt(65535); // has to do something with display range and angle
+		writeInt(_points.size() + _lines.size());
 		for (Point point : _points)
 		{
-			packet.writeC(1); // Its the type in this case Point
-			packet.writeS(point.getName());
+			writeByte(1); // Its the type in this case Point
+			writeString(point.getName());
 			final int color = point.getColor();
-			packet.writeD((color >> 16) & 0xFF); // R
-			packet.writeD((color >> 8) & 0xFF); // G
-			packet.writeD(color & 0xFF); // B
-			packet.writeD(point.isNameColored() ? 1 : 0);
-			packet.writeD(point.getX());
-			packet.writeD(point.getY());
-			packet.writeD(point.getZ());
+			writeInt((color >> 16) & 0xFF); // R
+			writeInt((color >> 8) & 0xFF); // G
+			writeInt(color & 0xFF); // B
+			writeInt(point.isNameColored());
+			writeInt(point.getX());
+			writeInt(point.getY());
+			writeInt(point.getZ());
 		}
 		for (Line line : _lines)
 		{
-			packet.writeC(2); // Its the type in this case Line
-			packet.writeS(line.getName());
+			writeByte(2); // Its the type in this case Line
+			writeString(line.getName());
 			final int color = line.getColor();
-			packet.writeD((color >> 16) & 0xFF); // R
-			packet.writeD((color >> 8) & 0xFF); // G
-			packet.writeD(color & 0xFF); // B
-			packet.writeD(line.isNameColored() ? 1 : 0);
-			packet.writeD(line.getX());
-			packet.writeD(line.getY());
-			packet.writeD(line.getZ());
-			packet.writeD(line.getX2());
-			packet.writeD(line.getY2());
-			packet.writeD(line.getZ2());
+			writeInt((color >> 16) & 0xFF); // R
+			writeInt((color >> 8) & 0xFF); // G
+			writeInt(color & 0xFF); // B
+			writeInt(line.isNameColored());
+			writeInt(line.getX());
+			writeInt(line.getY());
+			writeInt(line.getZ());
+			writeInt(line.getX2());
+			writeInt(line.getY2());
+			writeInt(line.getZ2());
 		}
-		return true;
 	}
 	
 	private static class Point

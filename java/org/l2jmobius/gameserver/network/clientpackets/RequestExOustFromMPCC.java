@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -27,15 +27,14 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
  * D0 0F 00 5A 00 77 00 65 00 72 00 67 00 00 00
  * @author -Wooden-
  */
-public class RequestExOustFromMPCC implements IClientIncomingPacket
+public class RequestExOustFromMPCC implements ClientPacket
 {
 	private String _name;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_name = packet.readS();
-		return true;
+		_name = packet.readString();
 	}
 	
 	@Override

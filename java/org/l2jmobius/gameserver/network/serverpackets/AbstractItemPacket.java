@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.ItemInfo;
 import org.l2jmobius.gameserver.model.TradeItem;
 import org.l2jmobius.gameserver.model.item.instance.Item;
@@ -25,65 +24,65 @@ import org.l2jmobius.gameserver.model.itemcontainer.PlayerInventory;
 /**
  * @author UnAfraid
  */
-public abstract class AbstractItemPacket implements IClientOutgoingPacket
+public abstract class AbstractItemPacket extends ServerPacket
 {
-	protected void writeItem(PacketWriter packet, TradeItem item)
+	protected void writeItem(TradeItem item)
 	{
-		writeItem(packet, new ItemInfo(item));
+		writeItem(new ItemInfo(item));
 	}
 	
-	protected void writeItem(PacketWriter packet, Item item)
+	protected void writeItem(Item item)
 	{
-		writeItem(packet, new ItemInfo(item));
+		writeItem(new ItemInfo(item));
 	}
 	
-	protected void writeItem(PacketWriter packet, ItemInfo item)
+	protected void writeItem(ItemInfo item)
 	{
-		packet.writeD(item.getObjectId()); // ObjectId
-		packet.writeD(item.getItem().getDisplayId()); // ItemId
-		packet.writeD(item.getLocation()); // T1
-		packet.writeQ(item.getCount()); // Quantity
-		packet.writeH(item.getItem().getType2()); // Item Type 2 : 00-weapon, 01-shield/armor, 02-ring/earring/necklace, 03-questitem, 04-adena, 05-item
-		packet.writeH(item.getCustomType1()); // Filler (always 0)
-		packet.writeH(item.getEquipped()); // Equipped : 00-No, 01-yes
-		packet.writeD(item.getItem().getBodyPart()); // Slot : 0006-lr.ear, 0008-neck, 0030-lr.finger, 0040-head, 0100-l.hand, 0200-gloves, 0400-chest, 0800-pants, 1000-feet, 4000-r.hand, 8000-r.hand
-		packet.writeH(item.getEnchant()); // Enchant level (pet level shown in control item)
-		packet.writeH(item.getCustomType2()); // Pet name exists or not shown in control item
-		packet.writeD(item.getAugmentationBonus());
-		packet.writeD(item.getMana());
-		packet.writeD(item.getTime());
-		writeItemElementalAndEnchant(packet, item);
+		writeInt(item.getObjectId()); // ObjectId
+		writeInt(item.getItem().getDisplayId()); // ItemId
+		writeInt(item.getLocation()); // T1
+		writeLong(item.getCount()); // Quantity
+		writeShort(item.getItem().getType2()); // Item Type 2 : 00-weapon, 01-shield/armor, 02-ring/earring/necklace, 03-questitem, 04-adena, 05-item
+		writeShort(item.getCustomType1()); // Filler (always 0)
+		writeShort(item.getEquipped()); // Equipped : 00-No, 01-yes
+		writeInt(item.getItem().getBodyPart()); // Slot : 0006-lr.ear, 0008-neck, 0030-lr.finger, 0040-head, 0100-l.hand, 0200-gloves, 0400-chest, 0800-pants, 1000-feet, 4000-r.hand, 8000-r.hand
+		writeShort(item.getEnchant()); // Enchant level (pet level shown in control item)
+		writeShort(item.getCustomType2()); // Pet name exists or not shown in control item
+		writeInt(item.getAugmentationBonus());
+		writeInt(item.getMana());
+		writeInt(item.getTime());
+		writeItemElementalAndEnchant(item);
 	}
 	
-	protected void writeItemElementalAndEnchant(PacketWriter packet, ItemInfo item)
+	protected void writeItemElementalAndEnchant(ItemInfo item)
 	{
-		packet.writeH(item.getAttackElementType());
-		packet.writeH(item.getAttackElementPower());
+		writeShort(item.getAttackElementType());
+		writeShort(item.getAttackElementPower());
 		for (byte i = 0; i < 6; i++)
 		{
-			packet.writeH(item.getElementDefAttr(i));
+			writeShort(item.getElementDefAttr(i));
 		}
 		// Enchant Effects
 		for (int op : item.getEnchantOptions())
 		{
-			packet.writeH(op);
+			writeShort(op);
 		}
 	}
 	
-	protected void writeInventoryBlock(PacketWriter packet, PlayerInventory inventory)
+	protected void writeInventoryBlock(PlayerInventory inventory)
 	{
 		if (inventory.hasInventoryBlock())
 		{
-			packet.writeH(inventory.getBlockItems().length);
-			packet.writeC(inventory.getBlockMode());
+			writeShort(inventory.getBlockItems().length);
+			writeByte(inventory.getBlockMode());
 			for (int i : inventory.getBlockItems())
 			{
-				packet.writeD(i);
+				writeInt(i);
 			}
 		}
 		else
 		{
-			packet.writeH(0);
+			writeShort(0);
 		}
 	}
 }

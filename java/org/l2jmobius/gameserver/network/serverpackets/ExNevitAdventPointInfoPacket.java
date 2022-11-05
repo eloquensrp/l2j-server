@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author mochitto
  */
-public class ExNevitAdventPointInfoPacket implements IClientOutgoingPacket
+public class ExNevitAdventPointInfoPacket extends ServerPacket
 {
 	private final int _points;
 	
@@ -32,10 +31,9 @@ public class ExNevitAdventPointInfoPacket implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_NAVIT_ADVENT_POINT_INFO.writeId(packet);
-		packet.writeD(_points); // 72 = 1%, max 7200 = 100%
-		return true;
+		ServerPackets.EX_NAVIT_ADVENT_POINT_INFO.writeId(this);
+		writeInt(_points); // 72 = 1%, max 7200 = 100%
 	}
 }

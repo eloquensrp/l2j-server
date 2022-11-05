@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Plim
  */
-public class PetitionVotePacket implements IClientOutgoingPacket
+public class PetitionVotePacket extends ServerPacket
 {
 	public static final PetitionVotePacket STATIC_PACKET = new PetitionVotePacket();
 	
@@ -31,9 +30,8 @@ public class PetitionVotePacket implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PETITION_VOTE.writeId(packet);
-		return true;
+		ServerPackets.PETITION_VOTE.writeId(this);
 	}
 }

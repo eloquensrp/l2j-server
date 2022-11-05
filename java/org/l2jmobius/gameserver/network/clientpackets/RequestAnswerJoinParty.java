@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.Party;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.partymatching.PartyMatchRoom;
@@ -27,15 +27,14 @@ import org.l2jmobius.gameserver.network.serverpackets.ExManagePartyRoomMember;
 import org.l2jmobius.gameserver.network.serverpackets.JoinParty;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 
-public class RequestAnswerJoinParty implements IClientIncomingPacket
+public class RequestAnswerJoinParty implements ClientPacket
 {
 	private int _response;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_response = packet.readD();
-		return true;
+		_response = packet.readInt();
 	}
 	
 	@Override

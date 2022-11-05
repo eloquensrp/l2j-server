@@ -16,17 +16,16 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author mrTJO
  */
-public class ExCubeGameRemovePlayer implements IClientOutgoingPacket
+public class ExCubeGameRemovePlayer extends ServerPacket
 {
-	Player _player;
-	boolean _isRedTeam;
+	private final Player _player;
+	private final boolean _isRedTeam;
 	
 	/**
 	 * Remove Player from Minigame Waiting List
@@ -40,13 +39,12 @@ public class ExCubeGameRemovePlayer implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BLOCK_UP_SET_LIST.writeId(packet);
-		packet.writeD(2);
-		packet.writeD(0xffffffff);
-		packet.writeD(_isRedTeam ? 1 : 0);
-		packet.writeD(_player.getObjectId());
-		return true;
+		ServerPackets.EX_BLOCK_UP_SET_LIST.writeId(this);
+		writeInt(2);
+		writeInt(0xffffffff);
+		writeInt(_isRedTeam);
+		writeInt(_player.getObjectId());
 	}
 }

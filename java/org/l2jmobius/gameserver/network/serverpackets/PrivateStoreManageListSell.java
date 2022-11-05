@@ -18,10 +18,9 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Collection;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.TradeItem;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 public class PrivateStoreManageListSell extends AbstractItemPacket
 {
@@ -42,28 +41,27 @@ public class PrivateStoreManageListSell extends AbstractItemPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PRIVATE_STORE_SELL_MANAGE_LIST.writeId(packet);
+		ServerPackets.PRIVATE_STORE_SELL_MANAGE_LIST.writeId(this);
 		// section 1
-		packet.writeD(_objId);
-		packet.writeD(_packageSale ? 1 : 0); // Package sell
-		packet.writeQ(_playerAdena);
+		writeInt(_objId);
+		writeInt(_packageSale); // Package sell
+		writeLong(_playerAdena);
 		// section2
-		packet.writeD(_itemList.size()); // for potential sells
+		writeInt(_itemList.size()); // for potential sells
 		for (TradeItem item : _itemList)
 		{
-			writeItem(packet, item);
-			packet.writeQ(item.getItem().getReferencePrice() * 2);
+			writeItem(item);
+			writeLong(item.getItem().getReferencePrice() * 2);
 		}
 		// section 3
-		packet.writeD(_sellList.size()); // count for any items already added for sell
+		writeInt(_sellList.size()); // count for any items already added for sell
 		for (TradeItem item : _sellList)
 		{
-			writeItem(packet, item);
-			packet.writeQ(item.getPrice());
-			packet.writeQ(item.getItem().getReferencePrice() * 2);
+			writeItem(item);
+			writeLong(item.getPrice());
+			writeLong(item.getItem().getReferencePrice() * 2);
 		}
-		return true;
 	}
 }

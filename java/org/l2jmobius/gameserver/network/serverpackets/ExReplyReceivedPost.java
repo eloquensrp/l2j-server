@@ -18,12 +18,11 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Collection;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.Message;
 import org.l2jmobius.gameserver.model.item.instance.Item;
 import org.l2jmobius.gameserver.model.itemcontainer.ItemContainer;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
 import org.l2jmobius.gameserver.network.PacketLogger;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Migi, DS
@@ -51,31 +50,30 @@ public class ExReplyReceivedPost extends AbstractItemPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_REPLY_RECEIVED_POST.writeId(packet);
-		packet.writeD(_msg.getId());
-		packet.writeD(_msg.isLocked() ? 1 : 0);
-		packet.writeD(0); // Unknown
-		packet.writeS(_msg.getSenderName());
-		packet.writeS(_msg.getSubject());
-		packet.writeS(_msg.getContent());
+		ServerPackets.EX_REPLY_RECEIVED_POST.writeId(this);
+		writeInt(_msg.getId());
+		writeInt(_msg.isLocked());
+		writeInt(0); // Unknown
+		writeString(_msg.getSenderName());
+		writeString(_msg.getSubject());
+		writeString(_msg.getContent());
 		if ((_items != null) && !_items.isEmpty())
 		{
-			packet.writeD(_items.size());
+			writeInt(_items.size());
 			for (Item item : _items)
 			{
-				writeItem(packet, item);
-				packet.writeD(item.getObjectId());
+				writeItem(item);
+				writeInt(item.getObjectId());
 			}
 		}
 		else
 		{
-			packet.writeD(0);
+			writeInt(0);
 		}
-		packet.writeQ(_msg.getReqAdena());
-		packet.writeD(_msg.hasAttachments() ? 1 : 0);
-		packet.writeD(_msg.getSendBySystem());
-		return true;
+		writeLong(_msg.getReqAdena());
+		writeInt(_msg.hasAttachments());
+		writeInt(_msg.getSendBySystem());
 	}
 }

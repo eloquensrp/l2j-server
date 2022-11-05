@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.network.clientpackets;
 import static org.l2jmobius.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.PrivateStoreType;
 import org.l2jmobius.gameserver.model.TradeList;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -36,7 +36,7 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * @version $Revision: 1.2.2.1.2.5 $ $Date: 2005/03/27 15:29:30 $
  */
-public class SetPrivateStoreListSell implements IClientIncomingPacket
+public class SetPrivateStoreListSell implements ClientPacket
 {
 	private static final int BATCH_LENGTH = 20; // length of the one item
 	
@@ -44,29 +44,28 @@ public class SetPrivateStoreListSell implements IClientIncomingPacket
 	private Item[] _items = null;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_packageSale = (packet.readD() == 1);
-		final int count = packet.readD();
-		if ((count < 1) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getReadableBytes()))
+		_packageSale = (packet.readInt() == 1);
+		final int count = packet.readInt();
+		if ((count < 1) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getRemainingLength()))
 		{
-			return false;
+			return;
 		}
 		
 		_items = new Item[count];
 		for (int i = 0; i < count; i++)
 		{
-			final int itemId = packet.readD();
-			final long cnt = packet.readQ();
-			final long price = packet.readQ();
+			final int itemId = packet.readInt();
+			final long cnt = packet.readLong();
+			final long price = packet.readLong();
 			if ((itemId < 1) || (cnt < 1) || (price < 0))
 			{
 				_items = null;
-				return false;
+				return;
 			}
 			_items[i] = new Item(itemId, cnt, price);
 		}
-		return true;
 	}
 	
 	@Override

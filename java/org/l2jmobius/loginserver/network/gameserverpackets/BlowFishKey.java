@@ -22,27 +22,25 @@ import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
-import org.l2jmobius.commons.util.crypt.NewCrypt;
+import org.l2jmobius.commons.crypt.NewCrypt;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.GameServerThread;
 import org.l2jmobius.loginserver.network.GameServerPacketHandler.GameServerState;
 
 /**
  * @author -Wooden-
  */
-public class BlowFishKey extends BaseRecievePacket
+public class BlowFishKey extends ReadablePacket
 {
 	protected static final Logger LOGGER = Logger.getLogger(BlowFishKey.class.getName());
 	
-	/**
-	 * @param decrypt
-	 * @param server
-	 */
 	public BlowFishKey(byte[] decrypt, GameServerThread server)
 	{
 		super(decrypt);
-		final int size = readD();
-		final byte[] tempKey = readB(size);
+		readByte(); // id (already processed)
+		
+		final int size = readInt();
+		final byte[] tempKey = readBytes(size);
 		try
 		{
 			byte[] tempDecryptKey;

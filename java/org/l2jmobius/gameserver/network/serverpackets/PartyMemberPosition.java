@@ -20,16 +20,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.Location;
 import org.l2jmobius.gameserver.model.Party;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author zabbix
  */
-public class PartyMemberPosition implements IClientOutgoingPacket
+public class PartyMemberPosition extends ServerPacket
 {
 	private final Map<Integer, Location> locations = new HashMap<>();
 	
@@ -52,18 +51,17 @@ public class PartyMemberPosition implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PARTY_MEMBER_POSITION.writeId(packet);
-		packet.writeD(locations.size());
+		ServerPackets.PARTY_MEMBER_POSITION.writeId(this);
+		writeInt(locations.size());
 		for (Entry<Integer, Location> entry : locations.entrySet())
 		{
 			final Location loc = entry.getValue();
-			packet.writeD(entry.getKey());
-			packet.writeD(loc.getX());
-			packet.writeD(loc.getY());
-			packet.writeD(loc.getZ());
+			writeInt(entry.getKey());
+			writeInt(loc.getX());
+			writeInt(loc.getY());
+			writeInt(loc.getZ());
 		}
-		return true;
 	}
 }

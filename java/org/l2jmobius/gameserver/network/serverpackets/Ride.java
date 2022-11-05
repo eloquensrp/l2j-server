@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.Location;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class Ride implements IClientOutgoingPacket
+public class Ride extends ServerPacket
 {
 	private final int _objectId;
-	private final int _mounted;
+	private final boolean _mounted;
 	private final int _rideType;
 	private final int _rideNpcId;
 	private final Location _loc;
@@ -32,23 +31,22 @@ public class Ride implements IClientOutgoingPacket
 	public Ride(Player player)
 	{
 		_objectId = player.getObjectId();
-		_mounted = player.isMounted() ? 1 : 0;
+		_mounted = player.isMounted();
 		_rideType = player.getMountType().ordinal();
 		_rideNpcId = player.getMountNpcId() + 1000000;
 		_loc = player.getLocation();
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.RIDE.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeD(_mounted);
-		packet.writeD(_rideType);
-		packet.writeD(_rideNpcId);
-		packet.writeD(_loc.getX());
-		packet.writeD(_loc.getY());
-		packet.writeD(_loc.getZ());
-		return true;
+		ServerPackets.RIDE.writeId(this);
+		writeInt(_objectId);
+		writeByte(_mounted);
+		writeInt(_rideType);
+		writeInt(_rideNpcId);
+		writeInt(_loc.getX());
+		writeInt(_loc.getY());
+		writeInt(_loc.getZ());
 	}
 }

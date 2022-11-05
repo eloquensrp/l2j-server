@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.network.clientpackets;
 import java.util.concurrent.TimeUnit;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.model.clan.ClanMember;
@@ -33,15 +33,14 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 /**
  * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:30 $
  */
-public class RequestOustPledgeMember implements IClientIncomingPacket
+public class RequestOustPledgeMember implements ClientPacket
 {
 	private String _target;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_target = packet.readS();
-		return true;
+		_target = packet.readString();
 	}
 	
 	@Override

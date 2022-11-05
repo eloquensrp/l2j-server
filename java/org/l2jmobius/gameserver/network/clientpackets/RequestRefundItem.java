@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.network.clientpackets;
 import static org.l2jmobius.gameserver.model.actor.Npc.INTERACTION_DISTANCE;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.BuyListData;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
@@ -39,7 +39,7 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * RequestRefundItem client packet class.
  */
-public class RequestRefundItem implements IClientIncomingPacket
+public class RequestRefundItem implements ClientPacket
 {
 	private static final int BATCH_LENGTH = 4; // length of the one item
 	private static final int CUSTOM_CB_SELL_LIST = 423;
@@ -48,21 +48,20 @@ public class RequestRefundItem implements IClientIncomingPacket
 	private int[] _items = null;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_listId = packet.readD();
-		final int count = packet.readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getReadableBytes()))
+		_listId = packet.readInt();
+		final int count = packet.readInt();
+		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getRemainingLength()))
 		{
-			return false;
+			return;
 		}
 		
 		_items = new int[count];
 		for (int i = 0; i < count; i++)
 		{
-			_items[i] = packet.readD();
+			_items[i] = packet.readInt();
 		}
-		return true;
 	}
 	
 	@Override

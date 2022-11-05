@@ -16,27 +16,21 @@
  */
 package org.l2jmobius.gameserver.network.loginserverpackets.game;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 import org.l2jmobius.gameserver.LoginServerThread.SessionKey;
 
 /**
  * @author -Wooden-
  */
-public class PlayerAuthRequest extends BaseSendablePacket
+public class PlayerAuthRequest extends WritablePacket
 {
 	public PlayerAuthRequest(String account, SessionKey key)
 	{
-		writeC(0x05);
-		writeS(account);
-		writeD(key.playOkID1);
-		writeD(key.playOkID2);
-		writeD(key.loginOkID1);
-		writeD(key.loginOkID2);
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
+		writeByte(0x05);
+		writeString(account);
+		writeInt(key.playOkID1);
+		writeInt(key.playOkID2);
+		writeInt(key.loginOkID1);
+		writeInt(key.loginOkID2);
 	}
 }

@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.GameServerTable;
 import org.l2jmobius.loginserver.GameServerTable.GameServerInfo;
 import org.l2jmobius.loginserver.GameServerThread;
@@ -43,7 +43,7 @@ import org.l2jmobius.loginserver.network.loginserverpackets.LoginServerFail;
  * 
  * @author -Wooden-
  */
-public class GameServerAuth extends BaseRecievePacket
+public class GameServerAuth extends ReadablePacket
 {
 	protected static final Logger LOGGER = Logger.getLogger(GameServerAuth.class.getName());
 	GameServerThread _server;
@@ -63,19 +63,21 @@ public class GameServerAuth extends BaseRecievePacket
 	public GameServerAuth(byte[] decrypt, GameServerThread server)
 	{
 		super(decrypt);
+		readByte(); // id (already processed)
+		
 		_server = server;
-		_desiredId = readC();
-		_acceptAlternativeId = readC() != 0;
-		_hostReserved = readC() != 0;
-		_port = readH();
-		_maxPlayers = readD();
-		int size = readD();
-		_hexId = readB(size);
-		size = 2 * readD();
+		_desiredId = readByte();
+		_acceptAlternativeId = readByte() != 0;
+		_hostReserved = readByte() != 0;
+		_port = readShort();
+		_maxPlayers = readInt();
+		int size = readInt();
+		_hexId = readBytes(size);
+		size = 2 * readInt();
 		_hosts = new String[size];
 		for (int i = 0; i < size; i++)
 		{
-			_hosts[i] = readS();
+			_hosts[i] = readString();
 		}
 		
 		if (handleRegProcess())

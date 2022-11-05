@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * ExVoteSystemInfo packet implementation.
  * @author Gnacik
  */
-public class ExVoteSystemInfo implements IClientOutgoingPacket
+public class ExVoteSystemInfo extends ServerPacket
 {
 	private final int _recomLeft;
 	private final int _recomHave;
@@ -42,14 +41,13 @@ public class ExVoteSystemInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_VOTE_SYSTEM_INFO.writeId(packet);
-		packet.writeD(_recomLeft);
-		packet.writeD(_recomHave);
-		packet.writeD(_bonusTime);
-		packet.writeD(_bonusVal);
-		packet.writeD(_bonusType);
-		return true;
+		ServerPackets.EX_VOTE_SYSTEM_INFO.writeId(this);
+		writeInt(_recomLeft);
+		writeInt(_recomHave);
+		writeInt(_bonusTime);
+		writeInt(_bonusVal);
+		writeInt(_bonusType);
 	}
 }

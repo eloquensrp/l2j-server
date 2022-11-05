@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.Location;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.actor.instance.AirShip;
@@ -30,7 +30,7 @@ import org.l2jmobius.gameserver.network.serverpackets.StopMoveInVehicle;
  * format: ddddddd X:%d Y:%d Z:%d OriginX:%d OriginY:%d OriginZ:%d
  * @author GodKratos
  */
-public class MoveToLocationInAirShip implements IClientIncomingPacket
+public class MoveToLocationInAirShip implements ClientPacket
 {
 	private int _shipId;
 	private int _targetX;
@@ -41,16 +41,15 @@ public class MoveToLocationInAirShip implements IClientIncomingPacket
 	private int _originZ;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_shipId = packet.readD();
-		_targetX = packet.readD();
-		_targetY = packet.readD();
-		_targetZ = packet.readD();
-		_originX = packet.readD();
-		_originY = packet.readD();
-		_originZ = packet.readD();
-		return true;
+		_shipId = packet.readInt();
+		_targetX = packet.readInt();
+		_targetY = packet.readInt();
+		_targetZ = packet.readInt();
+		_originX = packet.readInt();
+		_originY = packet.readInt();
+		_originZ = packet.readInt();
 	}
 	
 	@Override

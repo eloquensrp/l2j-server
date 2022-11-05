@@ -55,9 +55,9 @@ import org.l2jmobius.gameserver.network.NpcStringId;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.serverpackets.Earthquake;
 import org.l2jmobius.gameserver.network.serverpackets.ExShowScreenMessage;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
 import org.l2jmobius.gameserver.network.serverpackets.MagicSkillCanceled;
 import org.l2jmobius.gameserver.network.serverpackets.MagicSkillUse;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SocialAction;
 import org.l2jmobius.gameserver.network.serverpackets.SpecialCamera;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
@@ -1305,7 +1305,7 @@ public class FinalEmperialTomb extends AbstractInstance implements IXmlReader
 			}
 		}
 		
-		private void sendPacketX(IClientOutgoingPacket packet1, IClientOutgoingPacket packet2, int x)
+		private void sendPacketX(ServerPacket packet1, ServerPacket packet2, int x)
 		{
 			for (Player player : _world.getAllowed())
 			{
@@ -1411,7 +1411,7 @@ public class FinalEmperialTomb extends AbstractInstance implements IXmlReader
 		}
 	}
 	
-	protected void broadCastPacket(InstanceWorld world, IClientOutgoingPacket packet)
+	protected void broadCastPacket(InstanceWorld world, ServerPacket packet)
 	{
 		for (Player player : world.getAllowed())
 		{

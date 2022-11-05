@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.Shortcut;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ShortCutRegister implements IClientOutgoingPacket
+public class ShortCutRegister extends ServerPacket
 {
 	private final Shortcut _shortcut;
 	
@@ -34,29 +33,29 @@ public class ShortCutRegister implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SHORT_CUT_REGISTER.writeId(packet);
-		packet.writeD(_shortcut.getType().ordinal());
-		packet.writeD(_shortcut.getSlot() + (_shortcut.getPage() * 12)); // C4 Client
+		ServerPackets.SHORT_CUT_REGISTER.writeId(this);
+		writeInt(_shortcut.getType().ordinal());
+		writeInt(_shortcut.getSlot() + (_shortcut.getPage() * 12)); // C4 Client
 		switch (_shortcut.getType())
 		{
 			case ITEM:
 			{
-				packet.writeD(_shortcut.getId());
-				packet.writeD(_shortcut.getCharacterType());
-				packet.writeD(_shortcut.getSharedReuseGroup());
-				packet.writeD(0); // unknown
-				packet.writeD(0); // unknown
-				packet.writeD(0); // item augment id
+				writeInt(_shortcut.getId());
+				writeInt(_shortcut.getCharacterType());
+				writeInt(_shortcut.getSharedReuseGroup());
+				writeInt(0); // unknown
+				writeInt(0); // unknown
+				writeInt(0); // item augment id
 				break;
 			}
 			case SKILL:
 			{
-				packet.writeD(_shortcut.getId());
-				packet.writeD(_shortcut.getLevel());
-				packet.writeC(0); // C5
-				packet.writeD(_shortcut.getCharacterType());
+				writeInt(_shortcut.getId());
+				writeInt(_shortcut.getLevel());
+				writeByte(0); // C5
+				writeInt(_shortcut.getCharacterType());
 				break;
 			}
 			case ACTION:
@@ -64,10 +63,9 @@ public class ShortCutRegister implements IClientOutgoingPacket
 			case RECIPE:
 			case BOOKMARK:
 			{
-				packet.writeD(_shortcut.getId());
-				packet.writeD(_shortcut.getCharacterType());
+				writeInt(_shortcut.getId());
+				writeInt(_shortcut.getCharacterType());
 			}
 		}
-		return true;
 	}
 }

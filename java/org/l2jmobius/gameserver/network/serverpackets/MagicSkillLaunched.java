@@ -20,16 +20,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * MagicSkillLaunched server packet implementation.
  * @author UnAfraid
  */
-public class MagicSkillLaunched implements IClientOutgoingPacket
+public class MagicSkillLaunched extends ServerPacket
 {
 	private final int _objectId;
 	private final int _skillId;
@@ -55,17 +54,16 @@ public class MagicSkillLaunched implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.MAGIC_SKILL_LAUNCHED.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeD(_skillId);
-		packet.writeD(_skillLevel);
-		packet.writeD(_targets.size());
+		ServerPackets.MAGIC_SKILL_LAUNCHED.writeId(this);
+		writeInt(_objectId);
+		writeInt(_skillId);
+		writeInt(_skillLevel);
+		writeInt(_targets.size());
 		for (WorldObject target : _targets)
 		{
-			packet.writeD(target.getObjectId());
+			writeInt(target.getObjectId());
 		}
-		return true;
 	}
 }

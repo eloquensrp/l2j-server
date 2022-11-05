@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author mrTJO
  */
-public class Ex2ndPasswordCheck implements IClientOutgoingPacket
+public class Ex2ndPasswordCheck extends ServerPacket
 {
 	public static final int PASSWORD_NEW = 0;
 	public static final int PASSWORD_PROMPT = 1;
@@ -36,11 +35,10 @@ public class Ex2ndPasswordCheck implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_2ND_PASSWORD_CHECK.writeId(packet);
-		packet.writeD(_windowType);
-		packet.writeD(0);
-		return true;
+		ServerPackets.EX_2ND_PASSWORD_CHECK.writeId(this);
+		writeInt(_windowType);
+		writeInt(0);
 	}
 }

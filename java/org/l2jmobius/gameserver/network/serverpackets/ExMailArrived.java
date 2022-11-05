@@ -16,14 +16,13 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * (just a trigger)
  * @author -Wooden-
  */
-public class ExMailArrived implements IClientOutgoingPacket
+public class ExMailArrived extends ServerPacket
 {
 	public static final ExMailArrived STATIC_PACKET = new ExMailArrived();
 	
@@ -32,9 +31,8 @@ public class ExMailArrived implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_MAIL_ARRIVED.writeId(packet);
-		return true;
+		ServerPackets.EX_MAIL_ARRIVED.writeId(this);
 	}
 }

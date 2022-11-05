@@ -20,18 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.enums.AcquireSkillType;
 import org.l2jmobius.gameserver.model.SkillLearn;
 import org.l2jmobius.gameserver.model.holders.ItemHolder;
 import org.l2jmobius.gameserver.model.skill.CommonSkill;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Acquire Skill Info server packet implementation.
  * @author Zoey76
  */
-public class AcquireSkillInfo implements IClientOutgoingPacket
+public class AcquireSkillInfo extends ServerPacket
 {
 	private final AcquireSkillType _type;
 	private final int _id;
@@ -110,21 +109,20 @@ public class AcquireSkillInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.ACQUIRE_SKILL_INFO.writeId(packet);
-		packet.writeD(_id);
-		packet.writeD(_level);
-		packet.writeD(_spCost);
-		packet.writeD(_type.ordinal());
-		packet.writeD(_reqs.size());
+		ServerPackets.ACQUIRE_SKILL_INFO.writeId(this);
+		writeInt(_id);
+		writeInt(_level);
+		writeInt(_spCost);
+		writeInt(_type.ordinal());
+		writeInt(_reqs.size());
 		for (Req temp : _reqs)
 		{
-			packet.writeD(temp.type);
-			packet.writeD(temp.itemId);
-			packet.writeQ(temp.count);
-			packet.writeD(temp.unk);
+			writeInt(temp.type);
+			writeInt(temp.itemId);
+			writeLong(temp.count);
+			writeInt(temp.unk);
 		}
-		return true;
 	}
 }

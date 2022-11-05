@@ -42,10 +42,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.l2jmobius.Config;
+import org.l2jmobius.commons.crypt.NewCrypt;
 import org.l2jmobius.commons.database.DatabaseFactory;
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 import org.l2jmobius.commons.util.CommonUtil;
-import org.l2jmobius.commons.util.crypt.NewCrypt;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.ConnectionState;
@@ -135,15 +135,6 @@ public class LoginServerThread extends Thread
 		_subnets = Config.GAME_SERVER_SUBNETS;
 		_hosts = Config.GAME_SERVER_HOSTS;
 		_maxPlayer = Config.MAXIMUM_ONLINE_USERS;
-	}
-	
-	/**
-	 * Gets the single instance of LoginServerThread.
-	 * @return single instance of LoginServerThread
-	 */
-	public static LoginServerThread getInstance()
-	{
-		return SingletonHolder.INSTANCE;
 	}
 	
 	@Override
@@ -308,6 +299,7 @@ public class LoginServerThread extends Thread
 									if (wc.account.equals(account))
 									{
 										wcToRemove = wc;
+										break;
 									}
 								}
 							}
@@ -360,7 +352,7 @@ public class LoginServerThread extends Thread
 			}
 			catch (SocketException e)
 			{
-				LOGGER.warning(getClass().getSimpleName() + ": LoginServer not avaible, trying to reconnect...");
+				LOGGER.warning(getClass().getSimpleName() + ": LoginServer not available, trying to reconnect...");
 			}
 			catch (IOException e)
 			{
@@ -395,25 +387,26 @@ public class LoginServerThread extends Thread
 	
 	/**
 	 * Adds the waiting client and send request.
-	 * @param acc the account
+	 * @param accountName the account
 	 * @param client the game client
 	 * @param key the session key
 	 */
-	public void addWaitingClientAndSendRequest(String acc, GameClient client, SessionKey key)
+	public void addWaitingClientAndSendRequest(String accountName, GameClient client, SessionKey key)
 	{
-		final WaitingClient wc = new WaitingClient(acc, client, key);
+		final WaitingClient wc = new WaitingClient(accountName, client, key);
 		synchronized (_waitingClients)
 		{
 			_waitingClients.add(wc);
 		}
-		final PlayerAuthRequest par = new PlayerAuthRequest(acc, key);
+		
+		final PlayerAuthRequest par = new PlayerAuthRequest(accountName, key);
 		try
 		{
 			sendPacket(par);
 		}
 		catch (IOException e)
 		{
-			LOGGER.warning(getClass().getSimpleName() + ": Error while sending player auth request");
+			LOGGER.warning(getClass().getSimpleName() + ": Error while sending player auth request.");
 		}
 	}
 	
@@ -431,6 +424,7 @@ public class LoginServerThread extends Thread
 				if (c.gameClient == client)
 				{
 					toRemove = c;
+					break;
 				}
 			}
 			if (toRemove != null)
@@ -457,7 +451,7 @@ public class LoginServerThread extends Thread
 		}
 		catch (IOException e)
 		{
-			LOGGER.warning(getClass().getSimpleName() + ": Error while sending logout packet to login");
+			LOGGER.warning(getClass().getSimpleName() + ": Error while sending logout packet to login.");
 		}
 		finally
 		{
@@ -629,25 +623,38 @@ public class LoginServerThread extends Thread
 	
 	/**
 	 * Send packet.
-	 * @param sl the sendable packet
+	 * @param packet the sendable packet
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void sendPacket(BaseSendablePacket sl) throws IOException
+	private void sendPacket(WritablePacket packet) throws IOException
 	{
 		if (_blowfish == null)
 		{
 			return;
 		}
 		
-		final byte[] data = sl.getContent();
-		NewCrypt.appendChecksum(data);
-		_blowfish.crypt(data, 0, data.length);
-		
-		final int len = data.length + 2;
-		synchronized (_out) // avoids tow threads writing in the mean time
+		packet.write(); // write initial data
+		packet.writeInt(0); // reserved for checksum
+		int size = packet.getLength() - 2; // size without header
+		final int padding = size % 8; // padding of 8 bytes
+		if (padding != 0)
 		{
-			_out.write(len & 0xff);
-			_out.write((len >> 8) & 0xff);
+			for (int i = padding; i < 8; i++)
+			{
+				packet.writeByte(0);
+			}
+		}
+		
+		// size header + encrypted[data + checksum (int) + padding]
+		final byte[] data = packet.getSendableBytes();
+		
+		// encrypt
+		size = data.length - 2; // data size without header
+		NewCrypt.appendChecksum(data, 2, size);
+		_blowfish.crypt(data, 2, size);
+		
+		synchronized (_out)
+		{
 			_out.write(data);
 			_out.flush();
 		}
@@ -854,6 +861,15 @@ public class LoginServerThread extends Thread
 			gameClient = client;
 			session = key;
 		}
+	}
+	
+	/**
+	 * Gets the single instance of LoginServerThread.
+	 * @return single instance of LoginServerThread
+	 */
+	public static LoginServerThread getInstance()
+	{
+		return SingletonHolder.INSTANCE;
 	}
 	
 	private static class SingletonHolder

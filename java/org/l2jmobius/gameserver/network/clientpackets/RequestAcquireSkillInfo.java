@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.SkillData;
 import org.l2jmobius.gameserver.data.xml.SkillTreeData;
 import org.l2jmobius.gameserver.enums.AcquireSkillType;
@@ -33,19 +33,18 @@ import org.l2jmobius.gameserver.network.serverpackets.AcquireSkillInfo;
  * Request Acquire Skill Info client packet implementation.
  * @author Zoey76
  */
-public class RequestAcquireSkillInfo implements IClientIncomingPacket
+public class RequestAcquireSkillInfo implements ClientPacket
 {
 	private int _id;
 	private int _level;
 	private AcquireSkillType _skillType;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_id = packet.readD();
-		_level = packet.readD();
-		_skillType = AcquireSkillType.getAcquireSkillType(packet.readD());
-		return true;
+		_id = packet.readInt();
+		_level = packet.readInt();
+		_skillType = AcquireSkillType.getAcquireSkillType(packet.readInt());
 	}
 	
 	@Override

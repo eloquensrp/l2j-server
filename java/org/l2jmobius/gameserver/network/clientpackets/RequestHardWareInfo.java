@@ -16,14 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.holders.ClientHardwareInfoHolder;
 import org.l2jmobius.gameserver.network.GameClient;
 
 /**
  * @author Mobius
  */
-public class RequestHardWareInfo implements IClientIncomingPacket
+public class RequestHardWareInfo implements ClientPacket
 {
 	private String _macAddress;
 	private int _windowsPlatformId;
@@ -46,32 +46,31 @@ public class RequestHardWareInfo implements IClientIncomingPacket
 	private String _vgaDriverVersion;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_macAddress = packet.readS();
-		_windowsPlatformId = packet.readD();
-		_windowsMajorVersion = packet.readD();
-		_windowsMinorVersion = packet.readD();
-		_windowsBuildNumber = packet.readD();
-		_directxVersion = packet.readD();
-		_directxRevision = packet.readD();
-		packet.readB(16);
-		_cpuName = packet.readS();
-		_cpuSpeed = packet.readD();
-		_cpuCoreCount = packet.readC();
-		packet.readD();
-		_vgaCount = packet.readD();
-		_vgaPcxSpeed = packet.readD();
-		_physMemorySlot1 = packet.readD();
-		_physMemorySlot2 = packet.readD();
-		_physMemorySlot3 = packet.readD();
-		packet.readC();
-		_videoMemory = packet.readD();
-		packet.readD();
-		_vgaVersion = packet.readH();
-		_vgaName = packet.readS();
-		_vgaDriverVersion = packet.readS();
-		return true;
+		_macAddress = packet.readString();
+		_windowsPlatformId = packet.readInt();
+		_windowsMajorVersion = packet.readInt();
+		_windowsMinorVersion = packet.readInt();
+		_windowsBuildNumber = packet.readInt();
+		_directxVersion = packet.readInt();
+		_directxRevision = packet.readInt();
+		packet.readBytes(16);
+		_cpuName = packet.readString();
+		_cpuSpeed = packet.readInt();
+		_cpuCoreCount = packet.readByte();
+		packet.readInt();
+		_vgaCount = packet.readInt();
+		_vgaPcxSpeed = packet.readInt();
+		_physMemorySlot1 = packet.readInt();
+		_physMemorySlot2 = packet.readInt();
+		_physMemorySlot3 = packet.readInt();
+		packet.readByte();
+		_videoMemory = packet.readInt();
+		packet.readInt();
+		_vgaVersion = packet.readShort();
+		_vgaName = packet.readString();
+		_vgaDriverVersion = packet.readString();
 	}
 	
 	@Override

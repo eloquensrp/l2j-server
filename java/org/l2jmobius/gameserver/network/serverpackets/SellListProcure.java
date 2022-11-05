@@ -20,14 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.instancemanager.CastleManorManager;
 import org.l2jmobius.gameserver.model.CropProcure;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.instance.Item;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class SellListProcure implements IClientOutgoingPacket
+public class SellListProcure extends ServerPacket
 {
 	private final long _money;
 	private final Map<Item, Long> _sellList = new HashMap<>();
@@ -46,23 +45,22 @@ public class SellListProcure implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SELL_LIST_PROCURE.writeId(packet);
-		packet.writeQ(_money); // money
-		packet.writeD(0); // lease ?
-		packet.writeH(_sellList.size()); // list size
+		ServerPackets.SELL_LIST_PROCURE.writeId(this);
+		writeLong(_money); // money
+		writeInt(0); // lease ?
+		writeShort(_sellList.size()); // list size
 		for (Entry<Item, Long> entry : _sellList.entrySet())
 		{
 			final Item item = entry.getKey();
-			packet.writeH(item.getTemplate().getType1());
-			packet.writeD(item.getObjectId());
-			packet.writeD(item.getDisplayId());
-			packet.writeQ(entry.getValue()); // count
-			packet.writeH(item.getTemplate().getType2());
-			packet.writeH(0); // unknown
-			packet.writeQ(0); // price, you shouldnt get any adena for crops, only raw materials
+			writeShort(item.getTemplate().getType1());
+			writeInt(item.getObjectId());
+			writeInt(item.getDisplayId());
+			writeLong(entry.getValue()); // count
+			writeShort(item.getTemplate().getType2());
+			writeShort(0); // unknown
+			writeLong(0); // price, you shouldnt get any adena for crops, only raw materials
 		}
-		return true;
 	}
 }

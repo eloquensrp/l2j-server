@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.loginserver.network.gameserverpackets;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.GameServerThread;
 import org.l2jmobius.loginserver.LoginController;
 
@@ -24,22 +24,20 @@ import org.l2jmobius.loginserver.LoginController;
  * Thanks to mochitto.
  * @author mrTJO
  */
-public class ReplyCharacters extends BaseRecievePacket
+public class ReplyCharacters extends ReadablePacket
 {
-	/**
-	 * @param decrypt
-	 * @param server
-	 */
 	public ReplyCharacters(byte[] decrypt, GameServerThread server)
 	{
 		super(decrypt);
-		final String account = readS();
-		final int chars = readC();
-		final int charsToDel = readC();
+		readByte(); // id (already processed)
+		
+		final String account = readString();
+		final int chars = readByte();
+		final int charsToDel = readByte();
 		final long[] charsList = new long[charsToDel];
 		for (int i = 0; i < charsToDel; i++)
 		{
-			charsList[i] = readQ();
+			charsList[i] = readLong();
 		}
 		LoginController.getInstance().setCharactersOnServer(account, chars, charsList, server.getServerId());
 	}

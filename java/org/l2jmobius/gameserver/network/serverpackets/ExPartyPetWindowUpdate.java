@@ -16,14 +16,13 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Summon;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExPartyPetWindowUpdate implements IClientOutgoingPacket
+public class ExPartyPetWindowUpdate extends ServerPacket
 {
 	private final Summon _summon;
 	
@@ -33,19 +32,18 @@ public class ExPartyPetWindowUpdate implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_PARTY_PET_WINDOW_UPDATE.writeId(packet);
-		packet.writeD(_summon.getObjectId());
-		packet.writeD(_summon.getTemplate().getDisplayId() + 1000000);
-		packet.writeD(_summon.getSummonType());
-		packet.writeD(_summon.getOwner().getObjectId());
-		packet.writeS(_summon.getName());
-		packet.writeD((int) _summon.getCurrentHp());
-		packet.writeD(_summon.getMaxHp());
-		packet.writeD((int) _summon.getCurrentMp());
-		packet.writeD(_summon.getMaxMp());
-		packet.writeD(_summon.getLevel());
-		return true;
+		ServerPackets.EX_PARTY_PET_WINDOW_UPDATE.writeId(this);
+		writeInt(_summon.getObjectId());
+		writeInt(_summon.getTemplate().getDisplayId() + 1000000);
+		writeInt(_summon.getSummonType());
+		writeInt(_summon.getOwner().getObjectId());
+		writeString(_summon.getName());
+		writeInt((int) _summon.getCurrentHp());
+		writeInt(_summon.getMaxHp());
+		writeInt((int) _summon.getCurrentMp());
+		writeInt(_summon.getMaxMp());
+		writeInt(_summon.getLevel());
 	}
 }

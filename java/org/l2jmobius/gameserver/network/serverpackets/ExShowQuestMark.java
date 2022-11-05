@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Luca Baldi
  */
-public class ExShowQuestMark implements IClientOutgoingPacket
+public class ExShowQuestMark extends ServerPacket
 {
 	private final int _questId;
 	
@@ -32,10 +31,9 @@ public class ExShowQuestMark implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SHOW_QUEST_MARK.writeId(packet);
-		packet.writeD(_questId);
-		return true;
+		ServerPackets.EX_SHOW_QUEST_MARK.writeId(this);
+		writeInt(_questId);
 	}
 }

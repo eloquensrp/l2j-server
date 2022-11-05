@@ -16,8 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Dialog with input field<br>
@@ -25,7 +24,7 @@ import org.l2jmobius.gameserver.network.OutgoingPackets;
  * type 1 = clan name
  * @author JIV
  */
-public class ExNeedToChangeName implements IClientOutgoingPacket
+public class ExNeedToChangeName extends ServerPacket
 {
 	private final int _type;
 	private final int _subType;
@@ -33,19 +32,17 @@ public class ExNeedToChangeName implements IClientOutgoingPacket
 	
 	public ExNeedToChangeName(int type, int subType, String name)
 	{
-		super();
 		_type = type;
 		_subType = subType;
 		_name = name;
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_NEED_TO_CHANGE_NAME.writeId(packet);
-		packet.writeD(_type);
-		packet.writeD(_subType);
-		packet.writeS(_name);
-		return true;
+		ServerPackets.EX_NEED_TO_CHANGE_NAME.writeId(this);
+		writeInt(_type);
+		writeInt(_subType);
+		writeString(_name);
 	}
 }

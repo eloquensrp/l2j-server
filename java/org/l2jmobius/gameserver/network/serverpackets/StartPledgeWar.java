@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class StartPledgeWar implements IClientOutgoingPacket
+public class StartPledgeWar extends ServerPacket
 {
 	private final String _pledgeName;
 	private final String _playerName;
@@ -31,11 +30,10 @@ public class StartPledgeWar implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.START_PLEDGE_WAR.writeId(packet);
-		packet.writeS(_playerName);
-		packet.writeS(_pledgeName);
-		return true;
+		ServerPackets.START_PLEDGE_WAR.writeId(this);
+		writeString(_playerName);
+		writeString(_pledgeName);
 	}
 }

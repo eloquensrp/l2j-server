@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ExPutItemResultForVariationMake implements IClientOutgoingPacket
+public class ExPutItemResultForVariationMake extends ServerPacket
 {
 	private final int _itemObjId;
 	private final int _itemId;
@@ -31,12 +30,11 @@ public class ExPutItemResultForVariationMake implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_PUT_ITEM_RESULT_FOR_VARIATION_MAKE.writeId(packet);
-		packet.writeD(_itemObjId);
-		packet.writeD(_itemId);
-		packet.writeD(1);
-		return true;
+		ServerPackets.EX_PUT_ITEM_RESULT_FOR_VARIATION_MAKE.writeId(this);
+		writeInt(_itemObjId);
+		writeInt(_itemId);
+		writeInt(1);
 	}
 }

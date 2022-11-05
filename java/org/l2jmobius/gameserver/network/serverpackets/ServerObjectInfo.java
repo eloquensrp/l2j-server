@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Creature;
 import org.l2jmobius.gameserver.model.actor.Npc;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author devScarlet, mrTJO
  */
-public class ServerObjectInfo implements IClientOutgoingPacket
+public class ServerObjectInfo extends ServerPacket
 {
 	private final Npc _activeChar;
 	private final int _x;
@@ -52,25 +51,24 @@ public class ServerObjectInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SERVER_OBJECT_INFO.writeId(packet);
-		packet.writeD(_activeChar.getObjectId());
-		packet.writeD(_displayId + 1000000);
-		packet.writeS(_name); // name
-		packet.writeD(_isAttackable ? 1 : 0);
-		packet.writeD(_x);
-		packet.writeD(_y);
-		packet.writeD(_z);
-		packet.writeD(_heading);
-		packet.writeF(1.0); // movement multiplier
-		packet.writeF(1.0); // attack speed multiplier
-		packet.writeF(_collisionRadius);
-		packet.writeF(_collisionHeight);
-		packet.writeD((int) (_isAttackable ? _activeChar.getCurrentHp() : 0));
-		packet.writeD(_isAttackable ? _activeChar.getMaxHp() : 0);
-		packet.writeD(1); // object type
-		packet.writeD(0); // special effects
-		return true;
+		ServerPackets.SERVER_OBJECT_INFO.writeId(this);
+		writeInt(_activeChar.getObjectId());
+		writeInt(_displayId + 1000000);
+		writeString(_name); // name
+		writeInt(_isAttackable);
+		writeInt(_x);
+		writeInt(_y);
+		writeInt(_z);
+		writeInt(_heading);
+		writeDouble(1.0); // movement multiplier
+		writeDouble(1.0); // attack speed multiplier
+		writeDouble(_collisionRadius);
+		writeDouble(_collisionHeight);
+		writeInt((int) (_isAttackable ? _activeChar.getCurrentHp() : 0));
+		writeInt(_isAttackable ? _activeChar.getMaxHp() : 0);
+		writeInt(1); // object type
+		writeInt(0); // special effects
 	}
 }

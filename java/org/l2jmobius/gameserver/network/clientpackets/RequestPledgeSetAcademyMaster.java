@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.model.clan.ClanMember;
@@ -29,19 +29,18 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
  * Format: (ch) dSS
  * @author -Wooden-
  */
-public class RequestPledgeSetAcademyMaster implements IClientIncomingPacket
+public class RequestPledgeSetAcademyMaster implements ClientPacket
 {
 	private String _currPlayerName;
 	private int _set; // 1 set, 0 delete
 	private String _targetPlayerName;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_set = packet.readD();
-		_currPlayerName = packet.readS();
-		_targetPlayerName = packet.readS();
-		return true;
+		_set = packet.readInt();
+		_currPlayerName = packet.readString();
+		_targetPlayerName = packet.readString();
 	}
 	
 	@Override

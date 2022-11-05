@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Npc;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExSpawnEmitter implements IClientOutgoingPacket
+public class ExSpawnEmitter extends ServerPacket
 {
 	private final int _playerObjectId;
 	private final int _npcObjectId;
@@ -41,12 +40,11 @@ public class ExSpawnEmitter implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SPAWN_EMITTER.writeId(packet);
-		packet.writeD(_npcObjectId);
-		packet.writeD(_playerObjectId);
-		packet.writeD(0); // ?
-		return true;
+		ServerPackets.EX_SPAWN_EMITTER.writeId(this);
+		writeInt(_npcObjectId);
+		writeInt(_playerObjectId);
+		writeInt(0); // ?
 	}
 }

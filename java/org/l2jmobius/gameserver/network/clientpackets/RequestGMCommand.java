@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.sql.ClanTable;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -33,18 +33,17 @@ import org.l2jmobius.gameserver.network.serverpackets.GmViewQuestInfo;
 /**
  * @version $Revision: 1.1.2.2.2.2 $ $Date: 2005/03/27 15:29:30 $
  */
-public class RequestGMCommand implements IClientIncomingPacket
+public class RequestGMCommand implements ClientPacket
 {
 	private String _targetName;
 	private int _command;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_targetName = packet.readS();
-		_command = packet.readD();
-		// _unknown = packet.readD();
-		return true;
+		_targetName = packet.readString();
+		_command = packet.readInt();
+		// _unknown = packet.readInt();
 	}
 	
 	@Override

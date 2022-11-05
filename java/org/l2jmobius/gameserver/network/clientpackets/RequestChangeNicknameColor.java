@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.instance.Item;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -24,7 +24,7 @@ import org.l2jmobius.gameserver.network.GameClient;
 /**
  * @author KenM, Gnacik
  */
-public class RequestChangeNicknameColor implements IClientIncomingPacket
+public class RequestChangeNicknameColor implements ClientPacket
 {
 	private static final int[] COLORS =
 	{
@@ -45,12 +45,11 @@ public class RequestChangeNicknameColor implements IClientIncomingPacket
 	private String _title;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_colorNum = packet.readD();
-		_title = packet.readS();
-		_itemObjectId = packet.readD();
-		return true;
+		_colorNum = packet.readInt();
+		_title = packet.readString();
+		_itemObjectId = packet.readInt();
 	}
 	
 	@Override

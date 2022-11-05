@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author UnAfraid
  */
-public class ExChangeClientEffectInfo implements IClientOutgoingPacket
+public class ExChangeClientEffectInfo extends ServerPacket
 {
 	public static final ExChangeClientEffectInfo STATIC_FREYA_DEFAULT = new ExChangeClientEffectInfo(0, 0, 1);
 	public static final ExChangeClientEffectInfo STATIC_FREYA_DESTROYED = new ExChangeClientEffectInfo(0, 0, 2);
@@ -49,12 +48,11 @@ public class ExChangeClientEffectInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_CHANGE_CLIENT_EFFECT_INFO.writeId(packet);
-		packet.writeD(_type);
-		packet.writeD(_key);
-		packet.writeD(_value);
-		return true;
+		ServerPackets.EX_CHANGE_CLIENT_EFFECT_INFO.writeId(this);
+		writeInt(_type);
+		writeInt(_key);
+		writeInt(_value);
 	}
 }

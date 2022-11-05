@@ -40,8 +40,8 @@ import org.l2jmobius.gameserver.model.zone.ZoneType;
 import org.l2jmobius.gameserver.network.NpcStringId;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.serverpackets.ExShowScreenMessage;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
 import org.l2jmobius.gameserver.network.serverpackets.NpcSay;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 import org.l2jmobius.gameserver.util.Util;
 
@@ -749,7 +749,7 @@ public class HeartInfinityDefence extends AbstractNpcAI
 		return null;
 	}
 	
-	protected void broadCastPacket(HIDWorld world, IClientOutgoingPacket packet)
+	protected void broadCastPacket(HIDWorld world, ServerPacket packet)
 	{
 		for (Player player : world.getAllowed())
 		{

@@ -16,9 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.loginserverpackets.login;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 
-public class InitLS extends BaseRecievePacket
+public class InitLS extends ReadablePacket
 {
 	private final int _rev;
 	private final byte[] _key;
@@ -39,8 +39,10 @@ public class InitLS extends BaseRecievePacket
 	public InitLS(byte[] decrypt)
 	{
 		super(decrypt);
-		_rev = readD();
-		final int size = readD();
-		_key = readB(size);
+		readByte(); // id (already processed)
+		
+		_rev = readInt();
+		final int size = readInt();
+		_key = readBytes(size);
 	}
 }

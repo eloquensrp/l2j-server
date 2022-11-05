@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.ItemAuctionManager;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.itemauction.ItemAuction;
@@ -27,15 +27,14 @@ import org.l2jmobius.gameserver.network.serverpackets.ExItemAuctionInfoPacket;
 /**
  * @author Forsaiken
  */
-public class RequestInfoItemAuction implements IClientIncomingPacket
+public class RequestInfoItemAuction implements ClientPacket
 {
 	private int _instanceId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_instanceId = packet.readD();
-		return true;
+		_instanceId = packet.readInt();
 	}
 	
 	@Override

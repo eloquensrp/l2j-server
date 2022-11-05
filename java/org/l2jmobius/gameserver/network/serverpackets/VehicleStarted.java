@@ -16,14 +16,13 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Creature;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Kerberos
  */
-public class VehicleStarted implements IClientOutgoingPacket
+public class VehicleStarted extends ServerPacket
 {
 	private final int _objectId;
 	private final int _state;
@@ -39,11 +38,10 @@ public class VehicleStarted implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.VEHICLE_START.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeD(_state);
-		return true;
+		ServerPackets.VEHICLE_START.writeId(this);
+		writeInt(_objectId);
+		writeInt(_state);
 	}
 }

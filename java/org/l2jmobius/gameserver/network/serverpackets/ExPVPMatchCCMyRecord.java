@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Mobius
  */
-public class ExPVPMatchCCMyRecord implements IClientOutgoingPacket
+public class ExPVPMatchCCMyRecord extends ServerPacket
 {
 	private final int _points;
 	
@@ -32,10 +31,9 @@ public class ExPVPMatchCCMyRecord implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_PVP_MATCH_CC_MY_RECORD.writeId(packet);
-		packet.writeD(_points);
-		return true;
+		ServerPackets.EX_PVP_MATCH_CC_MY_RECORD.writeId(this);
+		writeInt(_points);
 	}
 }

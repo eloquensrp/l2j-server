@@ -16,17 +16,16 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Creature;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.actor.instance.ControllableAirShip;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * MyTargetSelected server packet implementation.
  * @author UnAfraid
  */
-public class MyTargetSelected implements IClientOutgoingPacket
+public class MyTargetSelected extends ServerPacket
 {
 	private final int _objectId;
 	private final int _color;
@@ -42,12 +41,11 @@ public class MyTargetSelected implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.MY_TARGET_SELECTED.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeH(_color);
-		packet.writeD(0);
-		return true;
+		ServerPackets.MY_TARGET_SELECTED.writeId(this);
+		writeInt(_objectId);
+		writeShort(_color);
+		writeInt(0);
 	}
 }

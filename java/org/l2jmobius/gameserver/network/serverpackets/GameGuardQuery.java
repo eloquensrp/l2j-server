@@ -16,14 +16,13 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Lets drink to code!
  * @author zabbix
  */
-public class GameGuardQuery implements IClientOutgoingPacket
+public class GameGuardQuery extends ServerPacket
 {
 	public static final GameGuardQuery STATIC_PACKET = new GameGuardQuery();
 	
@@ -32,13 +31,12 @@ public class GameGuardQuery implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.GAME_GUARD_QUERY.writeId(packet);
-		packet.writeD(0x27533DD9);
-		packet.writeD(0x2E72A51D);
-		packet.writeD(0x2017038B);
-		packet.writeD(0xC35B1EA3);
-		return true;
+		ServerPackets.GAME_GUARD_QUERY.writeId(this);
+		writeInt(0x27533DD9);
+		writeInt(0x2E72A51D);
+		writeInt(0x2017038B);
+		writeInt(0xC35B1EA3);
 	}
 }

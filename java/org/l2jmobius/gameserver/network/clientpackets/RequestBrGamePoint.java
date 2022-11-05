@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.ExBrGamePoint;
@@ -24,14 +23,8 @@ import org.l2jmobius.gameserver.network.serverpackets.ExBrGamePoint;
 /**
  * @author Mobius
  */
-public class RequestBrGamePoint implements IClientIncomingPacket
+public class RequestBrGamePoint implements ClientPacket
 {
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
-	
 	@Override
 	public void run(GameClient client)
 	{

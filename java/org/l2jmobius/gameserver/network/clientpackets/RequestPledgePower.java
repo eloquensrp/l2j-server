@@ -16,32 +16,31 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.clan.ClanPrivilege;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.ManagePledgePower;
 
-public class RequestPledgePower implements IClientIncomingPacket
+public class RequestPledgePower implements ClientPacket
 {
 	private int _rank;
 	private int _action;
 	private int _privs;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_rank = packet.readD();
-		_action = packet.readD();
+		_rank = packet.readInt();
+		_action = packet.readInt();
 		if (_action == 2)
 		{
-			_privs = packet.readD();
+			_privs = packet.readInt();
 		}
 		else
 		{
 			_privs = 0;
 		}
-		return true;
 	}
 	
 	@Override

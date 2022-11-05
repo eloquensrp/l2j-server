@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.instance.Item;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -35,13 +35,12 @@ public class RequestConfirmGemStone extends AbstractRefinePacket
 	private long _gemStoneCount;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_targetItemObjId = packet.readD();
-		_refinerItemObjId = packet.readD();
-		_gemstoneItemObjId = packet.readD();
-		_gemStoneCount = packet.readQ();
-		return true;
+		_targetItemObjId = packet.readInt();
+		_refinerItemObjId = packet.readInt();
+		_gemstoneItemObjId = packet.readInt();
+		_gemStoneCount = packet.readLong();
 	}
 	
 	@Override

@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class PlaySound implements IClientOutgoingPacket
+public class PlaySound extends ServerPacket
 {
 	private final int _unknown1;
 	private final String _soundFile;
@@ -60,17 +59,16 @@ public class PlaySound implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PLAY_SOUND.writeId(packet);
-		packet.writeD(_unknown1); // unknown 0 for quest and ship;
-		packet.writeS(_soundFile);
-		packet.writeD(_unknown3); // unknown 0 for quest; 1 for ship;
-		packet.writeD(_unknown4); // 0 for quest; objectId of ship
-		packet.writeD(_unknown5); // x
-		packet.writeD(_unknown6); // y
-		packet.writeD(_unknown7); // z
-		packet.writeD(_unknown8);
-		return true;
+		ServerPackets.PLAY_SOUND.writeId(this);
+		writeInt(_unknown1); // unknown 0 for quest and ship;
+		writeString(_soundFile);
+		writeInt(_unknown3); // unknown 0 for quest; 1 for ship;
+		writeInt(_unknown4); // 0 for quest; objectId of ship
+		writeInt(_unknown5); // x
+		writeInt(_unknown6); // y
+		writeInt(_unknown7); // z
+		writeInt(_unknown8);
 	}
 }

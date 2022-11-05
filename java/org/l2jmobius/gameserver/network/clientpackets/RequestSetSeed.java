@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.CastleManorManager;
 import org.l2jmobius.gameserver.model.Seed;
 import org.l2jmobius.gameserver.model.SeedProduction;
@@ -32,7 +32,7 @@ import org.l2jmobius.gameserver.network.serverpackets.ActionFailed;
 /**
  * @author l3x
  */
-public class RequestSetSeed implements IClientIncomingPacket
+public class RequestSetSeed implements ClientPacket
 {
 	private static final int BATCH_LENGTH = 20; // length of the one item
 	
@@ -40,25 +40,25 @@ public class RequestSetSeed implements IClientIncomingPacket
 	private List<SeedProduction> _items;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_manorId = packet.readD();
-		final int count = packet.readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getReadableBytes()))
+		_manorId = packet.readInt();
+		final int count = packet.readInt();
+		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getRemainingLength()))
 		{
-			return false;
+			return;
 		}
 		
 		_items = new ArrayList<>(count);
 		for (int i = 0; i < count; i++)
 		{
-			final int itemId = packet.readD();
-			final long sales = packet.readQ();
-			final long price = packet.readQ();
+			final int itemId = packet.readInt();
+			final long sales = packet.readLong();
+			final long price = packet.readLong();
 			if ((itemId < 1) || (sales < 0) || (price < 0))
 			{
 				_items.clear();
-				return false;
+				return;
 			}
 			
 			if (sales > 0)
@@ -66,7 +66,6 @@ public class RequestSetSeed implements IClientIncomingPacket
 				_items.add(new SeedProduction(itemId, sales, price, sales));
 			}
 		}
-		return true;
 	}
 	
 	@Override

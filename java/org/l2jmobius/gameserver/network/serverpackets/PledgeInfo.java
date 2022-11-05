@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.clan.Clan;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class PledgeInfo implements IClientOutgoingPacket
+public class PledgeInfo extends ServerPacket
 {
 	private final Clan _clan;
 	
@@ -30,12 +29,11 @@ public class PledgeInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PLEDGE_INFO.writeId(packet);
-		packet.writeD(_clan.getId());
-		packet.writeS(_clan.getName());
-		packet.writeS(_clan.getAllyName());
-		return true;
+		ServerPackets.PLEDGE_INFO.writeId(this);
+		writeInt(_clan.getId());
+		writeString(_clan.getName());
+		writeString(_clan.getAllyName());
 	}
 }

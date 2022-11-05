@@ -34,7 +34,7 @@ import org.l2jmobius.gameserver.model.siege.Fort;
 import org.l2jmobius.gameserver.network.NpcStringId;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.serverpackets.ExShowScreenMessage;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 
 import quests.Q00727_HopeWithinTheDarkness.Q00727_HopeWithinTheDarkness;
@@ -418,7 +418,7 @@ public class Q00726_LightWithinTheDarkness extends Quest
 		}
 	}
 	
-	protected void broadCastPacket(PAWORLD world, IClientOutgoingPacket packet)
+	protected void broadCastPacket(PAWORLD world, ServerPacket packet)
 	{
 		for (Player player : world.getAllowed())
 		{

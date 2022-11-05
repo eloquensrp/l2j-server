@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.network.clientpackets;
 import java.util.logging.Logger;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.sql.CharNameTable;
 import org.l2jmobius.gameserver.data.xml.SecondaryAuthData;
 import org.l2jmobius.gameserver.instancemanager.AntiFeedManager;
@@ -46,7 +46,7 @@ import org.l2jmobius.gameserver.network.serverpackets.ServerClose;
 /**
  * @version $Revision: 1.5.2.1.2.5 $ $Date: 2005/03/27 15:29:30 $
  */
-public class CharacterSelect implements IClientIncomingPacket
+public class CharacterSelect implements ClientPacket
 {
 	protected static final Logger LOGGER_ACCOUNTING = Logger.getLogger("accounting");
 	
@@ -63,14 +63,13 @@ public class CharacterSelect implements IClientIncomingPacket
 	private int _unk4; // new in C4
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_charSlot = packet.readD();
-		_unk1 = packet.readH();
-		_unk2 = packet.readD();
-		_unk3 = packet.readD();
-		_unk4 = packet.readD();
-		return true;
+		_charSlot = packet.readInt();
+		_unk1 = packet.readShort();
+		_unk2 = packet.readInt();
+		_unk3 = packet.readInt();
+		_unk4 = packet.readInt();
 	}
 	
 	@Override
@@ -113,7 +112,7 @@ public class CharacterSelect implements IClientIncomingPacket
 					// Banned?
 					if (PunishmentManager.getInstance().hasPunishment(info.getObjectId(), PunishmentAffect.CHARACTER, PunishmentType.BAN) //
 						|| PunishmentManager.getInstance().hasPunishment(client.getAccountName(), PunishmentAffect.ACCOUNT, PunishmentType.BAN) //
-						|| PunishmentManager.getInstance().hasPunishment(client.getConnectionAddress().getHostAddress(), PunishmentAffect.IP, PunishmentType.BAN))
+						|| PunishmentManager.getInstance().hasPunishment(client.getIp(), PunishmentAffect.IP, PunishmentType.BAN))
 					{
 						client.close(ServerClose.STATIC_PACKET);
 						return;

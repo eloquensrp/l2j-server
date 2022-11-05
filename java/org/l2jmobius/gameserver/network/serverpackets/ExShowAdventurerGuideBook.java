@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExShowAdventurerGuideBook implements IClientOutgoingPacket
+public class ExShowAdventurerGuideBook extends ServerPacket
 {
 	public static final ExShowAdventurerGuideBook STATIC_PACKET = new ExShowAdventurerGuideBook();
 	
@@ -31,9 +30,8 @@ public class ExShowAdventurerGuideBook implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SHOW_ADVENTURER_GUIDE_BOOK.writeId(packet);
-		return true;
+		ServerPackets.EX_SHOW_ADVENTURER_GUIDE_BOOK.writeId(this);
 	}
 }

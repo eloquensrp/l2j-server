@@ -16,14 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.ShortcutType;
 import org.l2jmobius.gameserver.model.Shortcut;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.ShortCutRegister;
 
-public class RequestShortCutReg implements IClientIncomingPacket
+public class RequestShortCutReg implements ClientPacket
 {
 	private ShortcutType _type;
 	private int _id;
@@ -33,17 +33,16 @@ public class RequestShortCutReg implements IClientIncomingPacket
 	private int _characterType; // 1 - player, 2 - pet
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		final int typeId = packet.readD();
+		final int typeId = packet.readInt();
 		_type = ShortcutType.values()[(typeId < 1) || (typeId > 6) ? 0 : typeId];
-		final int slot = packet.readD();
+		final int slot = packet.readInt();
 		_slot = slot % 12;
 		_page = slot / 12;
-		_id = packet.readD();
-		_level = packet.readD();
-		_characterType = packet.readD();
-		return true;
+		_id = packet.readInt();
+		_level = packet.readInt();
+		_characterType = packet.readInt();
 	}
 	
 	@Override

@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class PartySmallWindowDeleteAll implements IClientOutgoingPacket
+public class PartySmallWindowDeleteAll extends ServerPacket
 {
 	public static final PartySmallWindowDeleteAll STATIC_PACKET = new PartySmallWindowDeleteAll();
 	
@@ -28,9 +27,8 @@ public class PartySmallWindowDeleteAll implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PARTY_SMALL_WINDOW_DELETE_ALL.writeId(packet);
-		return true;
+		ServerPackets.PARTY_SMALL_WINDOW_DELETE_ALL.writeId(this);
 	}
 }

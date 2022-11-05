@@ -16,12 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.loginserverpackets.login;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 
 /**
  * @author -Wooden-
  */
-public class PlayerAuthResponse extends BaseRecievePacket
+public class PlayerAuthResponse extends ReadablePacket
 {
 	private final String _account;
 	private final boolean _authed;
@@ -32,9 +32,10 @@ public class PlayerAuthResponse extends BaseRecievePacket
 	public PlayerAuthResponse(byte[] decrypt)
 	{
 		super(decrypt);
+		readByte(); // id (already processed)
 		
-		_account = readS();
-		_authed = readC() != 0;
+		_account = readString();
+		_authed = readByte() != 0;
 	}
 	
 	/**

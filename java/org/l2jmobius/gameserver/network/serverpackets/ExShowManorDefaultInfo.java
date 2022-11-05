@@ -18,15 +18,14 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.instancemanager.CastleManorManager;
 import org.l2jmobius.gameserver.model.Seed;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author l3x
  */
-public class ExShowManorDefaultInfo implements IClientOutgoingPacket
+public class ExShowManorDefaultInfo extends ServerPacket
 {
 	private final List<Seed> _crops;
 	private final boolean _hideButtons;
@@ -38,22 +37,21 @@ public class ExShowManorDefaultInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SHOW_MANOR_DEFAULT_INFO.writeId(packet);
-		packet.writeC(_hideButtons ? 1 : 0); // Hide "Seed Purchase" and "Crop Sales" buttons
-		packet.writeD(_crops.size());
+		ServerPackets.EX_SHOW_MANOR_DEFAULT_INFO.writeId(this);
+		writeByte(_hideButtons); // Hide "Seed Purchase" and "Crop Sales" buttons
+		writeInt(_crops.size());
 		for (Seed crop : _crops)
 		{
-			packet.writeD(crop.getCropId()); // crop Id
-			packet.writeD(crop.getLevel()); // level
-			packet.writeD(crop.getSeedReferencePrice()); // seed price
-			packet.writeD(crop.getCropReferencePrice()); // crop price
-			packet.writeC(1); // Reward 1 type
-			packet.writeD(crop.getReward(1)); // Reward 1 itemId
-			packet.writeC(1); // Reward 2 type
-			packet.writeD(crop.getReward(2)); // Reward 2 itemId
+			writeInt(crop.getCropId()); // crop Id
+			writeInt(crop.getLevel()); // level
+			writeInt(crop.getSeedReferencePrice()); // seed price
+			writeInt(crop.getCropReferencePrice()); // crop price
+			writeByte(1); // Reward 1 type
+			writeInt(crop.getReward(1)); // Reward 1 itemId
+			writeByte(1); // Reward 2 type
+			writeInt(crop.getReward(2)); // Reward 2 itemId
 		}
-		return true;
 	}
 }

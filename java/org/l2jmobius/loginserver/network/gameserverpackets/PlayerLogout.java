@@ -18,24 +18,22 @@ package org.l2jmobius.loginserver.network.gameserverpackets;
 
 import java.util.logging.Logger;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.GameServerThread;
 
 /**
  * @author -Wooden-
  */
-public class PlayerLogout extends BaseRecievePacket
+public class PlayerLogout extends ReadablePacket
 {
 	protected static final Logger LOGGER = Logger.getLogger(PlayerLogout.class.getName());
 	
-	/**
-	 * @param decrypt
-	 * @param server
-	 */
 	public PlayerLogout(byte[] decrypt, GameServerThread server)
 	{
 		super(decrypt);
-		final String account = readS();
+		readByte(); // id (already processed)
+		
+		final String account = readString();
 		server.removeAccountOnGameServer(account);
 	}
 }

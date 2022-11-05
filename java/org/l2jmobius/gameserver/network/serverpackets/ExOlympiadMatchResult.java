@@ -18,14 +18,13 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.olympiad.OlympiadInfo;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author JIV
  */
-public class ExOlympiadMatchResult implements IClientOutgoingPacket
+public class ExOlympiadMatchResult extends ServerPacket
 {
 	private final boolean _tie;
 	private int _winTeam; // 1,2
@@ -50,36 +49,35 @@ public class ExOlympiadMatchResult implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_RECEIVE_OLYMPIAD.writeId(packet);
-		packet.writeD(1); // Type 0 = Match List, 1 = Match Result
-		packet.writeD(_tie ? 1 : 0); // 0 - win, 1 - tie
-		packet.writeS(_winnerList.get(0).getName());
-		packet.writeD(_winTeam);
-		packet.writeD(_winnerList.size());
+		ServerPackets.EX_RECEIVE_OLYMPIAD.writeId(this);
+		writeInt(1); // Type 0 = Match List, 1 = Match Result
+		writeInt(_tie); // 0 - win, 1 - tie
+		writeString(_winnerList.get(0).getName());
+		writeInt(_winTeam);
+		writeInt(_winnerList.size());
 		for (OlympiadInfo info : _winnerList)
 		{
-			packet.writeS(info.getName());
-			packet.writeS(info.getClanName());
-			packet.writeD(info.getClanId());
-			packet.writeD(info.getClassId());
-			packet.writeD(info.getDamage());
-			packet.writeD(info.getCurrentPoints());
-			packet.writeD(info.getDiffPoints());
+			writeString(info.getName());
+			writeString(info.getClanName());
+			writeInt(info.getClanId());
+			writeInt(info.getClassId());
+			writeInt(info.getDamage());
+			writeInt(info.getCurrentPoints());
+			writeInt(info.getDiffPoints());
 		}
-		packet.writeD(_loseTeam);
-		packet.writeD(_loserList.size());
+		writeInt(_loseTeam);
+		writeInt(_loserList.size());
 		for (OlympiadInfo info : _loserList)
 		{
-			packet.writeS(info.getName());
-			packet.writeS(info.getClanName());
-			packet.writeD(info.getClanId());
-			packet.writeD(info.getClassId());
-			packet.writeD(info.getDamage());
-			packet.writeD(info.getCurrentPoints());
-			packet.writeD(info.getDiffPoints());
+			writeString(info.getName());
+			writeString(info.getClanName());
+			writeInt(info.getClanId());
+			writeInt(info.getClassId());
+			writeInt(info.getDamage());
+			writeInt(info.getCurrentPoints());
+			writeInt(info.getDiffPoints());
 		}
-		return true;
 	}
 }

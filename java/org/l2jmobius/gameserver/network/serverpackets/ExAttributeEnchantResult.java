@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ExAttributeEnchantResult implements IClientOutgoingPacket
+public class ExAttributeEnchantResult extends ServerPacket
 {
 	private final int _result;
 	
@@ -29,10 +28,9 @@ public class ExAttributeEnchantResult implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_ATTRIBUTE_ENCHANT_RESULT.writeId(packet);
-		packet.writeD(_result);
-		return true;
+		ServerPackets.EX_ATTRIBUTE_ENCHANT_RESULT.writeId(this);
+		writeInt(_result);
 	}
 }

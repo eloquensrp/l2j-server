@@ -16,21 +16,20 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.RecipeManager;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 
-public class RequestRecipeBookOpen implements IClientIncomingPacket
+public class RequestRecipeBookOpen implements ClientPacket
 {
 	private boolean _isDwarvenCraft;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_isDwarvenCraft = packet.readD() == 0;
-		return true;
+		_isDwarvenCraft = packet.readInt() == 0;
 	}
 	
 	@Override

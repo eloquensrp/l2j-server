@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.handler.IUserCommandHandler;
 import org.l2jmobius.gameserver.handler.UserCommandHandler;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -25,15 +25,14 @@ import org.l2jmobius.gameserver.network.GameClient;
 /**
  * @version $Revision: 1.1.2.1.2.2 $ $Date: 2005/03/27 15:29:30 $
  */
-public class BypassUserCmd implements IClientIncomingPacket
+public class BypassUserCmd implements ClientPacket
 {
 	private int _command;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_command = packet.readD();
-		return true;
+		_command = packet.readInt();
 	}
 	
 	@Override

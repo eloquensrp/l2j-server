@@ -19,7 +19,6 @@ package org.l2jmobius.gameserver.network.clientpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.instancemanager.CursedWeaponsManager;
 import org.l2jmobius.gameserver.model.CursedWeapon;
 import org.l2jmobius.gameserver.model.Location;
@@ -32,14 +31,8 @@ import org.l2jmobius.gameserver.network.serverpackets.ExCursedWeaponLocation.Cur
  * Format: (ch)
  * @author -Wooden-
  */
-public class RequestCursedWeaponLocation implements IClientIncomingPacket
+public class RequestCursedWeaponLocation implements ClientPacket
 {
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
-	
 	@Override
 	public void run(GameClient client)
 	{

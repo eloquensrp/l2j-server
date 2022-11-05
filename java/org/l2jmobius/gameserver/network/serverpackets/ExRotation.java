@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author JIV
  */
-public class ExRotation implements IClientOutgoingPacket
+public class ExRotation extends ServerPacket
 {
 	private final int _charId;
 	private final int _heading;
@@ -34,11 +33,10 @@ public class ExRotation implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_ROTATION.writeId(packet);
-		packet.writeD(_charId);
-		packet.writeD(_heading);
-		return true;
+		ServerPackets.EX_ROTATION.writeId(this);
+		writeInt(_charId);
+		writeInt(_heading);
 	}
 }

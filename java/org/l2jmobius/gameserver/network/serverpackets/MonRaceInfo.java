@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Npc;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class MonRaceInfo implements IClientOutgoingPacket
+public class MonRaceInfo extends ServerPacket
 {
 	private final int _unknown1;
 	private final int _unknown2;
@@ -39,39 +38,38 @@ public class MonRaceInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.MON_RACE_INFO.writeId(packet);
-		packet.writeD(_unknown1);
-		packet.writeD(_unknown2);
-		packet.writeD(8);
+		ServerPackets.MON_RACE_INFO.writeId(this);
+		writeInt(_unknown1);
+		writeInt(_unknown2);
+		writeInt(8);
 		for (int i = 0; i < 8; i++)
 		{
-			packet.writeD(_monsters[i].getObjectId()); // npcObjectID
-			packet.writeD(_monsters[i].getTemplate().getDisplayId() + 1000000); // npcID
-			packet.writeD(14107); // origin X
-			packet.writeD(181875 + (58 * (7 - i))); // origin Y
-			packet.writeD(-3566); // origin Z
-			packet.writeD(12080); // end X
-			packet.writeD(181875 + (58 * (7 - i))); // end Y
-			packet.writeD(-3566); // end Z
-			packet.writeF(_monsters[i].getTemplate().getFCollisionHeight()); // coll. height
-			packet.writeF(_monsters[i].getTemplate().getFCollisionRadius()); // coll. radius
-			packet.writeD(120); // ?? unknown
+			writeInt(_monsters[i].getObjectId()); // npcObjectID
+			writeInt(_monsters[i].getTemplate().getDisplayId() + 1000000); // npcID
+			writeInt(14107); // origin X
+			writeInt(181875 + (58 * (7 - i))); // origin Y
+			writeInt(-3566); // origin Z
+			writeInt(12080); // end X
+			writeInt(181875 + (58 * (7 - i))); // end Y
+			writeInt(-3566); // end Z
+			writeDouble(_monsters[i].getTemplate().getFCollisionHeight()); // coll. height
+			writeDouble(_monsters[i].getTemplate().getFCollisionRadius()); // coll. radius
+			writeInt(120); // ?? unknown
 			for (int j = 0; j < 20; j++)
 			{
 				if (_unknown1 == 0)
 				{
-					packet.writeC(_speeds[i][j]);
+					writeByte(_speeds[i][j]);
 				}
 				else
 				{
-					packet.writeC(0);
+					writeByte(0);
 				}
 			}
-			packet.writeD(0);
-			packet.writeD(0); // CT2.3 special effect
+			writeInt(0);
+			writeInt(0); // CT2.3 special effect
 		}
-		return true;
 	}
 }

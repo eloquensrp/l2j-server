@@ -18,18 +18,17 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Collection;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.sql.ClanTable;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.model.clan.ClanInfo;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 import org.l2jmobius.gameserver.network.clientpackets.RequestAllyInfo;
 
 /**
  * Sent in response to {@link RequestAllyInfo}, if applicable.<br>
  * @author afk5min
  */
-public class AllianceInfo implements IClientOutgoingPacket
+public class AllianceInfo extends ServerPacket
 {
 	private final String _name;
 	private final int _total;
@@ -61,25 +60,24 @@ public class AllianceInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.ALLIANCE_INFO.writeId(packet);
-		packet.writeS(_name);
-		packet.writeD(_total);
-		packet.writeD(_online);
-		packet.writeS(_leaderC);
-		packet.writeS(_leaderP);
-		packet.writeD(_allies.length);
+		ServerPackets.ALLIANCE_INFO.writeId(this);
+		writeString(_name);
+		writeInt(_total);
+		writeInt(_online);
+		writeString(_leaderC);
+		writeString(_leaderP);
+		writeInt(_allies.length);
 		for (ClanInfo aci : _allies)
 		{
-			packet.writeS(aci.getClan().getName());
-			packet.writeD(0);
-			packet.writeD(aci.getClan().getLevel());
-			packet.writeS(aci.getClan().getLeaderName());
-			packet.writeD(aci.getTotal());
-			packet.writeD(aci.getOnline());
+			writeString(aci.getClan().getName());
+			writeInt(0);
+			writeInt(aci.getClan().getLevel());
+			writeString(aci.getClan().getLeaderName());
+			writeInt(aci.getTotal());
+			writeInt(aci.getOnline());
 		}
-		return true;
 	}
 	
 	public String getName()

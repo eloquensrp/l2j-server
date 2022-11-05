@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.network.clientpackets;
 import java.util.logging.Logger;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.EnchantItemData;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -39,7 +39,7 @@ import org.l2jmobius.gameserver.network.serverpackets.StatusUpdate;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 import org.l2jmobius.gameserver.util.Util;
 
-public class RequestEnchantItem implements IClientIncomingPacket
+public class RequestEnchantItem implements ClientPacket
 {
 	protected static final Logger LOGGER_ENCHANT = Logger.getLogger("enchant.items");
 	
@@ -47,11 +47,10 @@ public class RequestEnchantItem implements IClientIncomingPacket
 	private int _supportId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_objectId = packet.readD();
-		_supportId = packet.readD();
-		return true;
+		_objectId = packet.readInt();
+		_supportId = packet.readInt();
 	}
 	
 	@Override

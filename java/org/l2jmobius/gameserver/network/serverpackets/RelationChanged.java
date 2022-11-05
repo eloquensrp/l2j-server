@@ -19,14 +19,13 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Playable;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Luca Baldi
  */
-public class RelationChanged implements IClientOutgoingPacket
+public class RelationChanged extends ServerPacket
 {
 	public static final int RELATION_PARTY1 = 0x00001; // party member
 	public static final int RELATION_PARTY2 = 0x00002; // party member
@@ -50,7 +49,7 @@ public class RelationChanged implements IClientOutgoingPacket
 	{
 		int _objId;
 		int _relation;
-		int _autoAttackable;
+		boolean _autoAttackable;
 		int _karma;
 		int _pvpFlag;
 	}
@@ -63,7 +62,7 @@ public class RelationChanged implements IClientOutgoingPacket
 		_singled = new Relation();
 		_singled._objId = activeChar.getObjectId();
 		_singled._relation = relation;
-		_singled._autoAttackable = autoattackable ? 1 : 0;
+		_singled._autoAttackable = autoattackable;
 		_singled._karma = activeChar.getKarma();
 		_singled._pvpFlag = activeChar.getPvpFlag();
 	}
@@ -82,38 +81,37 @@ public class RelationChanged implements IClientOutgoingPacket
 		final Relation r = new Relation();
 		r._objId = activeChar.getObjectId();
 		r._relation = relation;
-		r._autoAttackable = autoattackable ? 1 : 0;
+		r._autoAttackable = autoattackable;
 		r._karma = activeChar.getKarma();
 		r._pvpFlag = activeChar.getPvpFlag();
 		_multi.add(r);
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.RELATION_CHANGED.writeId(packet);
+		ServerPackets.RELATION_CHANGED.writeId(this);
 		if (_multi == null)
 		{
-			packet.writeD(1);
-			writeRelation(packet, _singled);
+			writeInt(1);
+			writeRelation(_singled);
 		}
 		else
 		{
-			packet.writeD(_multi.size());
-			for (Relation r : _multi)
+			writeInt(_multi.size());
+			for (Relation relation : _multi)
 			{
-				writeRelation(packet, r);
+				writeRelation(relation);
 			}
 		}
-		return true;
 	}
 	
-	private void writeRelation(PacketWriter packet, Relation relation)
+	private void writeRelation(Relation relation)
 	{
-		packet.writeD(relation._objId);
-		packet.writeD(relation._relation);
-		packet.writeD(relation._autoAttackable);
-		packet.writeD(relation._karma);
-		packet.writeD(relation._pvpFlag);
+		writeInt(relation._objId);
+		writeInt(relation._relation);
+		writeInt(relation._autoAttackable);
+		writeInt(relation._karma);
+		writeInt(relation._pvpFlag);
 	}
 }

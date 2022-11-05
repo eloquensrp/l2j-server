@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author JIV
  */
-public class ExEnchantSkillResult implements IClientOutgoingPacket
+public class ExEnchantSkillResult extends ServerPacket
 {
 	private static final ExEnchantSkillResult STATIC_PACKET_TRUE = new ExEnchantSkillResult(true);
 	private static final ExEnchantSkillResult STATIC_PACKET_FALSE = new ExEnchantSkillResult(false);
@@ -40,10 +39,9 @@ public class ExEnchantSkillResult implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_ENCHANT_SKILL_RESULT.writeId(packet);
-		packet.writeD(_enchanted ? 1 : 0);
-		return true;
+		ServerPackets.EX_ENCHANT_SKILL_RESULT.writeId(this);
+		writeInt(_enchanted);
 	}
 }

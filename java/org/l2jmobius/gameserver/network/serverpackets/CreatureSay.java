@@ -19,15 +19,14 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.enums.ChatType;
 import org.l2jmobius.gameserver.model.actor.Creature;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.NpcStringId;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 
-public class CreatureSay implements IClientOutgoingPacket
+public class CreatureSay extends ServerPacket
 {
 	private final Creature _sender;
 	private final ChatType _chatType;
@@ -39,6 +38,8 @@ public class CreatureSay implements IClientOutgoingPacket
 	
 	public CreatureSay(Creature sender, ChatType chatType, String senderName, String text)
 	{
+		super(128);
+		
 		_sender = sender;
 		_chatType = chatType;
 		_senderName = senderName;
@@ -47,6 +48,8 @@ public class CreatureSay implements IClientOutgoingPacket
 	
 	public CreatureSay(Creature sender, ChatType chatType, NpcStringId npcStringId)
 	{
+		super(128);
+		
 		_sender = sender;
 		_chatType = chatType;
 		_messageId = npcStringId.getId();
@@ -58,6 +61,8 @@ public class CreatureSay implements IClientOutgoingPacket
 	
 	public CreatureSay(ChatType chatType, int charId, SystemMessageId systemMessageId)
 	{
+		super(128);
+		
 		_sender = null;
 		_chatType = chatType;
 		_charId = charId;
@@ -78,36 +83,35 @@ public class CreatureSay implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SAY2.writeId(packet);
-		packet.writeD(_sender == null ? 0 : _sender.getObjectId());
-		packet.writeD(_chatType.getClientId());
+		ServerPackets.SAY2.writeId(this);
+		writeInt(_sender == null ? 0 : _sender.getObjectId());
+		writeInt(_chatType.getClientId());
 		if (_senderName != null)
 		{
-			packet.writeS(_senderName);
+			writeString(_senderName);
 		}
 		else
 		{
-			packet.writeD(_charId);
+			writeInt(_charId);
 		}
-		packet.writeD(_messageId); // High Five NPCString ID
+		writeInt(_messageId); // High Five NPCString ID
 		if (_text != null)
 		{
-			packet.writeS(_text);
+			writeString(_text);
 		}
 		else if (_parameters != null)
 		{
 			for (String s : _parameters)
 			{
-				packet.writeS(s);
+				writeString(s);
 			}
 		}
-		return true;
 	}
 	
 	@Override
-	public void runImpl(Player player)
+	public void run(Player player)
 	{
 		if (player != null)
 		{

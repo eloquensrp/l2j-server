@@ -32,7 +32,7 @@ import org.l2jmobius.gameserver.model.item.instance.Item;
 import org.l2jmobius.gameserver.model.skill.Skill;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.serverpackets.CharInfo;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.taskmanager.DecayTaskManager;
 
 public class Decoy extends Creature
@@ -229,7 +229,7 @@ public class Decoy extends Creature
 	}
 	
 	@Override
-	public void sendPacket(IClientOutgoingPacket packet)
+	public void sendPacket(ServerPacket packet)
 	{
 		if (_owner != null)
 		{

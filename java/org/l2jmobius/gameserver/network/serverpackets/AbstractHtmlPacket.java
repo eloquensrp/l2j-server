@@ -25,7 +25,7 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * @author HorridoJoho
  */
-public abstract class AbstractHtmlPacket implements IClientOutgoingPacket
+public abstract class AbstractHtmlPacket extends ServerPacket
 {
 	public static final char VAR_PARAM_START_CHAR = '$';
 	
@@ -35,11 +35,13 @@ public abstract class AbstractHtmlPacket implements IClientOutgoingPacket
 	
 	protected AbstractHtmlPacket()
 	{
+		super(1024);
 		_npcObjId = 0;
 	}
 	
 	protected AbstractHtmlPacket(int npcObjId)
 	{
+		super(1024);
 		if (npcObjId < 0)
 		{
 			throw new IllegalArgumentException();
@@ -49,12 +51,14 @@ public abstract class AbstractHtmlPacket implements IClientOutgoingPacket
 	
 	protected AbstractHtmlPacket(String html)
 	{
+		super(1024);
 		_npcObjId = 0;
 		setHtml(html);
 	}
 	
 	protected AbstractHtmlPacket(int npcObjId, String html)
 	{
+		super(1024);
 		if (npcObjId < 0)
 		{
 			throw new IllegalArgumentException();
@@ -127,7 +131,7 @@ public abstract class AbstractHtmlPacket implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public void runImpl(Player player)
+	public void run(Player player)
 	{
 		if (player != null)
 		{

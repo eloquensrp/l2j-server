@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.CharSelectInfoPackage;
 import org.l2jmobius.gameserver.model.events.EventDispatcher;
 import org.l2jmobius.gameserver.model.events.EventType;
@@ -27,16 +27,15 @@ import org.l2jmobius.gameserver.network.serverpackets.CharSelectionInfo;
 /**
  * @version $Revision: 1.4.2.1.2.2 $ $Date: 2005/03/27 15:29:29 $
  */
-public class CharacterRestore implements IClientIncomingPacket
+public class CharacterRestore implements ClientPacket
 {
 	// cd
 	private int _charSlot;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_charSlot = packet.readD();
-		return true;
+		_charSlot = packet.readInt();
 	}
 	
 	@Override

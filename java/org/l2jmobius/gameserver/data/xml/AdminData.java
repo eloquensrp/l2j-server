@@ -35,7 +35,7 @@ import org.l2jmobius.gameserver.model.AdminCommandAccessRight;
 import org.l2jmobius.gameserver.model.StatSet;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.SystemMessageId;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 
 /**
@@ -293,7 +293,7 @@ public class AdminData implements IXmlReader
 	 * Broadcast to GMs.
 	 * @param packet the packet
 	 */
-	public void broadcastToGMs(IClientOutgoingPacket packet)
+	public void broadcastToGMs(ServerPacket packet)
 	{
 		for (Player gm : getAllGms(true))
 		{

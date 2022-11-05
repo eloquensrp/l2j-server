@@ -16,17 +16,16 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author mrTJO
  */
-public class ExCubeGameChangePoints implements IClientOutgoingPacket
+public class ExCubeGameChangePoints extends ServerPacket
 {
-	int _timeLeft;
-	int _bluePoints;
-	int _redPoints;
+	private final int _timeLeft;
+	private final int _bluePoints;
+	private final int _redPoints;
 	
 	/**
 	 * Change Client Point Counter
@@ -42,13 +41,12 @@ public class ExCubeGameChangePoints implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BLOCK_UP_SET_STATE.writeId(packet);
-		packet.writeD(2);
-		packet.writeD(_timeLeft);
-		packet.writeD(_bluePoints);
-		packet.writeD(_redPoints);
-		return true;
+		ServerPackets.EX_BLOCK_UP_SET_STATE.writeId(this);
+		writeInt(2);
+		writeInt(_timeLeft);
+		writeInt(_bluePoints);
+		writeInt(_redPoints);
 	}
 }

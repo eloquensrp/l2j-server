@@ -16,9 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.loginserverpackets.login;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 
-public class KickPlayer extends BaseRecievePacket
+public class KickPlayer extends ReadablePacket
 {
 	private final String _account;
 	
@@ -28,7 +28,9 @@ public class KickPlayer extends BaseRecievePacket
 	public KickPlayer(byte[] decrypt)
 	{
 		super(decrypt);
-		_account = readS();
+		readByte(); // id (already processed)
+		
+		_account = readString();
 	}
 	
 	/**

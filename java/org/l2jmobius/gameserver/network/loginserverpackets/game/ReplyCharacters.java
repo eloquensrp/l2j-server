@@ -18,28 +18,22 @@ package org.l2jmobius.gameserver.network.loginserverpackets.game;
 
 import java.util.List;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author mrTJO Thanks to mochitto
  */
-public class ReplyCharacters extends BaseSendablePacket
+public class ReplyCharacters extends WritablePacket
 {
 	public ReplyCharacters(String account, int chars, List<Long> timeToDel)
 	{
-		writeC(0x08);
-		writeS(account);
-		writeC(chars);
-		writeC(timeToDel.size());
+		writeByte(0x08);
+		writeString(account);
+		writeByte(chars);
+		writeByte(timeToDel.size());
 		for (long time : timeToDel)
 		{
-			writeQ(time);
+			writeLong(time);
 		}
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
 	}
 }

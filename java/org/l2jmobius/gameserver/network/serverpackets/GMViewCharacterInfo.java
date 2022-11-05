@@ -16,12 +16,11 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.xml.ExperienceData;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class GMViewCharacterInfo implements IClientOutgoingPacket
+public class GMViewCharacterInfo extends ServerPacket
 {
 	private final Player _player;
 	private final int _runSpd;
@@ -45,108 +44,107 @@ public class GMViewCharacterInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.GM_VIEW_CHARACTER_INFO.writeId(packet);
-		packet.writeD(_player.getX());
-		packet.writeD(_player.getY());
-		packet.writeD(_player.getZ());
-		packet.writeD(_player.getHeading());
-		packet.writeD(_player.getObjectId());
-		packet.writeS(_player.getName());
-		packet.writeD(_player.getRace().ordinal());
-		packet.writeD(_player.getAppearance().isFemale() ? 1 : 0);
-		packet.writeD(_player.getClassId().getId());
-		packet.writeD(_player.getLevel());
-		packet.writeQ(_player.getExp());
-		packet.writeF((float) (_player.getExp() - ExperienceData.getInstance().getExpForLevel(_player.getLevel())) / (ExperienceData.getInstance().getExpForLevel(_player.getLevel() + 1) - ExperienceData.getInstance().getExpForLevel(_player.getLevel()))); // High Five exp %
-		packet.writeD(_player.getSTR());
-		packet.writeD(_player.getDEX());
-		packet.writeD(_player.getCON());
-		packet.writeD(_player.getINT());
-		packet.writeD(_player.getWIT());
-		packet.writeD(_player.getMEN());
-		packet.writeD(_player.getMaxHp());
-		packet.writeD((int) _player.getCurrentHp());
-		packet.writeD(_player.getMaxMp());
-		packet.writeD((int) _player.getCurrentMp());
-		packet.writeD((int) _player.getSp());
-		packet.writeD(_player.getCurrentLoad());
-		packet.writeD(_player.getMaxLoad());
-		packet.writeD(_player.getPkKills());
+		ServerPackets.GM_VIEW_CHARACTER_INFO.writeId(this);
+		writeInt(_player.getX());
+		writeInt(_player.getY());
+		writeInt(_player.getZ());
+		writeInt(_player.getHeading());
+		writeInt(_player.getObjectId());
+		writeString(_player.getName());
+		writeInt(_player.getRace().ordinal());
+		writeInt(_player.getAppearance().isFemale());
+		writeInt(_player.getClassId().getId());
+		writeInt(_player.getLevel());
+		writeLong(_player.getExp());
+		writeDouble((float) (_player.getExp() - ExperienceData.getInstance().getExpForLevel(_player.getLevel())) / (ExperienceData.getInstance().getExpForLevel(_player.getLevel() + 1) - ExperienceData.getInstance().getExpForLevel(_player.getLevel()))); // High Five exp %
+		writeInt(_player.getSTR());
+		writeInt(_player.getDEX());
+		writeInt(_player.getCON());
+		writeInt(_player.getINT());
+		writeInt(_player.getWIT());
+		writeInt(_player.getMEN());
+		writeInt(_player.getMaxHp());
+		writeInt((int) _player.getCurrentHp());
+		writeInt(_player.getMaxMp());
+		writeInt((int) _player.getCurrentMp());
+		writeInt((int) _player.getSp());
+		writeInt(_player.getCurrentLoad());
+		writeInt(_player.getMaxLoad());
+		writeInt(_player.getPkKills());
 		for (int slot : getPaperdollOrder())
 		{
-			packet.writeD(_player.getInventory().getPaperdollObjectId(slot));
+			writeInt(_player.getInventory().getPaperdollObjectId(slot));
 		}
 		for (int slot : getPaperdollOrder())
 		{
-			packet.writeD(_player.getInventory().getPaperdollItemDisplayId(slot));
+			writeInt(_player.getInventory().getPaperdollItemDisplayId(slot));
 		}
 		for (int slot : getPaperdollOrder())
 		{
-			packet.writeD(_player.getInventory().getPaperdollAugmentationId(slot));
+			writeInt(_player.getInventory().getPaperdollAugmentationId(slot));
 		}
-		packet.writeD(_player.getInventory().getTalismanSlots()); // CT2.3
-		packet.writeD(_player.getInventory().canEquipCloak() ? 1 : 0); // CT2.3
-		packet.writeD((int) _player.getPAtk(null));
-		packet.writeD((int) _player.getPAtkSpd());
-		packet.writeD((int) _player.getPDef(null));
-		packet.writeD(_player.getEvasionRate(null));
-		packet.writeD(_player.getAccuracy());
-		packet.writeD(_player.getCriticalHit(null, null));
-		packet.writeD((int) _player.getMAtk(null, null));
-		packet.writeD(_player.getMAtkSpd());
-		packet.writeD((int) _player.getPAtkSpd());
-		packet.writeD((int) _player.getMDef(null, null));
-		packet.writeD(_player.getPvpFlag()); // 0-non-pvp 1-pvp = violett name
-		packet.writeD(_player.getKarma());
-		packet.writeD(_runSpd);
-		packet.writeD(_walkSpd);
-		packet.writeD(_swimRunSpd);
-		packet.writeD(_swimWalkSpd);
-		packet.writeD(_flyRunSpd);
-		packet.writeD(_flyWalkSpd);
-		packet.writeD(_flyRunSpd);
-		packet.writeD(_flyWalkSpd);
-		packet.writeF(_moveMultiplier);
-		packet.writeF(_player.getAttackSpeedMultiplier()); // 2.9); //
-		packet.writeF(_player.getCollisionRadius()); // scale
-		packet.writeF(_player.getCollisionHeight()); // y offset ??!? fem dwarf 4033
-		packet.writeD(_player.getAppearance().getHairStyle());
-		packet.writeD(_player.getAppearance().getHairColor());
-		packet.writeD(_player.getAppearance().getFace());
-		packet.writeD(_player.isGM() ? 1 : 0); // builder level
-		packet.writeS(_player.getTitle());
-		packet.writeD(_player.getClanId()); // pledge id
-		packet.writeD(_player.getClanCrestId()); // pledge crest id
-		packet.writeD(_player.getAllyId()); // ally id
-		packet.writeC(_player.getMountType().ordinal()); // mount type
-		packet.writeC(_player.getPrivateStoreType().getId());
-		packet.writeC(_player.hasDwarvenCraft() ? 1 : 0);
-		packet.writeD(_player.getPkKills());
-		packet.writeD(_player.getPvpKills());
-		packet.writeH(_player.getRecomLeft());
-		packet.writeH(_player.getRecomHave()); // Blue value for name (0 = white, 255 = pure blue)
-		packet.writeD(_player.getClassId().getId());
-		packet.writeD(0); // special effects? circles around player...
-		packet.writeD(_player.getMaxCp());
-		packet.writeD((int) _player.getCurrentCp());
-		packet.writeC(_player.isRunning() ? 1 : 0); // changes the Speed display on Status Window
-		packet.writeC(321);
-		packet.writeD(_player.getPledgeClass()); // changes the text above CP on Status Window
-		packet.writeC(_player.isNoble() ? 1 : 0);
-		packet.writeC(_player.isHero() ? 1 : 0);
-		packet.writeD(_player.getAppearance().getNameColor());
-		packet.writeD(_player.getAppearance().getTitleColor());
+		writeInt(_player.getInventory().getTalismanSlots()); // CT2.3
+		writeInt(_player.getInventory().canEquipCloak()); // CT2.3
+		writeInt((int) _player.getPAtk(null));
+		writeInt((int) _player.getPAtkSpd());
+		writeInt((int) _player.getPDef(null));
+		writeInt(_player.getEvasionRate(null));
+		writeInt(_player.getAccuracy());
+		writeInt(_player.getCriticalHit(null, null));
+		writeInt((int) _player.getMAtk(null, null));
+		writeInt(_player.getMAtkSpd());
+		writeInt((int) _player.getPAtkSpd());
+		writeInt((int) _player.getMDef(null, null));
+		writeInt(_player.getPvpFlag()); // 0-non-pvp 1-pvp = violett name
+		writeInt(_player.getKarma());
+		writeInt(_runSpd);
+		writeInt(_walkSpd);
+		writeInt(_swimRunSpd);
+		writeInt(_swimWalkSpd);
+		writeInt(_flyRunSpd);
+		writeInt(_flyWalkSpd);
+		writeInt(_flyRunSpd);
+		writeInt(_flyWalkSpd);
+		writeDouble(_moveMultiplier);
+		writeDouble(_player.getAttackSpeedMultiplier()); // 2.9); //
+		writeDouble(_player.getCollisionRadius()); // scale
+		writeDouble(_player.getCollisionHeight()); // y offset ??!? fem dwarf 4033
+		writeInt(_player.getAppearance().getHairStyle());
+		writeInt(_player.getAppearance().getHairColor());
+		writeInt(_player.getAppearance().getFace());
+		writeInt(_player.isGM()); // builder level
+		writeString(_player.getTitle());
+		writeInt(_player.getClanId()); // pledge id
+		writeInt(_player.getClanCrestId()); // pledge crest id
+		writeInt(_player.getAllyId()); // ally id
+		writeByte(_player.getMountType().ordinal()); // mount type
+		writeByte(_player.getPrivateStoreType().getId());
+		writeByte(_player.hasDwarvenCraft());
+		writeInt(_player.getPkKills());
+		writeInt(_player.getPvpKills());
+		writeShort(_player.getRecomLeft());
+		writeShort(_player.getRecomHave()); // Blue value for name (0 = white, 255 = pure blue)
+		writeInt(_player.getClassId().getId());
+		writeInt(0); // special effects? circles around player...
+		writeInt(_player.getMaxCp());
+		writeInt((int) _player.getCurrentCp());
+		writeByte(_player.isRunning()); // changes the Speed display on Status Window
+		writeByte(321);
+		writeInt(_player.getPledgeClass()); // changes the text above CP on Status Window
+		writeByte(_player.isNoble());
+		writeByte(_player.isHero());
+		writeInt(_player.getAppearance().getNameColor());
+		writeInt(_player.getAppearance().getTitleColor());
 		final byte attackAttribute = _player.getAttackElement();
-		packet.writeH(attackAttribute);
-		packet.writeH(_player.getAttackElementValue(attackAttribute));
+		writeShort(attackAttribute);
+		writeShort(_player.getAttackElementValue(attackAttribute));
 		for (byte i = 0; i < 6; i++)
 		{
-			packet.writeH(_player.getDefenseElementValue(i));
+			writeShort(_player.getDefenseElementValue(i));
 		}
-		packet.writeD(_player.getFame());
-		packet.writeD(_player.getVitalityPoints());
-		return true;
+		writeInt(_player.getFame());
+		writeInt(_player.getVitalityPoints());
 	}
 }

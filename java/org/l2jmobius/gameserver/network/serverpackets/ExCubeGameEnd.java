@@ -16,16 +16,15 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * *
  * @author mrTJO
  */
-public class ExCubeGameEnd implements IClientOutgoingPacket
+public class ExCubeGameEnd extends ServerPacket
 {
-	boolean _isRedTeamWin;
+	private final boolean _isRedTeamWin;
 	
 	/**
 	 * Show Minigame Results
@@ -37,11 +36,10 @@ public class ExCubeGameEnd implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BLOCK_UP_SET_STATE.writeId(packet);
-		packet.writeD(1);
-		packet.writeD(_isRedTeamWin ? 1 : 0);
-		return true;
+		ServerPackets.EX_BLOCK_UP_SET_STATE.writeId(this);
+		writeInt(1);
+		writeInt(_isRedTeamWin);
 	}
 }

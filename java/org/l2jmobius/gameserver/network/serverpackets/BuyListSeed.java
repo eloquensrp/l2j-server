@@ -19,15 +19,14 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.instancemanager.CastleManorManager;
 import org.l2jmobius.gameserver.model.SeedProduction;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author l3x
  */
-public class BuyListSeed implements IClientOutgoingPacket
+public class BuyListSeed extends ServerPacket
 {
 	private final int _manorId;
 	private final long _money;
@@ -47,47 +46,46 @@ public class BuyListSeed implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.BUY_LIST_SEED.writeId(packet);
-		packet.writeQ(_money); // current money
-		packet.writeD(_manorId); // manor id
+		ServerPackets.BUY_LIST_SEED.writeId(this);
+		writeLong(_money); // current money
+		writeInt(_manorId); // manor id
 		if (!_list.isEmpty())
 		{
-			packet.writeH(_list.size()); // list length
+			writeShort(_list.size()); // list length
 			for (SeedProduction s : _list)
 			{
-				packet.writeD(s.getId());
-				packet.writeD(s.getId());
-				packet.writeD(0);
-				packet.writeQ(s.getAmount()); // item count
-				packet.writeH(5); // Custom Type 2
-				packet.writeH(0); // Custom Type 1
-				packet.writeH(0); // Equipped
-				packet.writeD(0); // Body Part
-				packet.writeH(0); // Enchant
-				packet.writeH(0); // Custom Type
-				packet.writeD(0); // Augment
-				packet.writeD(-1); // Mana
-				packet.writeD(-9999); // Time
-				packet.writeH(0); // Element Type
-				packet.writeH(0); // Element Power
+				writeInt(s.getId());
+				writeInt(s.getId());
+				writeInt(0);
+				writeLong(s.getAmount()); // item count
+				writeShort(5); // Custom Type 2
+				writeShort(0); // Custom Type 1
+				writeShort(0); // Equipped
+				writeInt(0); // Body Part
+				writeShort(0); // Enchant
+				writeShort(0); // Custom Type
+				writeInt(0); // Augment
+				writeInt(-1); // Mana
+				writeInt(-9999); // Time
+				writeShort(0); // Element Type
+				writeShort(0); // Element Power
 				for (byte i = 0; i < 6; i++)
 				{
-					packet.writeH(0);
+					writeShort(0);
 				}
 				// Enchant Effects
-				packet.writeH(0);
-				packet.writeH(0);
-				packet.writeH(0);
-				packet.writeQ(s.getPrice()); // price
+				writeShort(0);
+				writeShort(0);
+				writeShort(0);
+				writeLong(s.getPrice()); // price
 			}
 			_list.clear();
 		}
 		else
 		{
-			packet.writeH(0);
+			writeShort(0);
 		}
-		return true;
 	}
 }

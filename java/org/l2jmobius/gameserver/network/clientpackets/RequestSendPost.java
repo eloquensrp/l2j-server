@@ -20,7 +20,7 @@ import static org.l2jmobius.gameserver.model.itemcontainer.Inventory.ADENA_ID;
 import static org.l2jmobius.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.sql.CharNameTable;
 import org.l2jmobius.gameserver.data.xml.AdminData;
 import org.l2jmobius.gameserver.enums.PrivateStoreType;
@@ -43,7 +43,7 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 /**
  * @author Migi, DS
  */
-public class RequestSendPost implements IClientIncomingPacket
+public class RequestSendPost implements ClientPacket
 {
 	private static final int BATCH_LENGTH = 12; // length of the one item
 	
@@ -65,17 +65,17 @@ public class RequestSendPost implements IClientIncomingPacket
 	private long _reqAdena;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_receiver = packet.readS();
-		_isCod = packet.readD() != 0;
-		_subject = packet.readS();
-		_text = packet.readS();
+		_receiver = packet.readString();
+		_isCod = packet.readInt() != 0;
+		_subject = packet.readString();
+		_text = packet.readString();
 		
-		final int attachCount = packet.readD();
-		if ((attachCount < 0) || (attachCount > Config.MAX_ITEM_IN_PACKET) || (((attachCount * BATCH_LENGTH) + 8) != packet.getReadableBytes()))
+		final int attachCount = packet.readInt();
+		if ((attachCount < 0) || (attachCount > Config.MAX_ITEM_IN_PACKET) || (((attachCount * BATCH_LENGTH) + 8) != packet.getRemainingLength()))
 		{
-			return false;
+			return;
 		}
 		
 		if (attachCount > 0)
@@ -83,19 +83,18 @@ public class RequestSendPost implements IClientIncomingPacket
 			_items = new AttachmentItem[attachCount];
 			for (int i = 0; i < attachCount; i++)
 			{
-				final int objectId = packet.readD();
-				final long count = packet.readQ();
+				final int objectId = packet.readInt();
+				final long count = packet.readLong();
 				if ((objectId < 1) || (count < 0))
 				{
 					_items = null;
-					return false;
+					return;
 				}
 				_items[i] = new AttachmentItem(objectId, count);
 			}
 		}
 		
-		_reqAdena = packet.readQ();
-		return true;
+		_reqAdena = packet.readLong();
 	}
 	
 	@Override

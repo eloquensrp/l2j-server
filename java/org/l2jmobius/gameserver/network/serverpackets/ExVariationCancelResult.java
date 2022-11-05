@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ExVariationCancelResult implements IClientOutgoingPacket
+public class ExVariationCancelResult extends ServerPacket
 {
 	private final int _result;
 	
@@ -29,10 +28,9 @@ public class ExVariationCancelResult implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_VARIATION_CANCEL_RESULT.writeId(packet);
-		packet.writeD(_result);
-		return true;
+		ServerPackets.EX_VARIATION_CANCEL_RESULT.writeId(this);
+		writeInt(_result);
 	}
 }

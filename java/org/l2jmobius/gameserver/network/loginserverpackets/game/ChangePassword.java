@@ -16,25 +16,19 @@
  */
 package org.l2jmobius.gameserver.network.loginserverpackets.game;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author UnAfraid
  */
-public class ChangePassword extends BaseSendablePacket
+public class ChangePassword extends WritablePacket
 {
 	public ChangePassword(String accountName, String characterName, String oldPass, String newPass)
 	{
-		writeC(0x0B);
-		writeS(accountName);
-		writeS(characterName);
-		writeS(oldPass);
-		writeS(newPass);
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
+		writeByte(0x0B);
+		writeString(accountName);
+		writeString(characterName);
+		writeString(oldPass);
+		writeString(newPass);
 	}
 }

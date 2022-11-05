@@ -18,13 +18,12 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Collection;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.sql.ClanTable;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.model.siege.Castle;
 import org.l2jmobius.gameserver.model.siege.SiegeClan;
 import org.l2jmobius.gameserver.model.siege.clanhalls.SiegableHall;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Populates the Siege Attacker List in the SiegeInfo Window<br>
@@ -48,7 +47,7 @@ import org.l2jmobius.gameserver.network.OutgoingPackets;
  * d = AllyCrestID<br>
  * @author KenM
  */
-public class SiegeAttackerList implements IClientOutgoingPacket
+public class SiegeAttackerList extends ServerPacket
 {
 	private Castle _castle;
 	private SiegableHall _hall;
@@ -64,21 +63,21 @@ public class SiegeAttackerList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.CASTLE_SIEGE_ATTACKER_LIST.writeId(packet);
+		ServerPackets.CASTLE_SIEGE_ATTACKER_LIST.writeId(this);
 		if (_castle != null)
 		{
-			packet.writeD(_castle.getResidenceId());
-			packet.writeD(0); // 0
-			packet.writeD(1); // 1
-			packet.writeD(0); // 0
+			writeInt(_castle.getResidenceId());
+			writeInt(0); // 0
+			writeInt(1); // 1
+			writeInt(0); // 0
 			final int size = _castle.getSiege().getAttackerClans().size();
 			if (size > 0)
 			{
 				Clan clan;
-				packet.writeD(size);
-				packet.writeD(size);
+				writeInt(size);
+				writeInt(size);
 				for (SiegeClan siegeclan : _castle.getSiege().getAttackerClans())
 				{
 					clan = ClanTable.getInstance().getClan(siegeclan.getClanId());
@@ -86,35 +85,35 @@ public class SiegeAttackerList implements IClientOutgoingPacket
 					{
 						continue;
 					}
-					packet.writeD(clan.getId());
-					packet.writeS(clan.getName());
-					packet.writeS(clan.getLeaderName());
-					packet.writeD(clan.getCrestId());
-					packet.writeD(0); // signed time (seconds) (not storated by L2J)
-					packet.writeD(clan.getAllyId());
-					packet.writeS(clan.getAllyName());
-					packet.writeS(""); // AllyLeaderName
-					packet.writeD(clan.getAllyCrestId());
+					writeInt(clan.getId());
+					writeString(clan.getName());
+					writeString(clan.getLeaderName());
+					writeInt(clan.getCrestId());
+					writeInt(0); // signed time (seconds) (not storated by L2J)
+					writeInt(clan.getAllyId());
+					writeString(clan.getAllyName());
+					writeString(""); // AllyLeaderName
+					writeInt(clan.getAllyCrestId());
 				}
 			}
 			else
 			{
-				packet.writeD(0);
-				packet.writeD(0);
+				writeInt(0);
+				writeInt(0);
 			}
 		}
 		else
 		{
-			packet.writeD(_hall.getId());
-			packet.writeD(0); // 0
-			packet.writeD(1); // 1
-			packet.writeD(0); // 0
+			writeInt(_hall.getId());
+			writeInt(0); // 0
+			writeInt(1); // 1
+			writeInt(0); // 0
 			final Collection<SiegeClan> attackers = _hall.getSiege().getAttackerClans();
 			final int size = attackers.size();
 			if (size > 0)
 			{
-				packet.writeD(size);
-				packet.writeD(size);
+				writeInt(size);
+				writeInt(size);
 				for (SiegeClan sClan : attackers)
 				{
 					final Clan clan = ClanTable.getInstance().getClan(sClan.getClanId());
@@ -122,23 +121,22 @@ public class SiegeAttackerList implements IClientOutgoingPacket
 					{
 						continue;
 					}
-					packet.writeD(clan.getId());
-					packet.writeS(clan.getName());
-					packet.writeS(clan.getLeaderName());
-					packet.writeD(clan.getCrestId());
-					packet.writeD(0); // signed time (seconds) (not storated by L2J)
-					packet.writeD(clan.getAllyId());
-					packet.writeS(clan.getAllyName());
-					packet.writeS(""); // AllyLeaderName
-					packet.writeD(clan.getAllyCrestId());
+					writeInt(clan.getId());
+					writeString(clan.getName());
+					writeString(clan.getLeaderName());
+					writeInt(clan.getCrestId());
+					writeInt(0); // signed time (seconds) (not storated by L2J)
+					writeInt(clan.getAllyId());
+					writeString(clan.getAllyName());
+					writeString(""); // AllyLeaderName
+					writeInt(clan.getAllyCrestId());
 				}
 			}
 			else
 			{
-				packet.writeD(0);
-				packet.writeD(0);
+				writeInt(0);
+				writeInt(0);
 			}
 		}
-		return true;
 	}
 }

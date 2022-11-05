@@ -102,7 +102,7 @@ public class AntiFeedManager
 				return !Config.ANTIFEED_DISCONNECTED_AS_DUALBOX;
 			}
 			
-			return !targetClient.getConnectionAddress().equals(attackerClient.getConnectionAddress());
+			return !targetClient.getIp().equals(attackerClient.getIp());
 		}
 		
 		return true;
@@ -157,7 +157,7 @@ public class AntiFeedManager
 			return false; // no such event registered
 		}
 		
-		final Integer addrHash = client.getConnectionAddress().hashCode();
+		final Integer addrHash = client.getIp().hashCode();
 		final AtomicInteger connectionCount = event.computeIfAbsent(addrHash, k -> new AtomicInteger());
 		if ((connectionCount.get() + 1) <= (max + Config.DUALBOX_CHECK_WHITELIST.getOrDefault(addrHash, 0)))
 		{
@@ -198,7 +198,7 @@ public class AntiFeedManager
 			return false; // no such event registered
 		}
 		
-		final Integer addrHash = client.getConnectionAddress().hashCode();
+		final Integer addrHash = client.getIp().hashCode();
 		return event.computeIfPresent(addrHash, (k, v) ->
 		{
 			if ((v == null) || (v.decrementAndGet() == 0))
@@ -215,7 +215,7 @@ public class AntiFeedManager
 	 */
 	public void onDisconnect(GameClient client)
 	{
-		if ((client == null) || (client.getConnectionAddress() == null) || (client.getPlayer() == null))
+		if ((client == null) || (client.getIp() == null) || (client.getPlayer() == null))
 		{
 			return;
 		}
@@ -258,7 +258,7 @@ public class AntiFeedManager
 			return max;
 		}
 		
-		final Integer addrHash = client.getConnectionAddress().hashCode();
+		final Integer addrHash = client.getIp().hashCode();
 		int limit = max;
 		if (Config.DUALBOX_CHECK_WHITELIST.containsKey(addrHash))
 		{

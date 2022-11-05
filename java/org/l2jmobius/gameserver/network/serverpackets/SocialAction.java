@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class SocialAction implements IClientOutgoingPacket
+public class SocialAction extends ServerPacket
 {
 	public static final int LEVEL_UP = 2122;
 	
@@ -37,11 +36,10 @@ public class SocialAction implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SOCIAL_ACTION.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeD(_actionId);
-		return true;
+		ServerPackets.SOCIAL_ACTION.writeId(this);
+		writeInt(_objectId);
+		writeInt(_actionId);
 	}
 }

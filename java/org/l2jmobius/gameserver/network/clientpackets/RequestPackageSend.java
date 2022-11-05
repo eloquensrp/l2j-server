@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Npc;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -37,7 +37,7 @@ import org.l2jmobius.gameserver.util.Util;
  * @author -Wooden-
  * @author UnAfraid Thanks mrTJO
  */
-public class RequestPackageSend implements IClientIncomingPacket
+public class RequestPackageSend implements ClientPacket
 {
 	private static final int BATCH_LENGTH = 12; // length of the one item
 	
@@ -45,30 +45,29 @@ public class RequestPackageSend implements IClientIncomingPacket
 	private int _objectId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_objectId = packet.readD();
+		_objectId = packet.readInt();
 		
-		final int count = packet.readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getReadableBytes()))
+		final int count = packet.readInt();
+		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getRemainingLength()))
 		{
-			return false;
+			return;
 		}
 		
 		_items = new ItemHolder[count];
 		for (int i = 0; i < count; i++)
 		{
-			final int objId = packet.readD();
-			final long cnt = packet.readQ();
+			final int objId = packet.readInt();
+			final long cnt = packet.readLong();
 			if ((objId < 1) || (cnt < 0))
 			{
 				_items = null;
-				return false;
+				return;
 			}
 			
 			_items[i] = new ItemHolder(objId, cnt);
 		}
-		return true;
 	}
 	
 	@Override

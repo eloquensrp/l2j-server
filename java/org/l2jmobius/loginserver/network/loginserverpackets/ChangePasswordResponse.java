@@ -16,24 +16,18 @@
  */
 package org.l2jmobius.loginserver.network.loginserverpackets;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author Nik
  */
-public class ChangePasswordResponse extends BaseSendablePacket
+public class ChangePasswordResponse extends WritablePacket
 {
 	public ChangePasswordResponse(byte successful, String characterName, String msgToSend)
 	{
-		writeC(0x06);
-		// writeC(successful); // 0 false, 1 true
-		writeS(characterName);
-		writeS(msgToSend);
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
+		writeByte(0x06);
+		// writeByte(successful); // 0 false, 1 true
+		writeString(characterName);
+		writeString(msgToSend);
 	}
 }

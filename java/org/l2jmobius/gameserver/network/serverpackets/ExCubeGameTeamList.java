@@ -18,14 +18,13 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author mrTJO
  */
-public class ExCubeGameTeamList implements IClientOutgoingPacket
+public class ExCubeGameTeamList extends ServerPacket
 {
 	// Players Lists
 	List<Player> _bluePlayers;
@@ -47,24 +46,23 @@ public class ExCubeGameTeamList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BLOCK_UP_SET_LIST.writeId(packet);
-		packet.writeD(0);
-		packet.writeD(_roomNumber);
-		packet.writeD(0xffffffff);
-		packet.writeD(_bluePlayers.size());
+		ServerPackets.EX_BLOCK_UP_SET_LIST.writeId(this);
+		writeInt(0);
+		writeInt(_roomNumber);
+		writeInt(0xffffffff);
+		writeInt(_bluePlayers.size());
 		for (Player player : _bluePlayers)
 		{
-			packet.writeD(player.getObjectId());
-			packet.writeS(player.getName());
+			writeInt(player.getObjectId());
+			writeString(player.getName());
 		}
-		packet.writeD(_redPlayers.size());
+		writeInt(_redPlayers.size());
 		for (Player player : _redPlayers)
 		{
-			packet.writeD(player.getObjectId());
-			packet.writeS(player.getName());
+			writeInt(player.getObjectId());
+			writeString(player.getName());
 		}
-		return true;
 	}
 }

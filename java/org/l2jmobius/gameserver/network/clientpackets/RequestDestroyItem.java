@@ -21,7 +21,7 @@ import java.sql.PreparedStatement;
 
 import org.l2jmobius.Config;
 import org.l2jmobius.commons.database.DatabaseFactory;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.PlayerCondOverride;
 import org.l2jmobius.gameserver.enums.PrivateStoreType;
 import org.l2jmobius.gameserver.instancemanager.CursedWeaponsManager;
@@ -38,17 +38,16 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * @version $Revision: 1.7.2.4.2.6 $ $Date: 2005/03/27 15:29:30 $
  */
-public class RequestDestroyItem implements IClientIncomingPacket
+public class RequestDestroyItem implements ClientPacket
 {
 	private int _objectId;
 	private long _count;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_objectId = packet.readD();
-		_count = packet.readQ();
-		return true;
+		_objectId = packet.readInt();
+		_count = packet.readLong();
 	}
 	
 	@Override

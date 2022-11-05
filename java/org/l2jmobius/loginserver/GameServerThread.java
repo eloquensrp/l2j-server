@@ -27,11 +27,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
-import org.l2jmobius.commons.util.crypt.NewCrypt;
-import org.l2jmobius.commons.util.crypt.ScrambledKeyPair;
+import org.l2jmobius.commons.crypt.NewCrypt;
+import org.l2jmobius.commons.network.WritablePacket;
 import org.l2jmobius.loginserver.GameServerTable.GameServerInfo;
 import org.l2jmobius.loginserver.network.GameServerPacketHandler;
+import org.l2jmobius.loginserver.network.ScrambledKeyPair;
 import org.l2jmobius.loginserver.network.GameServerPacketHandler.GameServerState;
 import org.l2jmobius.loginserver.network.loginserverpackets.ChangePasswordResponse;
 import org.l2jmobius.loginserver.network.loginserverpackets.InitLS;
@@ -46,6 +46,10 @@ import org.l2jmobius.loginserver.network.loginserverpackets.RequestCharacters;
 public class GameServerThread extends Thread
 {
 	protected static final Logger LOGGER = Logger.getLogger(GameServerThread.class.getName());
+	
+	/** Authed Clients on GameServer */
+	private final Set<String> _accountsOnGameServer = ConcurrentHashMap.newKeySet();
+	
 	private final Socket _connection;
 	private InputStream _in;
 	private OutputStream _out;
@@ -53,15 +57,9 @@ public class GameServerThread extends Thread
 	private final RSAPrivateKey _privateKey;
 	private NewCrypt _blowfish;
 	private GameServerState _loginConnectionState = GameServerState.CONNECTED;
-	
 	private final String _connectionIp;
-	
-	private GameServerInfo _gsi;
-	
-	/** Authed Clients on a GameServer */
-	private final Set<String> _accountsOnGameServer = ConcurrentHashMap.newKeySet();
-	
 	private String _connectionIPAddress;
+	private GameServerInfo _gsi;
 	
 	@Override
 	public void run()
@@ -220,29 +218,39 @@ public class GameServerThread extends Thread
 		start();
 	}
 	
-	/**
-	 * @param sl
-	 */
-	public void sendPacket(BaseSendablePacket sl)
+	public void sendPacket(WritablePacket packet)
 	{
 		try
 		{
-			final byte[] data = sl.getContent();
-			NewCrypt.appendChecksum(data);
-			_blowfish.crypt(data, 0, data.length);
+			packet.write(); // write initial data
+			packet.writeInt(0); // reserved for checksum
+			int size = packet.getLength() - 2; // size without header
+			final int padding = size % 8; // padding of 8 bytes
+			if (padding != 0)
+			{
+				for (int i = padding; i < 8; i++)
+				{
+					packet.writeByte(0);
+				}
+			}
 			
-			final int len = data.length + 2;
+			// size header + encrypted[data + checksum (int) + padding]
+			final byte[] data = packet.getSendableBytes();
+			
+			// encrypt
+			size = data.length - 2; // data size without header
+			NewCrypt.appendChecksum(data, 2, size);
+			_blowfish.crypt(data, 2, size);
+			
 			synchronized (_out)
 			{
-				_out.write(len & 0xff);
-				_out.write((len >> 8) & 0xff);
 				_out.write(data);
 				_out.flush();
 			}
 		}
 		catch (IOException e)
 		{
-			LOGGER.severe("IOException while sending packet " + sl.getClass().getSimpleName());
+			LOGGER.severe("IOException while sending packet " + packet.getClass().getSimpleName());
 		}
 	}
 	
@@ -256,7 +264,7 @@ public class GameServerThread extends Thread
 		sendPacket(new RequestCharacters(account));
 	}
 	
-	public void ChangePasswordResponse(byte successful, String characterName, String msgToSend)
+	public void changePasswordResponse(byte successful, String characterName, String msgToSend)
 	{
 		sendPacket(new ChangePasswordResponse(successful, characterName, msgToSend));
 	}

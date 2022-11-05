@@ -18,7 +18,7 @@ package org.l2jmobius.gameserver.network.clientpackets;
 
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.PlayerCondOverride;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.EtcItem;
@@ -32,7 +32,7 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 /**
  * @author Zoey76
  */
-public class RequestUnEquipItem implements IClientIncomingPacket
+public class RequestUnEquipItem implements ClientPacket
 {
 	private int _slot;
 	
@@ -40,10 +40,9 @@ public class RequestUnEquipItem implements IClientIncomingPacket
 	 * Packet type id 0x16 format: cd
 	 */
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_slot = packet.readD();
-		return true;
+		_slot = packet.readInt();
 	}
 	
 	@Override

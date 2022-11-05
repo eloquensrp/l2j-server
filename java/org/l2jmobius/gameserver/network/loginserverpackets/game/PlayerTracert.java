@@ -16,27 +16,21 @@
  */
 package org.l2jmobius.gameserver.network.loginserverpackets.game;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author mrTJO
  */
-public class PlayerTracert extends BaseSendablePacket
+public class PlayerTracert extends WritablePacket
 {
 	public PlayerTracert(String account, String pcIp, String hop1, String hop2, String hop3, String hop4)
 	{
-		writeC(0x07);
-		writeS(account);
-		writeS(pcIp);
-		writeS(hop1);
-		writeS(hop2);
-		writeS(hop3);
-		writeS(hop4);
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
+		writeByte(0x07);
+		writeString(account);
+		writeString(pcIp);
+		writeString(hop1);
+		writeString(hop2);
+		writeString(hop3);
+		writeString(hop4);
 	}
 }

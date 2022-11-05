@@ -16,17 +16,16 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.sql.CharNameTable;
 import org.l2jmobius.gameserver.model.World;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Support for "Chat with Friends" dialog. <br />
  * Add new friend or delete.
  * @author JIV
  */
-public class FriendPacket implements IClientOutgoingPacket
+public class FriendPacket extends ServerPacket
 {
 	private final boolean _action;
 	private final boolean _online;
@@ -46,14 +45,13 @@ public class FriendPacket implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.L2_FRIEND.writeId(packet);
-		packet.writeD(_action ? 1 : 3); // 1-add 3-remove
-		packet.writeD(_objid);
-		packet.writeS(_name);
-		packet.writeD(_online ? 1 : 0);
-		packet.writeD(_online ? _objid : 0);
-		return true;
+		ServerPackets.L2_FRIEND.writeId(this);
+		writeInt(_action ? 1 : 3); // 1-add 3-remove
+		writeInt(_objid);
+		writeString(_name);
+		writeInt(_online);
+		writeInt(_online ? _objid : 0);
 	}
 }

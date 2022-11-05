@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.PrivateStoreType;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.instance.Item;
@@ -28,18 +28,17 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 /**
  * @version $Revision: 1.0.0.0 $ $Date: 2005/07/11 15:29:30 $
  */
-public class RequestAutoSoulShot implements IClientIncomingPacket
+public class RequestAutoSoulShot implements ClientPacket
 {
 	// format cd
 	private int _itemId;
 	private int _type; // 1 = on : 0 = off;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_itemId = packet.readD();
-		_type = packet.readD();
-		return true;
+		_itemId = packet.readInt();
+		_type = packet.readInt();
 	}
 	
 	@Override

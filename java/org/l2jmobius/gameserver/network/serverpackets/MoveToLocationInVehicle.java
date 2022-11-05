@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.Location;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Maktakien
  */
-public class MoveToLocationInVehicle implements IClientOutgoingPacket
+public class MoveToLocationInVehicle extends ServerPacket
 {
 	private final int _objectId;
 	private final int _boatId;
@@ -45,17 +44,16 @@ public class MoveToLocationInVehicle implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.MOVE_TO_LOCATION_IN_VEHICLE.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeD(_boatId);
-		packet.writeD(_destination.getX());
-		packet.writeD(_destination.getY());
-		packet.writeD(_destination.getZ());
-		packet.writeD(_origin.getX());
-		packet.writeD(_origin.getY());
-		packet.writeD(_origin.getZ());
-		return true;
+		ServerPackets.MOVE_TO_LOCATION_IN_VEHICLE.writeId(this);
+		writeInt(_objectId);
+		writeInt(_boatId);
+		writeInt(_destination.getX());
+		writeInt(_destination.getY());
+		writeInt(_destination.getZ());
+		writeInt(_origin.getX());
+		writeInt(_origin.getY());
+		writeInt(_origin.getZ());
 	}
 }

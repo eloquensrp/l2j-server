@@ -18,7 +18,7 @@ package org.l2jmobius.gameserver.network.clientpackets;
 
 import java.util.Collection;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.instance.Item;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -28,15 +28,14 @@ import org.l2jmobius.gameserver.network.serverpackets.PackageSendableList;
  * @author -Wooden-
  * @author UnAfraid Thanks mrTJO
  */
-public class RequestPackageSendableItemList implements IClientIncomingPacket
+public class RequestPackageSendableItemList implements ClientPacket
 {
 	private int _objectID;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_objectID = packet.readD();
-		return true;
+		_objectID = packet.readInt();
 	}
 	
 	@Override

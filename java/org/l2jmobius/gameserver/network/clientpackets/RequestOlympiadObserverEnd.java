@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 
@@ -24,14 +23,8 @@ import org.l2jmobius.gameserver.network.GameClient;
  * format ch c: (id) 0xD0 h: (subid) 0x12
  * @author -Wooden-
  */
-public class RequestOlympiadObserverEnd implements IClientIncomingPacket
+public class RequestOlympiadObserverEnd implements ClientPacket
 {
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
-	
 	@Override
 	public void run(GameClient client)
 	{

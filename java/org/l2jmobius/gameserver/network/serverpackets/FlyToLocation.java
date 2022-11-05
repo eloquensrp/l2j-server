@@ -16,16 +16,15 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.enums.FlyType;
 import org.l2jmobius.gameserver.model.actor.Creature;
 import org.l2jmobius.gameserver.model.interfaces.ILocational;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class FlyToLocation implements IClientOutgoingPacket
+public class FlyToLocation extends ServerPacket
 {
 	private final int _destX;
 	private final int _destY;
@@ -58,17 +57,16 @@ public class FlyToLocation implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.FLY_TO_LOCATION.writeId(packet);
-		packet.writeD(_chaObjId);
-		packet.writeD(_destX);
-		packet.writeD(_destY);
-		packet.writeD(_destZ);
-		packet.writeD(_orgX);
-		packet.writeD(_orgY);
-		packet.writeD(_orgZ);
-		packet.writeD(_type.ordinal());
-		return true;
+		ServerPackets.FLY_TO_LOCATION.writeId(this);
+		writeInt(_chaObjId);
+		writeInt(_destX);
+		writeInt(_destY);
+		writeInt(_destZ);
+		writeInt(_orgX);
+		writeInt(_orgY);
+		writeInt(_orgZ);
+		writeInt(_type.ordinal());
 	}
 }

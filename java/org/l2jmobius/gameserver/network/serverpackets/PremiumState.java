@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author GodKratos
  */
-public class PremiumState implements IClientOutgoingPacket
+public class PremiumState extends ServerPacket
 {
 	private final int _objectId;
 	private final int _state;
@@ -34,11 +33,10 @@ public class PremiumState implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BR_PREMIUM_STATE.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeC(_state);
-		return true;
+		ServerPackets.EX_BR_PREMIUM_STATE.writeId(this);
+		writeInt(_objectId);
+		writeByte(_state);
 	}
 }

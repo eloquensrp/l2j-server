@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.instance.Item;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -29,15 +29,14 @@ import org.l2jmobius.gameserver.util.Util;
  * Format(ch) d
  * @author -Wooden-
  */
-public class RequestConfirmCancelItem implements IClientIncomingPacket
+public class RequestConfirmCancelItem implements ClientPacket
 {
 	private int _objectId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_objectId = packet.readD();
-		return true;
+		_objectId = packet.readInt();
 	}
 	
 	@Override

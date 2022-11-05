@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExBasicActionList implements IClientOutgoingPacket
+public class ExBasicActionList extends ServerPacket
 {
 	//@formatter:off
 	public static final int[] ACTIONS_ON_TRANSFORM =
@@ -96,14 +95,13 @@ public class ExBasicActionList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BASIC_ACTION_LIST.writeId(packet);
-		packet.writeD(_actionIds.length);
-		for (int _actionId : _actionIds)
+		ServerPackets.EX_BASIC_ACTION_LIST.writeId(this);
+		writeInt(_actionIds.length);
+		for (int actionId : _actionIds)
 		{
-			packet.writeD(_actionId);
+			writeInt(actionId);
 		}
-		return true;
 	}
 }

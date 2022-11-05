@@ -16,14 +16,13 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Summon;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExPartyPetWindowDelete implements IClientOutgoingPacket
+public class ExPartyPetWindowDelete extends ServerPacket
 {
 	private final Summon _summon;
 	
@@ -33,12 +32,11 @@ public class ExPartyPetWindowDelete implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_PARTY_PET_WINDOW_DELETE.writeId(packet);
-		packet.writeD(_summon.getObjectId());
-		packet.writeD(_summon.getOwner().getObjectId());
-		packet.writeS(_summon.getName());
-		return true;
+		ServerPackets.EX_PARTY_PET_WINDOW_DELETE.writeId(this);
+		writeInt(_summon.getObjectId());
+		writeInt(_summon.getOwner().getObjectId());
+		writeString(_summon.getName());
 	}
 }

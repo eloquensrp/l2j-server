@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 
@@ -24,19 +24,18 @@ import org.l2jmobius.gameserver.network.GameClient;
  * @author ShanSoft
  * @structure chdSdS
  */
-public class RequestSaveBookMarkSlot implements IClientIncomingPacket
+public class RequestSaveBookMarkSlot implements ClientPacket
 {
 	private int icon;
 	private String name;
 	private String tag;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		name = packet.readS();
-		icon = packet.readD();
-		tag = packet.readS();
-		return true;
+		name = packet.readString();
+		icon = packet.readInt();
+		tag = packet.readString();
 	}
 	
 	@Override

@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.HandysBlockCheckerManager;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -26,19 +26,18 @@ import org.l2jmobius.gameserver.network.PacketLogger;
  * Format: chddd d: Arena d: Answer
  * @author mrTJO
  */
-public class RequestExCubeGameReadyAnswer implements IClientIncomingPacket
+public class RequestExCubeGameReadyAnswer implements ClientPacket
 {
 	private int _arena;
 	private int _answer;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
 		// client sends -1,0,1,2 for arena parameter
-		_arena = packet.readD() + 1;
+		_arena = packet.readInt() + 1;
 		// client sends 1 if clicked confirm on not clicked, 0 if clicked cancel
-		_answer = packet.readD();
-		return true;
+		_answer = packet.readInt();
 	}
 	
 	@Override

@@ -16,22 +16,16 @@
  */
 package org.l2jmobius.loginserver.network.loginserverpackets;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author -Wooden-
  */
-public class KickPlayer extends BaseSendablePacket
+public class KickPlayer extends WritablePacket
 {
 	public KickPlayer(String account)
 	{
-		writeC(0x04);
-		writeS(account);
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
+		writeByte(0x04);
+		writeString(account);
 	}
 }

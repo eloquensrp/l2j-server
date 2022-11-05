@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.PacketLogger;
 
@@ -24,15 +24,14 @@ import org.l2jmobius.gameserver.network.PacketLogger;
  * Format: (ch) S
  * @author -Wooden- TODO: GodKratos: This packet is wrong in Gracia Final!!
  */
-public class RequestPCCafeCouponUse implements IClientIncomingPacket
+public class RequestPCCafeCouponUse implements ClientPacket
 {
 	private String _str;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_str = packet.readS();
-		return true;
+		_str = packet.readString();
 	}
 	
 	@Override

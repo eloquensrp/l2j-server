@@ -18,12 +18,11 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Collection;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.Shortcut;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ShortCutInit implements IClientOutgoingPacket
+public class ShortCutInit extends ServerPacket
 {
 	private Collection<Shortcut> _shortCuts;
 	
@@ -37,33 +36,33 @@ public class ShortCutInit implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SHORT_CUT_INIT.writeId(packet);
-		packet.writeD(_shortCuts.size());
+		ServerPackets.SHORT_CUT_INIT.writeId(this);
+		writeInt(_shortCuts.size());
 		for (Shortcut sc : _shortCuts)
 		{
-			packet.writeD(sc.getType().ordinal());
-			packet.writeD(sc.getSlot() + (sc.getPage() * 12));
+			writeInt(sc.getType().ordinal());
+			writeInt(sc.getSlot() + (sc.getPage() * 12));
 			switch (sc.getType())
 			{
 				case ITEM:
 				{
-					packet.writeD(sc.getId());
-					packet.writeD(1);
-					packet.writeD(sc.getSharedReuseGroup());
-					packet.writeD(0);
-					packet.writeD(0);
-					packet.writeH(0);
-					packet.writeH(0);
+					writeInt(sc.getId());
+					writeInt(1);
+					writeInt(sc.getSharedReuseGroup());
+					writeInt(0);
+					writeInt(0);
+					writeShort(0);
+					writeShort(0);
 					break;
 				}
 				case SKILL:
 				{
-					packet.writeD(sc.getId());
-					packet.writeD(sc.getLevel());
-					packet.writeC(0); // C5
-					packet.writeD(1); // C6
+					writeInt(sc.getId());
+					writeInt(sc.getLevel());
+					writeByte(0); // C5
+					writeInt(1); // C6
 					break;
 				}
 				case ACTION:
@@ -71,11 +70,10 @@ public class ShortCutInit implements IClientOutgoingPacket
 				case RECIPE:
 				case BOOKMARK:
 				{
-					packet.writeD(sc.getId());
-					packet.writeD(1); // C6
+					writeInt(sc.getId());
+					writeInt(1); // C6
 				}
 			}
 		}
-		return true;
 	}
 }

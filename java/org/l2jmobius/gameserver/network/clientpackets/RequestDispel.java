@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.SkillData;
 import org.l2jmobius.gameserver.enums.SkillFinishType;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -28,19 +28,18 @@ import org.l2jmobius.gameserver.network.GameClient;
 /**
  * @author KenM
  */
-public class RequestDispel implements IClientIncomingPacket
+public class RequestDispel implements ClientPacket
 {
 	private int _objectId;
 	private int _skillId;
 	private int _skillLevel;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_objectId = packet.readD();
-		_skillId = packet.readD();
-		_skillLevel = packet.readD();
-		return true;
+		_objectId = packet.readInt();
+		_skillId = packet.readInt();
+		_skillLevel = packet.readInt();
 	}
 	
 	@Override

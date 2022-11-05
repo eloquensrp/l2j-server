@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.model.clan.Clan.RankPrivs;
@@ -27,14 +26,8 @@ import org.l2jmobius.gameserver.network.serverpackets.PledgePowerGradeList;
  * Format: (ch)
  * @author -Wooden-
  */
-public class RequestPledgePowerGradeList implements IClientIncomingPacket
+public class RequestPledgePowerGradeList implements ClientPacket
 {
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
-	
 	@Override
 	public void run(GameClient client)
 	{

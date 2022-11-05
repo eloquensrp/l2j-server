@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.sql.ClanTable;
 import org.l2jmobius.gameserver.model.clan.Clan;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author -Wooden-
  */
-public class PledgeReceiveWarList implements IClientOutgoingPacket
+public class PledgeReceiveWarList extends ServerPacket
 {
 	private final Clan _clan;
 	private final int _tab;
@@ -36,12 +35,12 @@ public class PledgeReceiveWarList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PLEDGE_RECEIVE_WAR_LIST.writeId(packet);
-		packet.writeD(_tab); // type : 0 = Declared, 1 = Under Attack
-		packet.writeD(0); // page
-		packet.writeD(_tab == 0 ? _clan.getWarList().size() : _clan.getAttackerList().size());
+		ServerPackets.PLEDGE_RECEIVE_WAR_LIST.writeId(this);
+		writeInt(_tab); // type : 0 = Declared, 1 = Under Attack
+		writeInt(0); // page
+		writeInt(_tab == 0 ? _clan.getWarList().size() : _clan.getAttackerList().size());
 		for (Integer i : _tab == 0 ? _clan.getWarList() : _clan.getAttackerList())
 		{
 			final Clan clan = ClanTable.getInstance().getClan(i);
@@ -49,10 +48,9 @@ public class PledgeReceiveWarList implements IClientOutgoingPacket
 			{
 				continue;
 			}
-			packet.writeS(clan.getName());
-			packet.writeD(_tab); // ??
-			packet.writeD(_tab); // ??
+			writeString(clan.getName());
+			writeInt(_tab); // ??
+			writeInt(_tab); // ??
 		}
-		return true;
 	}
 }

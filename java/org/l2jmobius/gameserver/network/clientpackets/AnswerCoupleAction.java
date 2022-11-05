@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -29,19 +29,18 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * @author JIV
  */
-public class AnswerCoupleAction implements IClientIncomingPacket
+public class AnswerCoupleAction implements ClientPacket
 {
 	private int _objectId;
 	private int _actionId;
 	private int _answer;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_actionId = packet.readD();
-		_answer = packet.readD();
-		_objectId = packet.readD();
-		return true;
+		_actionId = packet.readInt();
+		_answer = packet.readInt();
+		_objectId = packet.readInt();
 	}
 	
 	@Override

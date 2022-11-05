@@ -17,7 +17,6 @@
 package org.l2jmobius.gameserver.network.serverpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.sql.ClanTable;
 import org.l2jmobius.gameserver.data.xml.NpcNameLocalisationData;
 import org.l2jmobius.gameserver.enums.PlayerCondOverride;
@@ -31,9 +30,9 @@ import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.model.skill.AbnormalVisualEffect;
 import org.l2jmobius.gameserver.model.zone.ZoneId;
 import org.l2jmobius.gameserver.model.zone.type.TownZone;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public abstract class AbstractNpcInfo implements IClientOutgoingPacket
+public abstract class AbstractNpcInfo extends ServerPacket
 {
 	protected int _x;
 	protected int _y;
@@ -135,46 +134,46 @@ public abstract class AbstractNpcInfo implements IClientOutgoingPacket
 		}
 		
 		@Override
-		public boolean write(PacketWriter packet)
+		public void write()
 		{
-			OutgoingPackets.NPC_INFO.writeId(packet);
-			packet.writeD(_npc.getObjectId());
-			packet.writeD(_displayId + 1000000); // npctype id
-			packet.writeD(_isAttackable ? 1 : 0);
-			packet.writeD(_x);
-			packet.writeD(_y);
-			packet.writeD(_z);
-			packet.writeD(_heading);
-			packet.writeD(0);
-			packet.writeD(_mAtkSpd);
-			packet.writeD(_pAtkSpd);
-			packet.writeD(_runSpd);
-			packet.writeD(_walkSpd);
-			packet.writeD(_swimRunSpd);
-			packet.writeD(_swimWalkSpd);
-			packet.writeD(_flyRunSpd);
-			packet.writeD(_flyWalkSpd);
-			packet.writeD(_flyRunSpd);
-			packet.writeD(_flyWalkSpd);
-			packet.writeF(_moveMultiplier);
-			packet.writeF(_npc.getAttackSpeedMultiplier());
-			packet.writeF(_collisionRadius);
-			packet.writeF(_collisionHeight);
-			packet.writeD(_rhand); // right hand weapon
-			packet.writeD(_chest);
-			packet.writeD(_lhand); // left hand weapon
-			packet.writeC(1); // name above char 1=true ... ??
-			packet.writeC(_npc.isRunning() ? 1 : 0);
-			packet.writeC(_npc.isInCombat() ? 1 : 0);
-			packet.writeC(_npc.isAlikeDead() ? 1 : 0);
-			packet.writeC(_isSummoned ? 2 : 0); // invisible ?? 0=false 1=true 2=summoned (only works if model has a summon animation)
-			packet.writeD(-1); // High Five NPCString ID
+			ServerPackets.NPC_INFO.writeId(this);
+			writeInt(_npc.getObjectId());
+			writeInt(_displayId + 1000000); // npctype id
+			writeInt(_isAttackable);
+			writeInt(_x);
+			writeInt(_y);
+			writeInt(_z);
+			writeInt(_heading);
+			writeInt(0);
+			writeInt(_mAtkSpd);
+			writeInt(_pAtkSpd);
+			writeInt(_runSpd);
+			writeInt(_walkSpd);
+			writeInt(_swimRunSpd);
+			writeInt(_swimWalkSpd);
+			writeInt(_flyRunSpd);
+			writeInt(_flyWalkSpd);
+			writeInt(_flyRunSpd);
+			writeInt(_flyWalkSpd);
+			writeDouble(_moveMultiplier);
+			writeDouble(_npc.getAttackSpeedMultiplier());
+			writeDouble(_collisionRadius);
+			writeDouble(_collisionHeight);
+			writeInt(_rhand); // right hand weapon
+			writeInt(_chest);
+			writeInt(_lhand); // left hand weapon
+			writeByte(1); // name above char 1=true ... ??
+			writeByte(_npc.isRunning());
+			writeByte(_npc.isInCombat());
+			writeByte(_npc.isAlikeDead());
+			writeByte(_isSummoned ? 2 : 0); // invisible ?? 0=false 1=true 2=summoned (only works if model has a summon animation)
+			writeInt(-1); // High Five NPCString ID
 			if ((_localisation == null) && _npc.getTemplate().isUsingServerSideName())
 			{
 				_name = _npc.getName(); // On every subclass
 			}
-			packet.writeS(_name);
-			packet.writeD(-1); // High Five NPCString ID
+			writeString(_name);
+			writeInt(-1); // High Five NPCString ID
 			if (_npc.isInvisible())
 			{
 				_title = "Invisible";
@@ -226,28 +225,27 @@ public abstract class AbstractNpcInfo implements IClientOutgoingPacket
 			{
 				_title = (Config.CHAMP_TITLE); // On every subclass
 			}
-			packet.writeS(_title);
-			packet.writeD(0); // Title color 0=client default
-			packet.writeD(0); // pvp flag
-			packet.writeD(0); // karma
-			packet.writeD(_npc.isInvisible() ? _npc.getAbnormalVisualEffects() | AbnormalVisualEffect.STEALTH.getMask() : _npc.getAbnormalVisualEffects());
-			packet.writeD(_clanId); // clan id
-			packet.writeD(_clanCrest); // crest id
-			packet.writeD(_allyId); // ally id
-			packet.writeD(_allyCrest); // all crest
-			packet.writeC(_npc.isInsideZone(ZoneId.WATER) ? 1 : _npc.isFlying() ? 2 : 0); // C2
-			packet.writeC(_npc.getTeam().getId());
-			packet.writeF(_collisionRadius);
-			packet.writeF(_collisionHeight);
-			packet.writeD(_enchantEffect); // C4
-			packet.writeD(_npc.isFlying() ? 1 : 0); // C6
-			packet.writeD(0);
-			packet.writeD(_npc.getColorEffect()); // CT1.5 Pet form and skills, Color effect
-			packet.writeC(_npc.isTargetable() ? 1 : 0);
-			packet.writeC(_npc.isShowName() ? 1 : 0);
-			packet.writeD(_npc.getAbnormalVisualEffectSpecial());
-			packet.writeD(_displayEffect);
-			return true;
+			writeString(_title);
+			writeInt(0); // Title color 0=client default
+			writeInt(0); // pvp flag
+			writeInt(0); // karma
+			writeInt(_npc.isInvisible() ? _npc.getAbnormalVisualEffects() | AbnormalVisualEffect.STEALTH.getMask() : _npc.getAbnormalVisualEffects());
+			writeInt(_clanId); // clan id
+			writeInt(_clanCrest); // crest id
+			writeInt(_allyId); // ally id
+			writeInt(_allyCrest); // all crest
+			writeByte(_npc.isInsideZone(ZoneId.WATER) ? 1 : _npc.isFlying() ? 2 : 0); // C2
+			writeByte(_npc.getTeam().getId());
+			writeDouble(_collisionRadius);
+			writeDouble(_collisionHeight);
+			writeInt(_enchantEffect); // C4
+			writeInt(_npc.isFlying()); // C6
+			writeInt(0);
+			writeInt(_npc.getColorEffect()); // CT1.5 Pet form and skills, Color effect
+			writeByte(_npc.isTargetable());
+			writeByte(_npc.isShowName());
+			writeInt(_npc.getAbnormalVisualEffectSpecial());
+			writeInt(_displayEffect);
 		}
 	}
 	
@@ -273,63 +271,62 @@ public abstract class AbstractNpcInfo implements IClientOutgoingPacket
 		}
 		
 		@Override
-		public boolean write(PacketWriter packet)
+		public void write()
 		{
-			OutgoingPackets.NPC_INFO.writeId(packet);
-			packet.writeD(_trap.getObjectId());
-			packet.writeD(_displayId + 1000000); // npctype id
-			packet.writeD(_isAttackable ? 1 : 0);
-			packet.writeD(_x);
-			packet.writeD(_y);
-			packet.writeD(_z);
-			packet.writeD(_heading);
-			packet.writeD(0);
-			packet.writeD(_mAtkSpd);
-			packet.writeD(_pAtkSpd);
-			packet.writeD(_runSpd);
-			packet.writeD(_walkSpd);
-			packet.writeD(_swimRunSpd);
-			packet.writeD(_swimWalkSpd);
-			packet.writeD(_flyRunSpd);
-			packet.writeD(_flyWalkSpd);
-			packet.writeD(_flyRunSpd);
-			packet.writeD(_flyWalkSpd);
-			packet.writeF(_moveMultiplier);
-			packet.writeF(_trap.getAttackSpeedMultiplier());
-			packet.writeF(_collisionRadius);
-			packet.writeF(_collisionHeight);
-			packet.writeD(_rhand); // right hand weapon
-			packet.writeD(_chest);
-			packet.writeD(_lhand); // left hand weapon
-			packet.writeC(1); // name above char 1=true ... ??
-			packet.writeC(1);
-			packet.writeC(_trap.isInCombat() ? 1 : 0);
-			packet.writeC(_trap.isAlikeDead() ? 1 : 0);
-			packet.writeC(_isSummoned ? 2 : 0); // invisible ?? 0=false 1=true 2=summoned (only works if model has a summon animation)
-			packet.writeD(-1); // High Five NPCString ID
-			packet.writeS(_name);
-			packet.writeD(-1); // High Five NPCString ID
-			packet.writeS(_title);
-			packet.writeD(0); // title color 0 = client default
-			packet.writeD(_trap.getPvpFlag());
-			packet.writeD(_trap.getKarma());
-			packet.writeD(_trap.isInvisible() ? _trap.getAbnormalVisualEffects() | AbnormalVisualEffect.STEALTH.getMask() : _trap.getAbnormalVisualEffects());
-			packet.writeD(0); // clan id
-			packet.writeD(0); // crest id
-			packet.writeD(0); // C2
-			packet.writeD(0); // C2
-			packet.writeC(0); // C2
-			packet.writeC(_trap.getTeam().getId());
-			packet.writeF(_collisionRadius);
-			packet.writeF(_collisionHeight);
-			packet.writeD(0); // C4
-			packet.writeD(0); // C6
-			packet.writeD(0);
-			packet.writeD(0); // CT1.5 Pet form and skills
-			packet.writeC(1);
-			packet.writeC(1);
-			packet.writeD(0);
-			return true;
+			ServerPackets.NPC_INFO.writeId(this);
+			writeInt(_trap.getObjectId());
+			writeInt(_displayId + 1000000); // npctype id
+			writeInt(_isAttackable);
+			writeInt(_x);
+			writeInt(_y);
+			writeInt(_z);
+			writeInt(_heading);
+			writeInt(0);
+			writeInt(_mAtkSpd);
+			writeInt(_pAtkSpd);
+			writeInt(_runSpd);
+			writeInt(_walkSpd);
+			writeInt(_swimRunSpd);
+			writeInt(_swimWalkSpd);
+			writeInt(_flyRunSpd);
+			writeInt(_flyWalkSpd);
+			writeInt(_flyRunSpd);
+			writeInt(_flyWalkSpd);
+			writeDouble(_moveMultiplier);
+			writeDouble(_trap.getAttackSpeedMultiplier());
+			writeDouble(_collisionRadius);
+			writeDouble(_collisionHeight);
+			writeInt(_rhand); // right hand weapon
+			writeInt(_chest);
+			writeInt(_lhand); // left hand weapon
+			writeByte(1); // name above char 1=true ... ??
+			writeByte(1);
+			writeByte(_trap.isInCombat());
+			writeByte(_trap.isAlikeDead());
+			writeByte(_isSummoned ? 2 : 0); // invisible ?? 0=false 1=true 2=summoned (only works if model has a summon animation)
+			writeInt(-1); // High Five NPCString ID
+			writeString(_name);
+			writeInt(-1); // High Five NPCString ID
+			writeString(_title);
+			writeInt(0); // title color 0 = client default
+			writeInt(_trap.getPvpFlag());
+			writeInt(_trap.getKarma());
+			writeInt(_trap.isInvisible() ? _trap.getAbnormalVisualEffects() | AbnormalVisualEffect.STEALTH.getMask() : _trap.getAbnormalVisualEffects());
+			writeInt(0); // clan id
+			writeInt(0); // crest id
+			writeInt(0); // C2
+			writeInt(0); // C2
+			writeByte(0); // C2
+			writeByte(_trap.getTeam().getId());
+			writeDouble(_collisionRadius);
+			writeDouble(_collisionHeight);
+			writeInt(0); // C4
+			writeInt(0); // C6
+			writeInt(0);
+			writeInt(0); // CT1.5 Pet form and skills
+			writeByte(1);
+			writeByte(1);
+			writeInt(0);
 		}
 	}
 	
@@ -361,63 +358,62 @@ public abstract class AbstractNpcInfo implements IClientOutgoingPacket
 		}
 		
 		@Override
-		public boolean write(PacketWriter packet)
+		public void write()
 		{
-			OutgoingPackets.NPC_INFO.writeId(packet);
-			packet.writeD(_summon.getObjectId());
-			packet.writeD(_displayId + 1000000); // npctype id
-			packet.writeD(_isAttackable ? 1 : 0);
-			packet.writeD(_x);
-			packet.writeD(_y);
-			packet.writeD(_z);
-			packet.writeD(_heading);
-			packet.writeD(0);
-			packet.writeD(_mAtkSpd);
-			packet.writeD(_pAtkSpd);
-			packet.writeD(_runSpd);
-			packet.writeD(_walkSpd);
-			packet.writeD(_swimRunSpd);
-			packet.writeD(_swimWalkSpd);
-			packet.writeD(_flyRunSpd);
-			packet.writeD(_flyWalkSpd);
-			packet.writeD(_flyRunSpd);
-			packet.writeD(_flyWalkSpd);
-			packet.writeF(_moveMultiplier);
-			packet.writeF(_summon.getAttackSpeedMultiplier());
-			packet.writeF(_collisionRadius);
-			packet.writeF(_collisionHeight);
-			packet.writeD(_rhand); // right hand weapon
-			packet.writeD(_chest);
-			packet.writeD(_lhand); // left hand weapon
-			packet.writeC(1); // name above char 1=true ... ??
-			packet.writeC(1); // always running 1=running 0=walking
-			packet.writeC(_summon.isInCombat() ? 1 : 0);
-			packet.writeC(_summon.isAlikeDead() ? 1 : 0);
-			packet.writeC(_isSummoned ? 2 : _value); // invisible ?? 0=false 1=true 2=summoned (only works if model has a summon animation)
-			packet.writeD(-1); // High Five NPCString ID
-			packet.writeS(_name);
-			packet.writeD(-1); // High Five NPCString ID
-			packet.writeS(_title);
-			packet.writeD(1); // Title color 0=client default
-			packet.writeD(_summon.getPvpFlag());
-			packet.writeD(_summon.getKarma());
-			packet.writeD(_gmSeeInvis && _summon.isInvisible() ? _summon.getAbnormalVisualEffects() | AbnormalVisualEffect.STEALTH.getMask() : _summon.getAbnormalVisualEffects());
-			packet.writeD(0); // clan id
-			packet.writeD(0); // crest id
-			packet.writeD(0); // C2
-			packet.writeD(0); // C2
-			packet.writeC(_summon.isInsideZone(ZoneId.WATER) ? 1 : _summon.isFlying() ? 2 : 0); // C2
-			packet.writeC(_summon.getTeam().getId());
-			packet.writeF(_collisionRadius);
-			packet.writeF(_collisionHeight);
-			packet.writeD(_enchantEffect); // C4
-			packet.writeD(0); // C6
-			packet.writeD(0);
-			packet.writeD(_form); // CT1.5 Pet form and skills
-			packet.writeC(1);
-			packet.writeC(1);
-			packet.writeD(_summon.getAbnormalVisualEffectSpecial());
-			return true;
+			ServerPackets.NPC_INFO.writeId(this);
+			writeInt(_summon.getObjectId());
+			writeInt(_displayId + 1000000); // npctype id
+			writeInt(_isAttackable);
+			writeInt(_x);
+			writeInt(_y);
+			writeInt(_z);
+			writeInt(_heading);
+			writeInt(0);
+			writeInt(_mAtkSpd);
+			writeInt(_pAtkSpd);
+			writeInt(_runSpd);
+			writeInt(_walkSpd);
+			writeInt(_swimRunSpd);
+			writeInt(_swimWalkSpd);
+			writeInt(_flyRunSpd);
+			writeInt(_flyWalkSpd);
+			writeInt(_flyRunSpd);
+			writeInt(_flyWalkSpd);
+			writeDouble(_moveMultiplier);
+			writeDouble(_summon.getAttackSpeedMultiplier());
+			writeDouble(_collisionRadius);
+			writeDouble(_collisionHeight);
+			writeInt(_rhand); // right hand weapon
+			writeInt(_chest);
+			writeInt(_lhand); // left hand weapon
+			writeByte(1); // name above char 1=true ... ??
+			writeByte(1); // always running 1=running 0=walking
+			writeByte(_summon.isInCombat());
+			writeByte(_summon.isAlikeDead());
+			writeByte(_isSummoned ? 2 : _value); // invisible ?? 0=false 1=true 2=summoned (only works if model has a summon animation)
+			writeInt(-1); // High Five NPCString ID
+			writeString(_name);
+			writeInt(-1); // High Five NPCString ID
+			writeString(_title);
+			writeInt(1); // Title color 0=client default
+			writeInt(_summon.getPvpFlag());
+			writeInt(_summon.getKarma());
+			writeInt(_gmSeeInvis && _summon.isInvisible() ? _summon.getAbnormalVisualEffects() | AbnormalVisualEffect.STEALTH.getMask() : _summon.getAbnormalVisualEffects());
+			writeInt(0); // clan id
+			writeInt(0); // crest id
+			writeInt(0); // C2
+			writeInt(0); // C2
+			writeByte(_summon.isInsideZone(ZoneId.WATER) ? 1 : _summon.isFlying() ? 2 : 0); // C2
+			writeByte(_summon.getTeam().getId());
+			writeDouble(_collisionRadius);
+			writeDouble(_collisionHeight);
+			writeInt(_enchantEffect); // C4
+			writeInt(0); // C6
+			writeInt(0);
+			writeInt(_form); // CT1.5 Pet form and skills
+			writeByte(1);
+			writeByte(1);
+			writeInt(_summon.getAbnormalVisualEffectSpecial());
 		}
 	}
 }

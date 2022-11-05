@@ -19,11 +19,10 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.skill.BuffInfo;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class AbnormalStatusUpdate implements IClientOutgoingPacket
+public class AbnormalStatusUpdate extends ServerPacket
 {
 	private final List<BuffInfo> _effects = new ArrayList<>();
 	
@@ -36,19 +35,18 @@ public class AbnormalStatusUpdate implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.ABNORMAL_STATUS_UPDATE.writeId(packet);
-		packet.writeH(_effects.size());
+		ServerPackets.ABNORMAL_STATUS_UPDATE.writeId(this);
+		writeShort(_effects.size());
 		for (BuffInfo info : _effects)
 		{
 			if ((info != null) && info.isInUse())
 			{
-				packet.writeD(info.getSkill().getDisplayId());
-				packet.writeH(info.getSkill().getDisplayLevel());
-				packet.writeD(info.getTime());
+				writeInt(info.getSkill().getDisplayId());
+				writeShort(info.getSkill().getDisplayLevel());
+				writeInt(info.getTime());
 			}
 		}
-		return true;
 	}
 }

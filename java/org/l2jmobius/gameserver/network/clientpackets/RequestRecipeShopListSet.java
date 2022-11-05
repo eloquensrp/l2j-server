@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.network.clientpackets;
 import static org.l2jmobius.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.RecipeData;
 import org.l2jmobius.gameserver.enums.PrivateStoreType;
 import org.l2jmobius.gameserver.model.ManufactureItem;
@@ -37,34 +37,33 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * RequestRecipeShopListSet client packet class.
  */
-public class RequestRecipeShopListSet implements IClientIncomingPacket
+public class RequestRecipeShopListSet implements ClientPacket
 {
 	private static final int BATCH_LENGTH = 12;
 	
 	private ManufactureItem[] _items = null;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		final int count = packet.readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getReadableBytes()))
+		final int count = packet.readInt();
+		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getRemainingLength()))
 		{
-			return false;
+			return;
 		}
 		
 		_items = new ManufactureItem[count];
 		for (int i = 0; i < count; i++)
 		{
-			final int id = packet.readD();
-			final long cost = packet.readQ();
+			final int id = packet.readInt();
+			final long cost = packet.readLong();
 			if (cost < 0)
 			{
 				_items = null;
-				return false;
+				return;
 			}
 			_items[i] = new ManufactureItem(id, cost);
 		}
-		return true;
 	}
 	
 	@Override

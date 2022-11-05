@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.Location;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ObservationReturn implements IClientOutgoingPacket
+public class ObservationReturn extends ServerPacket
 {
 	private final Location _loc;
 	
@@ -30,12 +29,11 @@ public class ObservationReturn implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.OBSERVER_END.writeId(packet);
-		packet.writeD(_loc.getX());
-		packet.writeD(_loc.getY());
-		packet.writeD(_loc.getZ());
-		return true;
+		ServerPackets.OBSERVER_END.writeId(this);
+		writeInt(_loc.getX());
+		writeInt(_loc.getY());
+		writeInt(_loc.getZ());
 	}
 }

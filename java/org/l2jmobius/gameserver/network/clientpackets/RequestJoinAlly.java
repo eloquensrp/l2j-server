@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.clan.Clan;
@@ -28,15 +28,14 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 /**
  * @version $Revision: 1.3.4.2 $ $Date: 2005/03/27 15:29:30 $
  */
-public class RequestJoinAlly implements IClientIncomingPacket
+public class RequestJoinAlly implements ClientPacket
 {
 	private int _id;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_id = packet.readD();
-		return true;
+		_id = packet.readInt();
 	}
 	
 	@Override

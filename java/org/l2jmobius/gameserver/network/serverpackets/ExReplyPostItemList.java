@@ -18,10 +18,9 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Collection;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.instance.Item;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Migi, DS
@@ -38,14 +37,13 @@ public class ExReplyPostItemList extends AbstractItemPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_REPLY_POST_ITEM_LIST.writeId(packet);
-		packet.writeD(_itemList.size());
+		ServerPackets.EX_REPLY_POST_ITEM_LIST.writeId(this);
+		writeInt(_itemList.size());
 		for (Item item : _itemList)
 		{
-			writeItem(packet, item);
+			writeItem(item);
 		}
-		return true;
 	}
 }

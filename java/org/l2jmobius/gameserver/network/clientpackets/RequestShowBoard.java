@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.handler.CommunityBoardHandler;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -26,16 +26,12 @@ import org.l2jmobius.gameserver.network.GameClient;
  * RequestShowBoard client packet implementation.
  * @author Zoey76
  */
-public class RequestShowBoard implements IClientIncomingPacket
+public class RequestShowBoard implements ClientPacket
 {
-	@SuppressWarnings("unused")
-	private int _unknown;
-	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_unknown = packet.readD();
-		return true;
+		packet.readInt(); // Unused.
 	}
 	
 	@Override

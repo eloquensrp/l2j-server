@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import org.l2jmobius.Config;
 import org.l2jmobius.commons.database.DatabaseFactory;
 import org.l2jmobius.commons.enums.ServerMode;
+import org.l2jmobius.commons.network.NetServer;
 import org.l2jmobius.commons.threads.ThreadPool;
 import org.l2jmobius.commons.util.DeadLockDetector;
 import org.l2jmobius.commons.util.PropertiesParser;
@@ -149,10 +150,10 @@ import org.l2jmobius.gameserver.model.partymatching.PartyMatchRoomList;
 import org.l2jmobius.gameserver.model.partymatching.PartyMatchWaitingList;
 import org.l2jmobius.gameserver.model.sevensigns.SevenSigns;
 import org.l2jmobius.gameserver.model.sevensigns.SevenSignsFestival;
-import org.l2jmobius.gameserver.network.ClientNetworkManager;
+import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.NpcStringId;
+import org.l2jmobius.gameserver.network.PacketHandler;
 import org.l2jmobius.gameserver.network.SystemMessageId;
-import org.l2jmobius.gameserver.network.telnet.TelnetServer;
 import org.l2jmobius.gameserver.scripting.ScriptEngineManager;
 import org.l2jmobius.gameserver.taskmanager.GameTimeTaskManager;
 import org.l2jmobius.gameserver.taskmanager.ItemsAutoDestroyTaskManager;
@@ -220,9 +221,6 @@ public class GameServer
 		printSection("Scripting Engine");
 		EventDispatcher.getInstance();
 		ScriptEngineManager.getInstance();
-		
-		printSection("Telnet");
-		TelnetServer.getInstance();
 		
 		printSection("World");
 		InstanceManager.getInstance();
@@ -469,7 +467,17 @@ public class GameServer
 		LOGGER.info(getClass().getSimpleName() + ": Maximum number of connected players is " + Config.MAXIMUM_ONLINE_USERS + ".");
 		LOGGER.info(getClass().getSimpleName() + ": Server loaded in " + ((System.currentTimeMillis() - serverLoadStart) / 1000) + " seconds.");
 		
-		ClientNetworkManager.getInstance().start();
+		final NetServer<GameClient> server = new NetServer<>(Config.GAMESERVER_HOSTNAME, Config.PORT_GAME, new PacketHandler(), GameClient::new);
+		server.setName(getClass().getSimpleName());
+		server.getNetConfig().setReadPoolSize(Config.CLIENT_READ_POOL_SIZE);
+		server.getNetConfig().setExecutePoolSize(Config.CLIENT_EXECUTE_POOL_SIZE);
+		server.getNetConfig().setPacketQueueLimit(Config.PACKET_QUEUE_LIMIT);
+		server.getNetConfig().setPacketFloodDisconnect(Config.PACKET_FLOOD_DISCONNECT);
+		server.getNetConfig().setPacketFloodDrop(Config.PACKET_FLOOD_DROP);
+		server.getNetConfig().setPacketFloodLogged(Config.PACKET_FLOOD_LOGGED);
+		server.getNetConfig().setTcpNoDelay(Config.TCP_NO_DELAY);
+		server.getNetConfig().setConnectionTimeout(Config.CONNECTION_TIMEOUT);
+		server.start();
 		
 		LoginServerThread.getInstance().start();
 		

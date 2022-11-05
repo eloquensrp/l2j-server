@@ -24,12 +24,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import org.l2jmobius.commons.network.IOutgoingPacket;
-import org.l2jmobius.commons.network.PacketWriter;
+import org.l2jmobius.commons.network.WritablePacket;
 import org.l2jmobius.loginserver.GameServerTable;
 import org.l2jmobius.loginserver.GameServerTable.GameServerInfo;
 import org.l2jmobius.loginserver.network.LoginClient;
-import org.l2jmobius.loginserver.network.OutgoingPackets;
+import org.l2jmobius.loginserver.network.LoginServerPackets;
 import org.l2jmobius.loginserver.network.gameserverpackets.ServerStatus;
 
 /**
@@ -60,7 +59,7 @@ import org.l2jmobius.loginserver.network.gameserverpackets.ServerStatus;
  * is less than half the maximum. as Normal between half and 4/5<br>
  * and Full when there's more than 4/5 of the maximum number of players.
  */
-public class ServerList implements IOutgoingPacket
+public class ServerList extends WritablePacket
 {
 	protected static final Logger LOGGER = Logger.getLogger(ServerList.class.getName());
 	
@@ -87,7 +86,7 @@ public class ServerList implements IOutgoingPacket
 		{
 			try
 			{
-				_ip = InetAddress.getByName(gsi.getServerAddress(client.getConnectionAddress())).getAddress();
+				_ip = InetAddress.getByName(client.getIp()).getAddress();
 			}
 			catch (UnknownHostException e)
 			{
@@ -121,13 +120,13 @@ public class ServerList implements IOutgoingPacket
 			_servers.add(new ServerData(client, gsi));
 		}
 		
-		// Wait 300ms to reply with character list.
+		// Wait 500ms to reply with character list.
 		int i = 0;
-		while (((_charsOnServers == null) || (_charsToDelete == null)) && (i++ < 3))
+		while (((_charsOnServers == null) || (_charsToDelete == null)) && (i++ < 10))
 		{
 			try
 			{
-				Thread.sleep(100);
+				Thread.sleep(50);
 			}
 			catch (InterruptedException ignored)
 			{
@@ -138,56 +137,55 @@ public class ServerList implements IOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SERVER_LIST.writeId(packet);
-		packet.writeC(_servers.size());
-		packet.writeC(_lastServer);
+		LoginServerPackets.SERVER_LIST.writeId(this);
+		writeByte(_servers.size());
+		writeByte(_lastServer);
 		for (ServerData server : _servers)
 		{
-			packet.writeC(server._serverId); // server id
+			writeByte(server._serverId); // server id
 			
-			packet.writeC(server._ip[0] & 0xff);
-			packet.writeC(server._ip[1] & 0xff);
-			packet.writeC(server._ip[2] & 0xff);
-			packet.writeC(server._ip[3] & 0xff);
+			writeByte(server._ip[0] & 0xff);
+			writeByte(server._ip[1] & 0xff);
+			writeByte(server._ip[2] & 0xff);
+			writeByte(server._ip[3] & 0xff);
 			
-			packet.writeD(server._port);
-			packet.writeC(server._ageLimit); // Age Limit 0, 15, 18
-			packet.writeC(server._pvp ? 0x01 : 0x00);
-			packet.writeH(server._currentPlayers);
-			packet.writeH(server._maxPlayers);
-			packet.writeC(server._status == ServerStatus.STATUS_DOWN ? 0x00 : 0x01);
-			packet.writeD(server._serverType); // 1: Normal, 2: Relax, 4: Public Test, 8: No Label, 16: Character Creation Restricted, 32: Event, 64: Free
-			packet.writeC(server._brackets ? 0x01 : 0x00);
+			writeInt(server._port);
+			writeByte(server._ageLimit); // Age Limit 0, 15, 18
+			writeByte(server._pvp ? 0x01 : 0x00);
+			writeShort(server._currentPlayers);
+			writeShort(server._maxPlayers);
+			writeByte(server._status == ServerStatus.STATUS_DOWN ? 0x00 : 0x01);
+			writeInt(server._serverType); // 1: Normal, 2: Relax, 4: Public Test, 8: No Label, 16: Character Creation Restricted, 32: Event, 64: Free
+			writeByte(server._brackets ? 0x01 : 0x00);
 		}
-		packet.writeH(0x00); // unknown
+		writeShort(0x00); // unknown
 		if (_charsOnServers != null)
 		{
-			packet.writeC(_charsOnServers.size());
+			writeByte(_charsOnServers.size());
 			for (Entry<Integer, Integer> entry : _charsOnServers.entrySet())
 			{
 				final int servId = entry.getKey();
-				packet.writeC(servId);
-				packet.writeC(entry.getValue());
+				writeByte(servId);
+				writeByte(entry.getValue());
 				if ((_charsToDelete == null) || !_charsToDelete.containsKey(servId))
 				{
-					packet.writeC(0x00);
+					writeByte(0x00);
 				}
 				else
 				{
-					packet.writeC(_charsToDelete.get(servId).length);
+					writeByte(_charsToDelete.get(servId).length);
 					for (long deleteTime : _charsToDelete.get(servId))
 					{
-						packet.writeD((int) ((deleteTime - System.currentTimeMillis()) / 1000));
+						writeInt((int) ((deleteTime - System.currentTimeMillis()) / 1000));
 					}
 				}
 			}
 		}
 		else
 		{
-			packet.writeC(0x00);
+			writeByte(0x00);
 		}
-		return true;
 	}
 }

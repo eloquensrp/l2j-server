@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class StopRotation implements IClientOutgoingPacket
+public class StopRotation extends ServerPacket
 {
 	private final int _objectId;
 	private final int _degree;
@@ -33,13 +32,12 @@ public class StopRotation implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.FINISH_ROTATING.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeD(_degree);
-		packet.writeD(_speed);
-		packet.writeC(0); // ?
-		return true;
+		ServerPackets.FINISH_ROTATING.writeId(this);
+		writeInt(_objectId);
+		writeInt(_degree);
+		writeInt(_speed);
+		writeByte(0); // ?
 	}
 }

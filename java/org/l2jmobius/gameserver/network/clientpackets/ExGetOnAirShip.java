@@ -16,14 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.network.GameClient;
 
 /**
  * Format: (c) dddd d: dx d: dy d: dz d: AirShip id ??
  * @author -Wooden-
  */
-public class ExGetOnAirShip implements IClientIncomingPacket
+public class ExGetOnAirShip implements ClientPacket
 {
 	@SuppressWarnings("unused")
 	private int _x;
@@ -35,13 +35,12 @@ public class ExGetOnAirShip implements IClientIncomingPacket
 	private int _shipId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_x = packet.readD();
-		_y = packet.readD();
-		_z = packet.readD();
-		_shipId = packet.readD();
-		return true;
+		_x = packet.readInt();
+		_y = packet.readInt();
+		_z = packet.readInt();
+		_shipId = packet.readInt();
 	}
 	
 	@Override

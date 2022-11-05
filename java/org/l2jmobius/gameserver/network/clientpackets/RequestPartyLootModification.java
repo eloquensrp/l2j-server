@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.PartyDistributionType;
 import org.l2jmobius.gameserver.model.Party;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -25,15 +25,14 @@ import org.l2jmobius.gameserver.network.GameClient;
 /**
  * @author JIV
  */
-public class RequestPartyLootModification implements IClientIncomingPacket
+public class RequestPartyLootModification implements ClientPacket
 {
 	private int _partyDistributionTypeId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_partyDistributionTypeId = packet.readD();
-		return true;
+		_partyDistributionTypeId = packet.readInt();
 	}
 	
 	@Override

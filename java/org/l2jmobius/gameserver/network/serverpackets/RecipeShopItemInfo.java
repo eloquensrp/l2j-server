@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class RecipeShopItemInfo implements IClientOutgoingPacket
+public class RecipeShopItemInfo extends ServerPacket
 {
 	private final Player _player;
 	private final int _recipeId;
@@ -32,14 +31,13 @@ public class RecipeShopItemInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.RECIPE_SHOP_ITEM_INFO.writeId(packet);
-		packet.writeD(_player.getObjectId());
-		packet.writeD(_recipeId);
-		packet.writeD((int) _player.getCurrentMp());
-		packet.writeD(_player.getMaxMp());
-		packet.writeD(0xffffffff);
-		return true;
+		ServerPackets.RECIPE_SHOP_ITEM_INFO.writeId(this);
+		writeInt(_player.getObjectId());
+		writeInt(_recipeId);
+		writeInt((int) _player.getCurrentMp());
+		writeInt(_player.getMaxMp());
+		writeInt(0xffffffff);
 	}
 }

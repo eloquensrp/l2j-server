@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.FortManager;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.siege.Fort;
@@ -28,15 +28,14 @@ import org.l2jmobius.gameserver.network.serverpackets.ExShowFortressMapInfo;
 /**
  * @author KenM
  */
-public class RequestFortressMapInfo implements IClientIncomingPacket
+public class RequestFortressMapInfo implements ClientPacket
 {
 	private int _fortressId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_fortressId = packet.readD();
-		return true;
+		_fortressId = packet.readInt();
 	}
 	
 	@Override

@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 
@@ -24,21 +24,20 @@ import org.l2jmobius.gameserver.network.GameClient;
  * @author ShanSoft
  * @structure chddSdS
  */
-public class RequestModifyBookMarkSlot implements IClientIncomingPacket
+public class RequestModifyBookMarkSlot implements ClientPacket
 {
-	private int id;
-	private int icon;
-	private String name;
-	private String tag;
+	private int _id;
+	private int _icon;
+	private String _name;
+	private String _tag;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		id = packet.readD();
-		name = packet.readS();
-		icon = packet.readD();
-		tag = packet.readS();
-		return true;
+		_id = packet.readInt();
+		_name = packet.readString();
+		_icon = packet.readInt();
+		_tag = packet.readString();
 	}
 	
 	@Override
@@ -49,6 +48,7 @@ public class RequestModifyBookMarkSlot implements IClientIncomingPacket
 		{
 			return;
 		}
-		player.teleportBookmarkModify(id, icon, tag, name);
+		
+		player.teleportBookmarkModify(_id, _icon, _tag, _name);
 	}
 }

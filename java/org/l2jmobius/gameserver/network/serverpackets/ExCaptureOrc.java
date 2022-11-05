@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExCaptureOrc implements IClientOutgoingPacket
+public class ExCaptureOrc extends ServerPacket
 {
 	private static final byte[] _test;
 	static
@@ -44,10 +43,9 @@ public class ExCaptureOrc implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SEARCH_ORC.writeId(packet);
-		packet.writeB(_test);
-		return true;
+		ServerPackets.EX_SEARCH_ORC.writeId(this);
+		writeBytes(_test);
 	}
 }

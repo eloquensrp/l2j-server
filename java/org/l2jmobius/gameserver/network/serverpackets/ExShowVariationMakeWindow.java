@@ -16,14 +16,13 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Trigger packet
  * @author KenM
  */
-public class ExShowVariationMakeWindow implements IClientOutgoingPacket
+public class ExShowVariationMakeWindow extends ServerPacket
 {
 	public static final ExShowVariationMakeWindow STATIC_PACKET = new ExShowVariationMakeWindow();
 	
@@ -32,9 +31,8 @@ public class ExShowVariationMakeWindow implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SHOW_VARIATION_MAKE_WINDOW.writeId(packet);
-		return true;
+		ServerPackets.EX_SHOW_VARIATION_MAKE_WINDOW.writeId(this);
 	}
 }

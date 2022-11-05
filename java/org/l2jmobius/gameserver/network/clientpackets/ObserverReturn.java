@@ -16,21 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 
 /**
  * @version $Revision: 1.7.4.4 $ $Date: 2005/03/27 18:46:19 $
  */
-public class ObserverReturn implements IClientIncomingPacket
+public class ObserverReturn implements ClientPacket
 {
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
-	
 	@Override
 	public void run(GameClient client)
 	{

@@ -19,14 +19,13 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author -Wooden-
  * @author UnAfraid, mrTJO
  */
-public class PackageToList implements IClientOutgoingPacket
+public class PackageToList extends ServerPacket
 {
 	private final Map<Integer, String> _players;
 	
@@ -36,15 +35,14 @@ public class PackageToList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PACKAGE_TO_LIST.writeId(packet);
-		packet.writeD(_players.size());
+		ServerPackets.PACKAGE_TO_LIST.writeId(this);
+		writeInt(_players.size());
 		for (Entry<Integer, String> entry : _players.entrySet())
 		{
-			packet.writeD(entry.getKey());
-			packet.writeS(entry.getValue());
+			writeInt(entry.getKey());
+			writeString(entry.getValue());
 		}
-		return true;
 	}
 }

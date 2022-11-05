@@ -54,7 +54,7 @@ public class EnchantFormatter extends Formatter
 					StringUtil.append(output, "Character:", player.getName(), " [" + player.getObjectId() + "] Account:", player.getAccountName());
 					if ((player.getClient() != null) && !player.getClient().isDetached())
 					{
-						StringUtil.append(output, " IP:", player.getClient().getConnectionAddress().getHostAddress());
+						StringUtil.append(output, " IP:", player.getClient().getIp());
 					}
 				}
 				else if (p instanceof Item)

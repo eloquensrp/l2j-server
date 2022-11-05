@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ExRegenMax implements IClientOutgoingPacket
+public class ExRegenMax extends ServerPacket
 {
 	private final int _time;
 	private final int _tickInterval;
@@ -33,13 +32,12 @@ public class ExRegenMax implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_REGEN_MAX.writeId(packet);
-		packet.writeD(1);
-		packet.writeD(_time);
-		packet.writeD(_tickInterval);
-		packet.writeF(_amountPerTick);
-		return true;
+		ServerPackets.EX_REGEN_MAX.writeId(this);
+		writeInt(1);
+		writeInt(_time);
+		writeInt(_tickInterval);
+		writeDouble(_amountPerTick);
 	}
 }

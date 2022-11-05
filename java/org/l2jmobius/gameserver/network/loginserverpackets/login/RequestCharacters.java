@@ -16,19 +16,21 @@
  */
 package org.l2jmobius.gameserver.network.loginserverpackets.login;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 
 /**
  * @author mrTJO Thanks to mochitto
  */
-public class RequestCharacters extends BaseRecievePacket
+public class RequestCharacters extends ReadablePacket
 {
 	private final String _account;
 	
 	public RequestCharacters(byte[] decrypt)
 	{
 		super(decrypt);
-		_account = readS();
+		readByte(); // id (already processed)
+		
+		_account = readString();
 	}
 	
 	/**

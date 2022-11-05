@@ -69,7 +69,6 @@ import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.serverpackets.CreatureSay;
 import org.l2jmobius.gameserver.network.serverpackets.ExBrExtraUserInfo;
 import org.l2jmobius.gameserver.network.serverpackets.ExSubPledgeSkillAdd;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
 import org.l2jmobius.gameserver.network.serverpackets.ItemList;
 import org.l2jmobius.gameserver.network.serverpackets.PledgeReceiveSubPledgeCreated;
 import org.l2jmobius.gameserver.network.serverpackets.PledgeShowInfoUpdate;
@@ -79,6 +78,7 @@ import org.l2jmobius.gameserver.network.serverpackets.PledgeShowMemberListUpdate
 import org.l2jmobius.gameserver.network.serverpackets.PledgeSkillList;
 import org.l2jmobius.gameserver.network.serverpackets.PledgeSkillList.SubPledgeSkill;
 import org.l2jmobius.gameserver.network.serverpackets.PledgeSkillListAdd;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.StatusUpdate;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 import org.l2jmobius.gameserver.network.serverpackets.UserInfo;
@@ -1555,7 +1555,7 @@ public class Clan implements IIdentifiable, INamable
 		}
 	}
 	
-	public void broadcastToOnlineAllyMembers(IClientOutgoingPacket packet)
+	public void broadcastToOnlineAllyMembers(ServerPacket packet)
 	{
 		for (Clan clan : ClanTable.getInstance().getClanAllies(getAllyId()))
 		{
@@ -1563,7 +1563,7 @@ public class Clan implements IIdentifiable, INamable
 		}
 	}
 	
-	public void broadcastToOnlineMembers(IClientOutgoingPacket packet)
+	public void broadcastToOnlineMembers(ServerPacket packet)
 	{
 		for (ClanMember member : _members.values())
 		{
@@ -1585,7 +1585,7 @@ public class Clan implements IIdentifiable, INamable
 		}
 	}
 	
-	public void broadcastToOtherOnlineMembers(IClientOutgoingPacket packet, Player player)
+	public void broadcastToOtherOnlineMembers(ServerPacket packet, Player player)
 	{
 		for (ClanMember member : _members.values())
 		{

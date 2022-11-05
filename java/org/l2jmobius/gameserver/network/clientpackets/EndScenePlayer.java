@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.Movie;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.holders.MovieHolder;
@@ -25,15 +25,14 @@ import org.l2jmobius.gameserver.network.GameClient;
 /**
  * @author JIV
  */
-public class EndScenePlayer implements IClientIncomingPacket
+public class EndScenePlayer implements ClientPacket
 {
 	private int _movieId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_movieId = packet.readD();
-		return true;
+		_movieId = packet.readInt();
 	}
 	
 	@Override

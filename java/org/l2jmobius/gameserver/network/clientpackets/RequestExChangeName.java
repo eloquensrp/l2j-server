@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.PacketLogger;
 import org.l2jmobius.gameserver.network.serverpackets.ExNeedToChangeName;
@@ -25,19 +25,18 @@ import org.l2jmobius.gameserver.network.serverpackets.ExNeedToChangeName;
  * Reply for {@link ExNeedToChangeName}
  * @author JIV
  */
-public class RequestExChangeName implements IClientIncomingPacket
+public class RequestExChangeName implements ClientPacket
 {
 	private String _newName;
 	private int _type;
 	private int _charSlot;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_type = packet.readD();
-		_newName = packet.readS();
-		_charSlot = packet.readD();
-		return true;
+		_type = packet.readInt();
+		_newName = packet.readString();
+		_charSlot = packet.readInt();
 	}
 	
 	@Override

@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.item.instance.Item;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ExPutItemResultForVariationCancel implements IClientOutgoingPacket
+public class ExPutItemResultForVariationCancel extends ServerPacket
 {
 	private final int _itemObjId;
 	private final int _itemId;
@@ -38,15 +37,14 @@ public class ExPutItemResultForVariationCancel implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_PUT_ITEM_RESULT_FOR_VARIATION_CANCEL.writeId(packet);
-		packet.writeD(_itemObjId);
-		packet.writeD(_itemId);
-		packet.writeD(_itemAug1);
-		packet.writeD(_itemAug2);
-		packet.writeQ(_price);
-		packet.writeD(1);
-		return true;
+		ServerPackets.EX_PUT_ITEM_RESULT_FOR_VARIATION_CANCEL.writeId(this);
+		writeInt(_itemObjId);
+		writeInt(_itemId);
+		writeInt(_itemAug1);
+		writeInt(_itemAug2);
+		writeLong(_price);
+		writeInt(1);
 	}
 }

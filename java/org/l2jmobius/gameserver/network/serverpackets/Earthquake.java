@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class Earthquake implements IClientOutgoingPacket
+public class Earthquake extends ServerPacket
 {
 	private final int _x;
 	private final int _y;
@@ -44,15 +43,14 @@ public class Earthquake implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EARTHQUAKE.writeId(packet);
-		packet.writeD(_x);
-		packet.writeD(_y);
-		packet.writeD(_z);
-		packet.writeD(_intensity);
-		packet.writeD(_duration);
-		packet.writeD(0); // Unknown
-		return true;
+		ServerPackets.EARTHQUAKE.writeId(this);
+		writeInt(_x);
+		writeInt(_y);
+		writeInt(_z);
+		writeInt(_intensity);
+		writeInt(_duration);
+		writeInt(0); // Unknown
 	}
 }

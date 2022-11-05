@@ -17,7 +17,7 @@
 
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.CastleManager;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.siege.Castle;
@@ -27,15 +27,14 @@ import org.l2jmobius.gameserver.network.serverpackets.SiegeDefenderList;
 /**
  * @version $Revision: 1.3.4.2 $ $Date: 2005/03/27 15:29:30 $
  */
-public class RequestSiegeDefenderList implements IClientIncomingPacket
+public class RequestSiegeDefenderList implements ClientPacket
 {
 	private int _castleId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_castleId = packet.readD();
-		return true;
+		_castleId = packet.readInt();
 	}
 	
 	@Override

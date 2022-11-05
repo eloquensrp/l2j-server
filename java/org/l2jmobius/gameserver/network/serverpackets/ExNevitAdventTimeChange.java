@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author mochitto
  */
-public class ExNevitAdventTimeChange implements IClientOutgoingPacket
+public class ExNevitAdventTimeChange extends ServerPacket
 {
 	private final boolean _paused;
 	private final int _time;
@@ -34,13 +33,12 @@ public class ExNevitAdventTimeChange implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_NAVIT_ADVENT_TIME_CHANGE.writeId(packet);
+		ServerPackets.EX_NAVIT_ADVENT_TIME_CHANGE.writeId(this);
 		// state 0 - pause 1 - started
-		packet.writeC(_paused ? 0 : 1);
+		writeByte(!_paused);
 		// left time in ms max is 16000 its 4m and state is automatically changed to quit
-		packet.writeD(_time);
-		return true;
+		writeInt(_time);
 	}
 }

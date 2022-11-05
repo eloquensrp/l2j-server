@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.CommandChannel;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -27,15 +27,14 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
  * format: (ch) d
  * @author -Wooden-
  */
-public class RequestExAcceptJoinMPCC implements IClientIncomingPacket
+public class RequestExAcceptJoinMPCC implements ClientPacket
 {
 	private int _response;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_response = packet.readD();
-		return true;
+		_response = packet.readInt();
 	}
 	
 	@Override

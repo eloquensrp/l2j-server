@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.sql.CrestTable;
 import org.l2jmobius.gameserver.enums.CrestType;
 import org.l2jmobius.gameserver.model.Crest;
@@ -30,27 +30,31 @@ import org.l2jmobius.gameserver.network.SystemMessageId;
  * Format : chdb c (id) 0xD0 h (subid) 0x11 d data size b raw data (picture i think ;) )
  * @author -Wooden-
  */
-public class RequestExSetPledgeCrestLarge implements IClientIncomingPacket
+public class RequestExSetPledgeCrestLarge implements ClientPacket
 {
 	private int _length;
 	private byte[] _data = null;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_length = packet.readD();
+		_length = packet.readInt();
 		if (_length > 2176)
 		{
-			return false;
+			return;
 		}
 		
-		_data = packet.readB(_length);
-		return true;
+		_data = packet.readBytes(_length);
 	}
 	
 	@Override
 	public void run(GameClient client)
 	{
+		if (_data == null)
+		{
+			return;
+		}
+		
 		final Player player = client.getPlayer();
 		if (player == null)
 		{

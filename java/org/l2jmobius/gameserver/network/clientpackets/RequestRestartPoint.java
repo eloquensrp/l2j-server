@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.commons.threads.ThreadPool;
 import org.l2jmobius.gameserver.data.sql.ClanHallTable;
 import org.l2jmobius.gameserver.enums.TeleportWhereType;
@@ -42,16 +42,15 @@ import org.l2jmobius.gameserver.network.PacketLogger;
 /**
  * @version $Revision: 1.7.2.3.2.6 $ $Date: 2005/03/27 15:29:30 $
  */
-public class RequestRestartPoint implements IClientIncomingPacket
+public class RequestRestartPoint implements ClientPacket
 {
 	protected int _requestedPointType;
 	protected boolean _continuation;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_requestedPointType = packet.readD();
-		return true;
+		_requestedPointType = packet.readInt();
 	}
 	
 	class DeathTask implements Runnable

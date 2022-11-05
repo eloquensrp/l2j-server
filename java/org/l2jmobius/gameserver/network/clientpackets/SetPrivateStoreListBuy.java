@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.network.clientpackets;
 import static org.l2jmobius.gameserver.model.itemcontainer.Inventory.MAX_ADENA;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.PrivateStoreType;
 import org.l2jmobius.gameserver.model.TradeList;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -35,42 +35,41 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * @version $Revision: 1.2.2.1.2.5 $ $Date: 2005/03/27 15:29:30 $ CPU Disasm Packets: ddhhQQ cddb
  */
-public class SetPrivateStoreListBuy implements IClientIncomingPacket
+public class SetPrivateStoreListBuy implements ClientPacket
 {
 	private static final int BATCH_LENGTH = 40; // length of the one item
 	
 	private Item[] _items = null;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		final int count = packet.readD();
-		if ((count < 1) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getReadableBytes()))
+		final int count = packet.readInt();
+		if ((count < 1) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getRemainingLength()))
 		{
-			return false;
+			return;
 		}
 		
 		_items = new Item[count];
 		for (int i = 0; i < count; i++)
 		{
-			final int itemId = packet.readD();
-			packet.readD(); // TODO analyse this
+			final int itemId = packet.readInt();
+			packet.readInt(); // TODO analyse this
 			
-			final long cnt = packet.readQ();
-			final long price = packet.readQ();
+			final long cnt = packet.readLong();
+			final long price = packet.readLong();
 			if ((itemId < 1) || (cnt < 1) || (price < 0))
 			{
 				_items = null;
-				return false;
+				return;
 			}
-			packet.readD(); // Unk
-			packet.readD(); // Unk
-			packet.readD(); // Unk
-			packet.readD(); // Unk
+			packet.readInt(); // Unk
+			packet.readInt(); // Unk
+			packet.readInt(); // Unk
+			packet.readInt(); // Unk
 			
 			_items[i] = new Item(itemId, cnt, price);
 		}
-		return true;
 	}
 	
 	@Override

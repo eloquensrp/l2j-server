@@ -16,14 +16,13 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Creature;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author -Wooden-
  */
-public class ExFishingStart implements IClientOutgoingPacket
+public class ExFishingStart extends ServerPacket
 {
 	private final Creature _creature;
 	private final int _x;
@@ -43,16 +42,15 @@ public class ExFishingStart implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_FISHING_START.writeId(packet);
-		packet.writeD(_creature.getObjectId());
-		packet.writeD(_fishType); // fish type
-		packet.writeD(_x); // x position
-		packet.writeD(_y); // y position
-		packet.writeD(_z); // z position
-		packet.writeC(_isNightLure ? 1 : 0); // night lure
-		packet.writeC(0); // show fish rank result button
-		return true;
+		ServerPackets.EX_FISHING_START.writeId(this);
+		writeInt(_creature.getObjectId());
+		writeInt(_fishType); // fish type
+		writeInt(_x); // x position
+		writeInt(_y); // y position
+		writeInt(_z); // z position
+		writeByte(_isNightLure); // night lure
+		writeByte(0); // show fish rank result button
 	}
 }

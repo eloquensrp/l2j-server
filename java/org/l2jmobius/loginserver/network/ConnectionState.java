@@ -16,12 +16,10 @@
  */
 package org.l2jmobius.loginserver.network;
 
-import org.l2jmobius.commons.network.IConnectionState;
-
 /**
  * @author Mobius
  */
-public enum ConnectionState implements IConnectionState
+public enum ConnectionState
 {
 	CONNECTED,
 	AUTHED_GG,

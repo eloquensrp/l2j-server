@@ -19,7 +19,6 @@ package org.l2jmobius.gameserver.network.clientpackets;
 import java.util.concurrent.TimeUnit;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -30,14 +29,8 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 /**
  * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:30 $
  */
-public class RequestWithdrawalPledge implements IClientIncomingPacket
+public class RequestWithdrawalPledge implements ClientPacket
 {
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
-	
 	@Override
 	public void run(GameClient client)
 	{

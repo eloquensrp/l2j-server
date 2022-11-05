@@ -17,8 +17,7 @@
 package org.l2jmobius.loginserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.IIncomingPacket;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.LoginController;
 import org.l2jmobius.loginserver.LoginServer;
 import org.l2jmobius.loginserver.SessionKey;
@@ -36,23 +35,21 @@ import org.l2jmobius.loginserver.network.serverpackets.PlayOk;
  * c: server ID
  * </pre>
  */
-public class RequestServerLogin implements IIncomingPacket<LoginClient>
+public class RequestServerLogin implements LoginClientPacket
 {
 	private int _skey1;
 	private int _skey2;
 	private int _serverId;
 	
 	@Override
-	public boolean read(LoginClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		if (packet.getReadableBytes() >= 9)
+		if (packet.getRemainingLength() >= 9)
 		{
-			_skey1 = packet.readD();
-			_skey2 = packet.readD();
-			_serverId = packet.readC();
-			return true;
+			_skey1 = packet.readInt();
+			_skey2 = packet.readInt();
+			_serverId = packet.readByte();
 		}
-		return false;
 	}
 	
 	@Override
@@ -60,7 +57,7 @@ public class RequestServerLogin implements IIncomingPacket<LoginClient>
 	{
 		final SessionKey sk = client.getSessionKey();
 		
-		// if we didnt showed the license we cant check these values
+		// If we didn't showed the license we can't check these values.
 		if (!Config.SHOW_LICENCE || sk.checkLoginPair(_skey1, _skey2))
 		{
 			if ((LoginServer.getInstance().getStatus() == ServerStatus.STATUS_DOWN) || ((LoginServer.getInstance().getStatus() == ServerStatus.STATUS_GM_ONLY) && (client.getAccessLevel() < 1)))

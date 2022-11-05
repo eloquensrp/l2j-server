@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class Dice implements IClientOutgoingPacket
+public class Dice extends ServerPacket
 {
 	private final int _objectId;
 	private final int _itemId;
@@ -47,15 +46,14 @@ public class Dice implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.DICE.writeId(packet);
-		packet.writeD(_objectId); // object id of player
-		packet.writeD(_itemId); // item id of dice (spade) 4625,4626,4627,4628
-		packet.writeD(_number); // number rolled
-		packet.writeD(_x); // x
-		packet.writeD(_y); // y
-		packet.writeD(_z); // z
-		return true;
+		ServerPackets.DICE.writeId(this);
+		writeInt(_objectId); // object id of player
+		writeInt(_itemId); // item id of dice (spade) 4625,4626,4627,4628
+		writeInt(_number); // number rolled
+		writeInt(_x); // x
+		writeInt(_y); // y
+		writeInt(_z); // z
 	}
 }

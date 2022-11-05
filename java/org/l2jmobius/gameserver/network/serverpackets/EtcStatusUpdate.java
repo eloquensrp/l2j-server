@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.zone.ZoneId;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Luca Baldi
  */
-public class EtcStatusUpdate implements IClientOutgoingPacket
+public class EtcStatusUpdate extends ServerPacket
 {
 	private final Player _player;
 	
@@ -34,18 +33,17 @@ public class EtcStatusUpdate implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.ETC_STATUS_UPDATE.writeId(packet);
-		packet.writeD(_player.getCharges()); // 1-7 increase force, level
-		packet.writeD(_player.getWeightPenalty()); // 1-4 weight penalty, level (1=50%, 2=66.6%, 3=80%, 4=100%)
-		packet.writeD((_player.getMessageRefusal() || _player.isChatBanned() || _player.isSilenceMode()) ? 1 : 0); // 1 = block all chat
-		packet.writeD(_player.isInsideZone(ZoneId.DANGER_AREA) ? 1 : 0); // 1 = danger area
-		packet.writeD(_player.getExpertiseWeaponPenalty()); // Weapon Grade Penalty [1-4]
-		packet.writeD(_player.getExpertiseArmorPenalty()); // Armor Grade Penalty [1-4]
-		packet.writeD(_player.hasCharmOfCourage() ? 1 : 0); // 1 = charm of courage (allows resurrection on the same spot upon death on the siege battlefield)
-		packet.writeD(_player.getDeathPenaltyBuffLevel()); // 1-15 death penalty, level (combat ability decreased due to death)
-		packet.writeD(_player.getChargedSouls());
-		return true;
+		ServerPackets.ETC_STATUS_UPDATE.writeId(this);
+		writeInt(_player.getCharges()); // 1-7 increase force, level
+		writeInt(_player.getWeightPenalty()); // 1-4 weight penalty, level (1=50%, 2=66.6%, 3=80%, 4=100%)
+		writeInt(_player.getMessageRefusal() || _player.isChatBanned() || _player.isSilenceMode()); // 1 = block all chat
+		writeInt(_player.isInsideZone(ZoneId.DANGER_AREA)); // 1 = danger area
+		writeInt(_player.getExpertiseWeaponPenalty()); // Weapon Grade Penalty [1-4]
+		writeInt(_player.getExpertiseArmorPenalty()); // Armor Grade Penalty [1-4]
+		writeInt(_player.hasCharmOfCourage()); // 1 = charm of courage (allows resurrection on the same spot upon death on the siege battlefield)
+		writeInt(_player.getDeathPenaltyBuffLevel()); // 1-15 death penalty, level (combat ability decreased due to death)
+		writeInt(_player.getChargedSouls());
 	}
 }

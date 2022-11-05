@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.partymatching.PartyMatchRoom;
 import org.l2jmobius.gameserver.model.partymatching.PartyMatchRoomList;
@@ -31,7 +31,7 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 /**
  * @author Gnacik
  */
-public class RequestPartyMatchDetail implements IClientIncomingPacket
+public class RequestPartyMatchDetail implements ClientPacket
 {
 	private int _roomid;
 	@SuppressWarnings("unused")
@@ -42,15 +42,14 @@ public class RequestPartyMatchDetail implements IClientIncomingPacket
 	private int _unk3;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_roomid = packet.readD();
+		_roomid = packet.readInt();
 		// If player click on Room all unk are 0
 		// If player click AutoJoin values are -1 1 1
-		_unk1 = packet.readD();
-		_unk2 = packet.readD();
-		_unk3 = packet.readD();
-		return true;
+		_unk1 = packet.readInt();
+		_unk2 = packet.readInt();
+		_unk3 = packet.readInt();
 	}
 	
 	@Override

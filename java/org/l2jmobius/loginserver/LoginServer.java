@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -33,9 +32,11 @@ import org.l2jmobius.Config;
 import org.l2jmobius.commons.database.DatabaseBackup;
 import org.l2jmobius.commons.database.DatabaseFactory;
 import org.l2jmobius.commons.enums.ServerMode;
+import org.l2jmobius.commons.network.NetServer;
 import org.l2jmobius.commons.util.PropertiesParser;
 import org.l2jmobius.gameserver.network.loginserverpackets.game.ServerStatus;
-import org.l2jmobius.loginserver.network.ClientNetworkManager;
+import org.l2jmobius.loginserver.network.LoginClient;
+import org.l2jmobius.loginserver.network.LoginPacketHandler;
 import org.l2jmobius.loginserver.ui.Gui;
 
 /**
@@ -128,7 +129,13 @@ public class LoginServer
 			System.exit(1);
 		}
 		
-		ClientNetworkManager.getInstance().start();
+		final NetServer<LoginClient> server = new NetServer<>(Config.LOGIN_BIND_ADDRESS, Config.PORT_LOGIN, new LoginPacketHandler(), LoginClient::new);
+		server.setName(getClass().getSimpleName());
+		server.getNetConfig().setReadPoolSize(2000);
+		server.getNetConfig().setExecutePoolSize(2000);
+		server.getNetConfig().setPacketQueueLimit(10);
+		server.getNetConfig().setPacketFloodDisconnect(true);
+		server.start();
 	}
 	
 	public GameServerListener getGameServerListener()
@@ -174,7 +181,7 @@ public class LoginServer
 						{
 							LoginController.getInstance().addBanForAddress(address, duration);
 						}
-						catch (UnknownHostException e)
+						catch (Exception e)
 						{
 							LOGGER.warning("Skipped: Invalid address (" + address + ") on (" + bannedFile.getName() + "). Line: " + lnr.getLineNumber());
 						}

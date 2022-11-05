@@ -16,9 +16,8 @@
  */
 package org.l2jmobius.loginserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.IOutgoingPacket;
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.loginserver.network.OutgoingPackets;
+import org.l2jmobius.commons.network.WritablePacket;
+import org.l2jmobius.loginserver.network.LoginServerPackets;
 
 /**
  * <pre>
@@ -34,7 +33,7 @@ import org.l2jmobius.loginserver.network.OutgoingPackets;
  * s: blowfish key
  * </pre>
  */
-public class Init implements IOutgoingPacket
+public class Init extends WritablePacket
 {
 	private final int _sessionId;
 	
@@ -49,23 +48,21 @@ public class Init implements IOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.INIT.writeId(packet);
-		packet.writeD(_sessionId); // session id
-		packet.writeD(0x0000c621); // protocol revision
+		LoginServerPackets.INIT.writeId(this);
+		writeInt(_sessionId); // session id
+		writeInt(0x0000c621); // protocol revision
 		
-		packet.writeB(_publicKey); // RSA Public Key
+		writeBytes(_publicKey); // RSA Public Key
 		
 		// unk GG related?
-		packet.writeD(0x29DD954E);
-		packet.writeD(0x77C39CFC);
-		packet.writeD(0x97ADB620);
-		packet.writeD(0x07BDE0F7);
+		writeInt(0x29DD954E);
+		writeInt(0x77C39CFC);
+		writeInt(0x97ADB620);
+		writeInt(0x07BDE0F7);
 		
-		packet.writeB(_blowfishKey); // BlowFish key
-		packet.writeC(0x00); // null termination ;)
-		
-		return true;
+		writeBytes(_blowfishKey); // BlowFish key
+		writeByte(0); // null termination ;)
 	}
 }

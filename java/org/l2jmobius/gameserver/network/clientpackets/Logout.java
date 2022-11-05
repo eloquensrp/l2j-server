@@ -19,7 +19,6 @@ package org.l2jmobius.gameserver.network.clientpackets;
 import java.util.logging.Logger;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.enums.TeleportWhereType;
 import org.l2jmobius.gameserver.instancemanager.InstanceManager;
 import org.l2jmobius.gameserver.model.Location;
@@ -35,15 +34,9 @@ import org.l2jmobius.gameserver.util.OfflineTradeUtil;
 /**
  * @version $Revision: 1.9.4.3 $ $Date: 2005/03/27 15:29:30 $
  */
-public class Logout implements IClientIncomingPacket
+public class Logout implements ClientPacket
 {
 	protected static final Logger LOGGER_ACCOUNTING = Logger.getLogger("accounting");
-	
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
 	
 	@Override
 	public void run(GameClient client)

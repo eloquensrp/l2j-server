@@ -18,28 +18,27 @@ package org.l2jmobius.loginserver.network.gameserverpackets;
 
 import java.util.logging.Logger;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.LoginController;
 
 /**
  * @author mrTJO
  */
-public class PlayerTracert extends BaseRecievePacket
+public class PlayerTracert extends ReadablePacket
 {
 	protected static final Logger LOGGER = Logger.getLogger(PlayerTracert.class.getName());
 	
-	/**
-	 * @param decrypt
-	 */
 	public PlayerTracert(byte[] decrypt)
 	{
 		super(decrypt);
-		final String account = readS();
-		final String pcIp = readS();
-		final String hop1 = readS();
-		final String hop2 = readS();
-		final String hop3 = readS();
-		final String hop4 = readS();
+		readByte(); // id (already processed)
+		
+		final String account = readString();
+		final String pcIp = readString();
+		final String hop1 = readString();
+		final String hop2 = readString();
+		final String hop3 = readString();
+		final String hop4 = readString();
 		LoginController.getInstance().setAccountLastTracert(account, pcIp, hop1, hop2, hop3, hop4);
 	}
 }

@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.instance.Door;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class DoorStatusUpdate implements IClientOutgoingPacket
+public class DoorStatusUpdate extends ServerPacket
 {
 	private final Door _door;
 	
@@ -30,16 +29,15 @@ public class DoorStatusUpdate implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.DOOR_STATUS_UPDATE.writeId(packet);
-		packet.writeD(_door.getObjectId());
-		packet.writeD(_door.isOpen() ? 0 : 1);
-		packet.writeD(_door.getDamage());
-		packet.writeD(_door.isEnemy() ? 1 : 0);
-		packet.writeD(_door.getId());
-		packet.writeD((int) _door.getCurrentHp());
-		packet.writeD(_door.getMaxHp());
-		return true;
+		ServerPackets.DOOR_STATUS_UPDATE.writeId(this);
+		writeInt(_door.getObjectId());
+		writeInt(!_door.isOpen());
+		writeInt(_door.getDamage());
+		writeInt(_door.isEnemy());
+		writeInt(_door.getId());
+		writeInt((int) _door.getCurrentHp());
+		writeInt(_door.getMaxHp());
 	}
 }

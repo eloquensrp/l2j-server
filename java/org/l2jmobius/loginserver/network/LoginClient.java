@@ -16,19 +16,15 @@
  */
 package org.l2jmobius.loginserver.network;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.crypto.SecretKey;
 
-import org.l2jmobius.commons.network.ChannelInboundHandler;
-import org.l2jmobius.commons.network.IIncomingPacket;
-import org.l2jmobius.commons.network.IOutgoingPacket;
+import org.l2jmobius.commons.network.EncryptionInterface;
+import org.l2jmobius.commons.network.NetClient;
+import org.l2jmobius.commons.network.WritablePacket;
 import org.l2jmobius.commons.util.Rnd;
-import org.l2jmobius.commons.util.crypt.ScrambledKeyPair;
 import org.l2jmobius.loginserver.LoginController;
 import org.l2jmobius.loginserver.SessionKey;
 import org.l2jmobius.loginserver.enums.LoginFailReason;
@@ -37,22 +33,14 @@ import org.l2jmobius.loginserver.network.serverpackets.Init;
 import org.l2jmobius.loginserver.network.serverpackets.LoginFail;
 import org.l2jmobius.loginserver.network.serverpackets.PlayFail;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-
 /**
  * Represents a client connected into the LoginServer
  * @author KenM
  */
-public class LoginClient extends ChannelInboundHandler<LoginClient>
+public class LoginClient extends NetClient
 {
-	private static final Logger LOGGER = Logger.getLogger(LoginClient.class.getName());
-	
-	// Crypt
-	private final ScrambledKeyPair _scrambledPair;
-	private final SecretKey _blowfishKey;
-	private InetAddress _addr;
-	private Channel _channel;
+	private ScrambledKeyPair _scrambledPair;
+	private SecretKey _blowfishKey;
 	
 	private String _account;
 	private int _accessLevel;
@@ -62,60 +50,34 @@ public class LoginClient extends ChannelInboundHandler<LoginClient>
 	private boolean _joinedGS;
 	private Map<Integer, Integer> _charsOnServers;
 	private Map<Integer, long[]> _charsToDelete;
-	
+	private ConnectionState _connectionState = ConnectionState.CONNECTED;
 	private long _connectionStartTime;
-	
-	public LoginClient(SecretKey blowfishKey)
-	{
-		super();
-		_blowfishKey = blowfishKey;
-		_scrambledPair = LoginController.getInstance().getScrambledRSAKeyPair();
-	}
+	private final LoginEncryption _encryption = new LoginEncryption();
 	
 	@Override
-	public void channelActive(ChannelHandlerContext ctx)
+	public void onConnection()
 	{
-		super.channelActive(ctx);
-		
-		setConnectionState(ConnectionState.CONNECTED);
-		final InetSocketAddress address = (InetSocketAddress) ctx.channel().remoteAddress();
-		_addr = address.getAddress();
-		_channel = ctx.channel();
+		_blowfishKey = LoginController.getInstance().generateBlowfishKey();
+		_encryption.setKey(_blowfishKey.getEncoded());
+		_scrambledPair = LoginController.getInstance().getScrambledRSAKeyPair();
 		_sessionId = Rnd.nextInt();
 		_connectionStartTime = System.currentTimeMillis();
 		sendPacket(new Init(_scrambledPair.getScrambledModulus(), _blowfishKey.getEncoded(), _sessionId));
+		
+		if (LoginController.getInstance().isBannedAddress(getIp()))
+		{
+			sendPacket(new LoginFail(LoginFailReason.REASON_NOT_AUTHED));
+			disconnect();
+		}
 	}
 	
 	@Override
-	public void channelInactive(ChannelHandlerContext ctx)
+	public void onDisconnection()
 	{
 		if (!_joinedGS || ((_connectionStartTime + LoginController.LOGIN_TIMEOUT) < System.currentTimeMillis()))
 		{
 			LoginController.getInstance().removeAuthedLoginClient(getAccount());
 		}
-	}
-	
-	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, IIncomingPacket<LoginClient> packet)
-	{
-		try
-		{
-			packet.run(this);
-		}
-		catch (Exception e)
-		{
-			LOGGER.warning(getClass().getSimpleName() + ": " + e.getMessage());
-		}
-	}
-	
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
-	{
-	}
-	
-	public InetAddress getConnectionAddress()
-	{
-		return _addr;
 	}
 	
 	public String getAccount()
@@ -183,7 +145,7 @@ public class LoginClient extends ChannelInboundHandler<LoginClient>
 		return _connectionStartTime;
 	}
 	
-	public void sendPacket(IOutgoingPacket packet)
+	public void sendPacket(WritablePacket packet)
 	{
 		if ((packet == null))
 		{
@@ -191,7 +153,17 @@ public class LoginClient extends ChannelInboundHandler<LoginClient>
 		}
 		
 		// Write into the channel.
-		_channel.writeAndFlush(packet);
+		if ((getChannel() != null) && getChannel().isConnected())
+		{
+			try
+			{
+				// Send the packet data.
+				getChannel().write(packet.getSendableByteBuffer());
+			}
+			catch (Exception ignored)
+			{
+			}
+		}
 	}
 	
 	public void close(LoginFailReason reason)
@@ -204,7 +176,7 @@ public class LoginClient extends ChannelInboundHandler<LoginClient>
 		close(new PlayFail(reason));
 	}
 	
-	public void close(IOutgoingPacket packet)
+	public void close(WritablePacket packet)
 	{
 		sendPacket(packet);
 		closeNow();
@@ -212,10 +184,7 @@ public class LoginClient extends ChannelInboundHandler<LoginClient>
 	
 	public void closeNow()
 	{
-		if (_channel != null)
-		{
-			_channel.close();
-		}
+		disconnect();
 	}
 	
 	public void setCharsOnServ(int servId, int chars)
@@ -244,5 +213,46 @@ public class LoginClient extends ChannelInboundHandler<LoginClient>
 	public Map<Integer, long[]> getCharsWaitingDelOnServ()
 	{
 		return _charsToDelete;
+	}
+	
+	public ConnectionState getConnectionState()
+	{
+		return _connectionState;
+	}
+	
+	public void setConnectionState(ConnectionState connectionState)
+	{
+		_connectionState = connectionState;
+	}
+	
+	@Override
+	public EncryptionInterface getEncryption()
+	{
+		return _encryption;
+	}
+	
+	@Override
+	public String toString()
+	{
+		final String ip = getIp();
+		final StringBuilder sb = new StringBuilder();
+		sb.append(getClass().getSimpleName());
+		sb.append(" [");
+		if (_account != null)
+		{
+			sb.append("Account: ");
+			sb.append(_account);
+		}
+		if (ip != null)
+		{
+			if (_account != null)
+			{
+				sb.append(" - ");
+			}
+			sb.append("IP: ");
+			sb.append(ip);
+		}
+		sb.append("]");
+		return sb.toString();
 	}
 }

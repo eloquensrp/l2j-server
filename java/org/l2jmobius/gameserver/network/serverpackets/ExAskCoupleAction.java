@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author JIV
  */
-public class ExAskCoupleAction implements IClientOutgoingPacket
+public class ExAskCoupleAction extends ServerPacket
 {
 	private final int _objectId;
 	private final int _actionId;
@@ -34,11 +33,10 @@ public class ExAskCoupleAction implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_ASK_COUPLE_ACTION.writeId(packet);
-		packet.writeD(_actionId);
-		packet.writeD(_objectId);
-		return true;
+		ServerPackets.EX_ASK_COUPLE_ACTION.writeId(this);
+		writeInt(_actionId);
+		writeInt(_objectId);
 	}
 }

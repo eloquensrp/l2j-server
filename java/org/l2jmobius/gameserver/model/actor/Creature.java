@@ -151,13 +151,13 @@ import org.l2jmobius.gameserver.network.serverpackets.ChangeWaitType;
 import org.l2jmobius.gameserver.network.serverpackets.ExRotation;
 import org.l2jmobius.gameserver.network.serverpackets.FakePlayerInfo;
 import org.l2jmobius.gameserver.network.serverpackets.FlyToLocation;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
 import org.l2jmobius.gameserver.network.serverpackets.MagicSkillCanceled;
 import org.l2jmobius.gameserver.network.serverpackets.MagicSkillLaunched;
 import org.l2jmobius.gameserver.network.serverpackets.MagicSkillUse;
 import org.l2jmobius.gameserver.network.serverpackets.MoveToLocation;
 import org.l2jmobius.gameserver.network.serverpackets.Revive;
 import org.l2jmobius.gameserver.network.serverpackets.ServerObjectInfo;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SetupGauge;
 import org.l2jmobius.gameserver.network.serverpackets.SocialAction;
 import org.l2jmobius.gameserver.network.serverpackets.StatusUpdate;
@@ -596,15 +596,15 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 	 * <br>
 	 * Player in the detection area of the Creature are identified in <b>_knownPlayers</b>.<br>
 	 * In order to inform other players of state modification on the Creature, server just need to go through _knownPlayers to send Server->Client Packet
-	 * @param mov
+	 * @param packet
 	 */
-	public void broadcastPacket(IClientOutgoingPacket mov)
+	public void broadcastPacket(ServerPacket packet)
 	{
 		World.getInstance().forEachVisibleObject(this, Player.class, player ->
 		{
 			if (isVisibleFor(player))
 			{
-				player.sendPacket(mov);
+				player.sendPacket(packet);
 			}
 		});
 	}
@@ -616,16 +616,16 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 	 * <br>
 	 * Player in the detection area of the Creature are identified in <b>_knownPlayers</b>.<br>
 	 * In order to inform other players of state modification on the Creature, server just need to go through _knownPlayers to send Server->Client Packet
-	 * @param mov
+	 * @param packet
 	 * @param radiusInKnownlist
 	 */
-	public void broadcastPacket(IClientOutgoingPacket mov, int radiusInKnownlist)
+	public void broadcastPacket(ServerPacket packet, int radiusInKnownlist)
 	{
 		World.getInstance().forEachVisibleObjectInRange(this, Player.class, radiusInKnownlist, player ->
 		{
 			if (isVisibleFor(player))
 			{
-				player.sendPacket(mov);
+				player.sendPacket(packet);
 			}
 		});
 	}

@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.sql.ClanTable;
 import org.l2jmobius.gameserver.data.sql.CrestTable;
 import org.l2jmobius.gameserver.enums.CrestType;
@@ -29,21 +29,20 @@ import org.l2jmobius.gameserver.network.SystemMessageId;
 /**
  * Client packet for setting ally crest.
  */
-public class RequestSetAllyCrest implements IClientIncomingPacket
+public class RequestSetAllyCrest implements ClientPacket
 {
 	private int _length;
 	private byte[] _data = null;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_length = packet.readD();
+		_length = packet.readInt();
 		if (_length > 192)
 		{
-			return false;
+			return;
 		}
-		_data = packet.readB(_length);
-		return true;
+		_data = packet.readBytes(_length);
 	}
 	
 	@Override

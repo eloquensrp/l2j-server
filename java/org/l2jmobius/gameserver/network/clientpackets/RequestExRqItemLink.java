@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -27,15 +27,14 @@ import org.l2jmobius.gameserver.network.serverpackets.ExRpItemLink;
 /**
  * @author KenM
  */
-public class RequestExRqItemLink implements IClientIncomingPacket
+public class RequestExRqItemLink implements ClientPacket
 {
 	private int _objectId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_objectId = packet.readD();
-		return true;
+		_objectId = packet.readInt();
 	}
 	
 	@Override

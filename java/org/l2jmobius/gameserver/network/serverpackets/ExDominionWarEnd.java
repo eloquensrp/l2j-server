@@ -16,19 +16,17 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Possibly trigger packet only, need to be verified.
  * @author JIV
  */
-public class ExDominionWarEnd implements IClientOutgoingPacket
+public class ExDominionWarEnd extends ServerPacket
 {
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_DOMINION_WAR_END.writeId(packet);
-		return true;
+		ServerPackets.EX_DOMINION_WAR_END.writeId(this);
 	}
 }

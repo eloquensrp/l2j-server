@@ -16,25 +16,23 @@
  */
 package org.l2jmobius.loginserver.network.gameserverpackets;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.GameServerThread;
 
 /**
  * @author -Wooden-
  */
-public class PlayerInGame extends BaseRecievePacket
+public class PlayerInGame extends ReadablePacket
 {
-	/**
-	 * @param decrypt
-	 * @param server
-	 */
 	public PlayerInGame(byte[] decrypt, GameServerThread server)
 	{
 		super(decrypt);
-		final int size = readH();
+		readByte(); // id (already processed)
+		
+		final int size = readShort();
 		for (int i = 0; i < size; i++)
 		{
-			final String account = readS();
+			final String account = readString();
 			server.addAccountOnGameServer(account);
 		}
 	}

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.UIData;
 import org.l2jmobius.gameserver.model.ActionKey;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -32,48 +32,47 @@ import org.l2jmobius.gameserver.network.GameClient;
  * Request Save Key Mapping client packet.
  * @author mrTJO, Zoey76
  */
-public class RequestSaveKeyMapping implements IClientIncomingPacket
+public class RequestSaveKeyMapping implements ClientPacket
 {
 	private final Map<Integer, List<ActionKey>> _keyMap = new HashMap<>();
 	private final Map<Integer, List<Integer>> _catMap = new HashMap<>();
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
 		int category = 0;
-		packet.readD(); // Unknown
-		packet.readD(); // Unknown
-		final int _tabNum = packet.readD();
+		packet.readInt(); // Unknown
+		packet.readInt(); // Unknown
+		final int _tabNum = packet.readInt();
 		for (int i = 0; i < _tabNum; i++)
 		{
-			final int cmd1Size = packet.readC();
+			final int cmd1Size = packet.readByte();
 			for (int j = 0; j < cmd1Size; j++)
 			{
-				UIData.addCategory(_catMap, category, packet.readC());
+				UIData.addCategory(_catMap, category, packet.readByte());
 			}
 			category++;
 			
-			final int cmd2Size = packet.readC();
+			final int cmd2Size = packet.readByte();
 			for (int j = 0; j < cmd2Size; j++)
 			{
-				UIData.addCategory(_catMap, category, packet.readC());
+				UIData.addCategory(_catMap, category, packet.readByte());
 			}
 			category++;
 			
-			final int cmdSize = packet.readD();
+			final int cmdSize = packet.readInt();
 			for (int j = 0; j < cmdSize; j++)
 			{
-				final int cmd = packet.readD();
-				final int key = packet.readD();
-				final int tgKey1 = packet.readD();
-				final int tgKey2 = packet.readD();
-				final int show = packet.readD();
+				final int cmd = packet.readInt();
+				final int key = packet.readInt();
+				final int tgKey1 = packet.readInt();
+				final int tgKey2 = packet.readInt();
+				final int show = packet.readInt();
 				UIData.addKey(_keyMap, i, new ActionKey(i, cmd, key, tgKey1, tgKey2, show));
 			}
 		}
-		packet.readD();
-		packet.readD();
-		return true;
+		packet.readInt();
+		packet.readInt();
 	}
 	
 	@Override

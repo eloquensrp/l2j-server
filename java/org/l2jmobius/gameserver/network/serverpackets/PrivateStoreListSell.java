@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.instancemanager.SellBuffsManager;
 import org.l2jmobius.gameserver.model.TradeItem;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 public class PrivateStoreListSell extends AbstractItemPacket
 {
@@ -34,7 +33,7 @@ public class PrivateStoreListSell extends AbstractItemPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
 		if (_seller.isSellingBuffs())
 		{
@@ -42,18 +41,17 @@ public class PrivateStoreListSell extends AbstractItemPacket
 		}
 		else
 		{
-			OutgoingPackets.PRIVATE_STORE_SELL_LIST.writeId(packet);
-			packet.writeD(_seller.getObjectId());
-			packet.writeD(_seller.getSellList().isPackaged() ? 1 : 0);
-			packet.writeQ(_player.getAdena());
-			packet.writeD(_seller.getSellList().getItems().size());
+			ServerPackets.PRIVATE_STORE_SELL_LIST.writeId(this);
+			writeInt(_seller.getObjectId());
+			writeInt(_seller.getSellList().isPackaged());
+			writeLong(_player.getAdena());
+			writeInt(_seller.getSellList().getItems().size());
 			for (TradeItem item : _seller.getSellList().getItems())
 			{
-				writeItem(packet, item);
-				packet.writeQ(item.getPrice());
-				packet.writeQ(item.getItem().getReferencePrice() * 2);
+				writeItem(item);
+				writeLong(item.getPrice());
+				writeLong(item.getItem().getReferencePrice() * 2);
 			}
 		}
-		return true;
 	}
 }

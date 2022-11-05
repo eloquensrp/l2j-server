@@ -16,18 +16,16 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Kerberos
  */
-public class AcquireSkillDone implements IClientOutgoingPacket
+public class AcquireSkillDone extends ServerPacket
 {
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.ACQUIRE_SKILL_DONE.writeId(packet);
-		return true;
+		ServerPackets.ACQUIRE_SKILL_DONE.writeId(this);
 	}
 }

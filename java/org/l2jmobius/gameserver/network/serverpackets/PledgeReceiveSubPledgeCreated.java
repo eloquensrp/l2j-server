@@ -16,16 +16,15 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.model.clan.Clan.SubPledge;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 import org.l2jmobius.gameserver.network.PacketLogger;
 
 /**
  * @author -Wooden-
  */
-public class PledgeReceiveSubPledgeCreated implements IClientOutgoingPacket
+public class PledgeReceiveSubPledgeCreated extends ServerPacket
 {
 	private final SubPledge _subPledge;
 	private final Clan _clan;
@@ -41,14 +40,13 @@ public class PledgeReceiveSubPledgeCreated implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PLEDGE_RECEIVE_SUB_PLEDGE_CREATED.writeId(packet);
-		packet.writeD(1);
-		packet.writeD(_subPledge.getId());
-		packet.writeS(_subPledge.getName());
-		packet.writeS(getLeaderName());
-		return true;
+		ServerPackets.PLEDGE_RECEIVE_SUB_PLEDGE_CREATED.writeId(this);
+		writeInt(1);
+		writeInt(_subPledge.getId());
+		writeString(_subPledge.getName());
+		writeString(getLeaderName());
 	}
 	
 	private String getLeaderName()

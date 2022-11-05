@@ -1,0 +1,15 @@
+2022.11.04 11:40:31,849	INFO	1	org.l2jmobius.commons.database.DatabaseFactory	Database: Initialized.
+2022.11.04 11:40:31,881	INFO	1	org.l2jmobius.loginserver.LoginController	Loading LoginController...
+2022.11.04 11:40:32,150	INFO	1	org.l2jmobius.loginserver.LoginController	Cached 10 KeyPairs for RSA communication.
+2022.11.04 11:40:32,209	INFO	1	org.l2jmobius.loginserver.GameServerTable	Loaded 127 server names.
+2022.11.04 11:40:32,210	INFO	1	org.l2jmobius.loginserver.GameServerTable	Loaded 1 registered Game Servers.
+2022.11.04 11:40:32,259	INFO	1	org.l2jmobius.loginserver.GameServerTable	Cached 10 RSA keys for Game Server communication.
+2022.11.04 11:40:32,261	INFO	1	org.l2jmobius.loginserver.LoginServer	Loaded 2 IP Bans.
+2022.11.04 11:40:32,262	INFO	1	org.l2jmobius.loginserver.LoginServer	Listening for GameServers on 127.0.0.1:9014
+2022.11.04 11:40:32,266	INFO	37	org.l2jmobius.commons.network.NetServer	LoginServer: Listening on port 2106 for incoming connections.
+2022.11.04 11:41:00,185	INFO	40	org.l2jmobius.loginserver.GameServerThread	Updated Gameserver [2] Sieghardt IP's:
+2022.11.04 11:41:00,185	INFO	40	org.l2jmobius.loginserver.GameServerThread	127.0.0.1/127.0.0.0/8
+2022.11.04 11:41:00,185	INFO	40	org.l2jmobius.loginserver.GameServerThread	192.168.2.6/192.168.2.0/24
+2022.11.04 11:41:00,186	INFO	40	org.l2jmobius.loginserver.GameServerThread	46.198.204.56/0.0.0.0/0
+2022.11.04 11:49:21,940	INFO	40	org.l2jmobius.loginserver.GameServerThread	GameServer [2] Sieghardt: Connection lost: Connection reset
+2022.11.04 11:49:21,941	INFO	40	org.l2jmobius.loginserver.GameServerThread	Server [2] Sieghardt is now set as disconnected.

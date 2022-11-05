@@ -58,7 +58,7 @@ import org.l2jmobius.gameserver.model.siege.Siegable;
 import org.l2jmobius.gameserver.model.siege.SiegeClan;
 import org.l2jmobius.gameserver.model.skill.Skill;
 import org.l2jmobius.gameserver.network.SystemMessageId;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 import org.l2jmobius.gameserver.util.Broadcast;
 import org.l2jmobius.gameserver.util.Util;
@@ -1417,7 +1417,7 @@ public class TerritoryWarManager implements Siegable
 		}
 	}
 	
-	public void announceToParticipants(IClientOutgoingPacket sm, int exp, int sp)
+	public void announceToParticipants(ServerPacket sm, int exp, int sp)
 	{
 		// broadcast to clan members
 		for (Territory ter : _territoryList.values())

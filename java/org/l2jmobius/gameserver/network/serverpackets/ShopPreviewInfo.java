@@ -18,14 +18,13 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Map;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.itemcontainer.Inventory;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  ** @author Gnacik
  */
-public class ShopPreviewInfo implements IClientOutgoingPacket
+public class ShopPreviewInfo extends ServerPacket
 {
 	private final Map<Integer, Integer> _itemlist;
 	
@@ -35,31 +34,30 @@ public class ShopPreviewInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SHOP_PREVIEW_INFO.writeId(packet);
-		packet.writeD(Inventory.PAPERDOLL_TOTALSLOTS);
+		ServerPackets.SHOP_PREVIEW_INFO.writeId(this);
+		writeInt(Inventory.PAPERDOLL_TOTALSLOTS);
 		// Slots
-		packet.writeD(getFromList(Inventory.PAPERDOLL_UNDER));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_REAR));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_LEAR));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_NECK));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_RFINGER));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_LFINGER));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_HEAD));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_RHAND));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_LHAND));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_GLOVES));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_CHEST));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_LEGS));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_FEET));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_CLOAK));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_RHAND));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_HAIR));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_HAIR2));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_RBRACELET));
-		packet.writeD(getFromList(Inventory.PAPERDOLL_LBRACELET));
-		return true;
+		writeInt(getFromList(Inventory.PAPERDOLL_UNDER));
+		writeInt(getFromList(Inventory.PAPERDOLL_REAR));
+		writeInt(getFromList(Inventory.PAPERDOLL_LEAR));
+		writeInt(getFromList(Inventory.PAPERDOLL_NECK));
+		writeInt(getFromList(Inventory.PAPERDOLL_RFINGER));
+		writeInt(getFromList(Inventory.PAPERDOLL_LFINGER));
+		writeInt(getFromList(Inventory.PAPERDOLL_HEAD));
+		writeInt(getFromList(Inventory.PAPERDOLL_RHAND));
+		writeInt(getFromList(Inventory.PAPERDOLL_LHAND));
+		writeInt(getFromList(Inventory.PAPERDOLL_GLOVES));
+		writeInt(getFromList(Inventory.PAPERDOLL_CHEST));
+		writeInt(getFromList(Inventory.PAPERDOLL_LEGS));
+		writeInt(getFromList(Inventory.PAPERDOLL_FEET));
+		writeInt(getFromList(Inventory.PAPERDOLL_CLOAK));
+		writeInt(getFromList(Inventory.PAPERDOLL_RHAND));
+		writeInt(getFromList(Inventory.PAPERDOLL_HAIR));
+		writeInt(getFromList(Inventory.PAPERDOLL_HAIR2));
+		writeInt(getFromList(Inventory.PAPERDOLL_RBRACELET));
+		writeInt(getFromList(Inventory.PAPERDOLL_LBRACELET));
 	}
 	
 	private int getFromList(int key)

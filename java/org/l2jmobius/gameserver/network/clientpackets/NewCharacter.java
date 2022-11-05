@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.data.xml.PlayerTemplateData;
 import org.l2jmobius.gameserver.enums.ClassId;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -25,14 +24,8 @@ import org.l2jmobius.gameserver.network.serverpackets.NewCharacterSuccess;
 /**
  * @author Zoey76
  */
-public class NewCharacter implements IClientIncomingPacket
+public class NewCharacter implements ClientPacket
 {
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
-	
 	@Override
 	public void run(GameClient client)
 	{

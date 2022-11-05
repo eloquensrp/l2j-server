@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class RestartResponse implements IClientOutgoingPacket
+public class RestartResponse extends ServerPacket
 {
 	private static final RestartResponse STATIC_PACKET_TRUE = new RestartResponse(true);
 	private static final RestartResponse STATIC_PACKET_FALSE = new RestartResponse(false);
@@ -37,10 +36,9 @@ public class RestartResponse implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.RESTART_RESPONSE.writeId(packet);
-		packet.writeD(_result ? 1 : 0);
-		return true;
+		ServerPackets.RESTART_RESPONSE.writeId(this);
+		writeInt(_result);
 	}
 }

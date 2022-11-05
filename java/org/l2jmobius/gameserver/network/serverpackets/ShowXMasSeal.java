@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author devScarlet, mrTJO
  */
-public class ShowXMasSeal implements IClientOutgoingPacket
+public class ShowXMasSeal extends ServerPacket
 {
 	private final int _item;
 	
@@ -32,10 +31,9 @@ public class ShowXMasSeal implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SHOW_XMAS_SEAL.writeId(packet);
-		packet.writeD(_item);
-		return true;
+		ServerPackets.SHOW_XMAS_SEAL.writeId(this);
+		writeInt(_item);
 	}
 }

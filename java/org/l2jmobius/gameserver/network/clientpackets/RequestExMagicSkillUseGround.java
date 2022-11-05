@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.SkillData;
 import org.l2jmobius.gameserver.model.Location;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -32,7 +32,7 @@ import org.l2jmobius.gameserver.util.Util;
  * Format:(ch) dddddc
  * @author -Wooden-
  */
-public class RequestExMagicSkillUseGround implements IClientIncomingPacket
+public class RequestExMagicSkillUseGround implements ClientPacket
 {
 	private int _x;
 	private int _y;
@@ -42,15 +42,14 @@ public class RequestExMagicSkillUseGround implements IClientIncomingPacket
 	private boolean _shiftPressed;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_x = packet.readD();
-		_y = packet.readD();
-		_z = packet.readD();
-		_skillId = packet.readD();
-		_ctrlPressed = packet.readD() != 0;
-		_shiftPressed = packet.readC() != 0;
-		return true;
+		_x = packet.readInt();
+		_y = packet.readInt();
+		_z = packet.readInt();
+		_skillId = packet.readInt();
+		_ctrlPressed = packet.readInt() != 0;
+		_shiftPressed = packet.readByte() != 0;
 	}
 	
 	@Override

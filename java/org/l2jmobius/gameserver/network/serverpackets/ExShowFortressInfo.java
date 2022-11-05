@@ -18,16 +18,15 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.instancemanager.FortManager;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.model.siege.Fort;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExShowFortressInfo implements IClientOutgoingPacket
+public class ExShowFortressInfo extends ServerPacket
 {
 	public static final ExShowFortressInfo STATIC_PACKET = new ExShowFortressInfo();
 	
@@ -36,20 +35,19 @@ public class ExShowFortressInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SHOW_FORTRESS_INFO.writeId(packet);
+		ServerPackets.EX_SHOW_FORTRESS_INFO.writeId(this);
 		final List<Fort> forts = FortManager.getInstance().getForts();
-		packet.writeD(forts.size());
+		writeInt(forts.size());
 		for (Fort fort : forts)
 		{
 			final Clan clan = fort.getOwnerClan();
-			packet.writeD(fort.getResidenceId());
-			packet.writeS(clan != null ? clan.getName() : "");
-			packet.writeD(fort.getSiege().isInProgress() ? 1 : 0);
+			writeInt(fort.getResidenceId());
+			writeString(clan != null ? clan.getName() : "");
+			writeInt(fort.getSiege().isInProgress());
 			// Time of possession
-			packet.writeD(fort.getOwnedTime());
+			writeInt(fort.getOwnedTime());
 		}
-		return true;
 	}
 }

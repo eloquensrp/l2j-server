@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.data.xml.AdminData;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -25,14 +24,8 @@ import org.l2jmobius.gameserver.network.GameClient;
  * This class handles RequestGmLista packet triggered by /gmlist command
  * @version $Revision: 1.1.4.2 $ $Date: 2005/03/27 15:29:30 $
  */
-public class RequestGmList implements IClientIncomingPacket
+public class RequestGmList implements ClientPacket
 {
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
-	
 	@Override
 	public void run(GameClient client)
 	{

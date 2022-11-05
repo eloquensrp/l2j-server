@@ -16,33 +16,27 @@
  */
 package org.l2jmobius.gameserver.network.loginserverpackets.game;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author mrTJO
  */
-public class TempBan extends BaseSendablePacket
+public class TempBan extends WritablePacket
 {
 	public TempBan(String accountName, String ip, long time)
 	{
-		writeC(0x0A);
-		writeS(accountName);
-		writeS(ip);
-		writeQ(System.currentTimeMillis() + (time * 60000));
+		writeByte(0x0A);
+		writeString(accountName);
+		writeString(ip);
+		writeLong(System.currentTimeMillis() + (time * 60000));
 		// if (reason != null)
 		// {
-		// writeC(0x01);
-		// writeS(reason);
+		// writeByte(0x01);
+		// writeString(reason);
 		// }
 		// else
 		// {
-		writeC(0x00);
+		writeByte(0x00);
 		// }
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
 	}
 }

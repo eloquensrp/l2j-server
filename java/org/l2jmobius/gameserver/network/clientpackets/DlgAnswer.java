@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.PlayerAction;
 import org.l2jmobius.gameserver.handler.AdminCommandHandler;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -38,19 +38,18 @@ import org.l2jmobius.gameserver.util.OfflineTradeUtil;
 /**
  * @author Dezmond_snz
  */
-public class DlgAnswer implements IClientIncomingPacket
+public class DlgAnswer implements ClientPacket
 {
 	private int _messageId;
 	private int _answer;
 	private int _requesterId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_messageId = packet.readD();
-		_answer = packet.readD();
-		_requesterId = packet.readD();
-		return true;
+		_messageId = packet.readInt();
+		_answer = packet.readInt();
+		_requesterId = packet.readInt();
 	}
 	
 	@Override

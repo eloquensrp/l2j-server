@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.ShowMiniMap;
@@ -25,14 +24,8 @@ import org.l2jmobius.gameserver.network.serverpackets.ShowMiniMap;
  * sample format d
  * @version $Revision: 1 $ $Date: 2005/04/10 00:17:44 $
  */
-public class RequestShowMiniMap implements IClientIncomingPacket
+public class RequestShowMiniMap implements ClientPacket
 {
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
-	
 	@Override
 	public void run(GameClient client)
 	{

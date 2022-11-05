@@ -18,7 +18,7 @@ package org.l2jmobius.loginserver.network;
 
 import java.util.logging.Logger;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.GameServerThread;
 import org.l2jmobius.loginserver.network.gameserverpackets.BlowFishKey;
 import org.l2jmobius.loginserver.network.gameserverpackets.ChangeAccessLevel;
@@ -47,9 +47,9 @@ public class GameServerPacketHandler
 		AUTHED
 	}
 	
-	public static BaseRecievePacket handlePacket(byte[] data, GameServerThread server)
+	public static ReadablePacket handlePacket(byte[] data, GameServerThread server)
 	{
-		BaseRecievePacket msg = null;
+		ReadablePacket msg = null;
 		final int opcode = data[0] & 0xff;
 		final GameServerState state = server.getLoginConnectionState();
 		switch (state)

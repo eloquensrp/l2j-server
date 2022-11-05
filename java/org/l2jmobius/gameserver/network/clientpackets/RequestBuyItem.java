@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.BuyListData;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
@@ -40,7 +40,7 @@ import org.l2jmobius.gameserver.network.serverpackets.ExBuySellList;
 import org.l2jmobius.gameserver.network.serverpackets.StatusUpdate;
 import org.l2jmobius.gameserver.util.Util;
 
-public class RequestBuyItem implements IClientIncomingPacket
+public class RequestBuyItem implements ClientPacket
 {
 	private static final int BATCH_LENGTH = 12;
 	private static final int CUSTOM_CB_SELL_LIST = 423;
@@ -49,28 +49,27 @@ public class RequestBuyItem implements IClientIncomingPacket
 	private List<ItemHolder> _items = null;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_listId = packet.readD();
-		final int size = packet.readD();
-		if ((size <= 0) || (size > Config.MAX_ITEM_IN_PACKET) || ((size * BATCH_LENGTH) != packet.getReadableBytes()))
+		_listId = packet.readInt();
+		final int size = packet.readInt();
+		if ((size <= 0) || (size > Config.MAX_ITEM_IN_PACKET) || ((size * BATCH_LENGTH) != packet.getRemainingLength()))
 		{
-			return false;
+			return;
 		}
 		
 		_items = new ArrayList<>(size);
 		for (int i = 0; i < size; i++)
 		{
-			final int itemId = packet.readD();
-			final long count = packet.readQ();
+			final int itemId = packet.readInt();
+			final long count = packet.readLong();
 			if ((itemId < 1) || (count < 1))
 			{
 				_items = null;
-				return false;
+				return;
 			}
 			_items.add(new ItemHolder(itemId, count));
 		}
-		return true;
 	}
 	
 	@Override

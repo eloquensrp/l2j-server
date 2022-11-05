@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.CharSelectionInfo;
 
@@ -24,14 +23,8 @@ import org.l2jmobius.gameserver.network.serverpackets.CharSelectionInfo;
  * (ch)
  * @author KenM
  */
-public class RequestGotoLobby implements IClientIncomingPacket
+public class RequestGotoLobby implements ClientPacket
 {
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
-	
 	@Override
 	public void run(GameClient client)
 	{

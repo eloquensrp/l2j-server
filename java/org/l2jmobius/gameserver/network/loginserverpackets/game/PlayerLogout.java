@@ -16,22 +16,16 @@
  */
 package org.l2jmobius.gameserver.network.loginserverpackets.game;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author -Wooden-
  */
-public class PlayerLogout extends BaseSendablePacket
+public class PlayerLogout extends WritablePacket
 {
 	public PlayerLogout(String player)
 	{
-		writeC(0x03);
-		writeS(player);
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
+		writeByte(0x03);
+		writeString(player);
 	}
 }

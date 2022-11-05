@@ -16,20 +16,19 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.RecipeItemMakeInfo;
 
-public class RequestRecipeItemMakeInfo implements IClientIncomingPacket
+public class RequestRecipeItemMakeInfo implements ClientPacket
 {
 	private int _id;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_id = packet.readD();
-		return true;
+		_id = packet.readInt();
 	}
 	
 	@Override

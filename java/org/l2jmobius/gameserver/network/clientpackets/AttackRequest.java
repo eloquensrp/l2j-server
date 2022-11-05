@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.PlayerCondOverride;
 import org.l2jmobius.gameserver.enums.PrivateStoreType;
 import org.l2jmobius.gameserver.model.World;
@@ -29,7 +29,7 @@ import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.serverpackets.ActionFailed;
 
-public class AttackRequest implements IClientIncomingPacket
+public class AttackRequest implements ClientPacket
 {
 	// cddddc
 	private int _objectId;
@@ -43,14 +43,13 @@ public class AttackRequest implements IClientIncomingPacket
 	private int _attackId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_objectId = packet.readD();
-		_originX = packet.readD();
-		_originY = packet.readD();
-		_originZ = packet.readD();
-		_attackId = packet.readC(); // 0 for simple click 1 for shift-click
-		return true;
+		_objectId = packet.readInt();
+		_originX = packet.readInt();
+		_originY = packet.readInt();
+		_originZ = packet.readInt();
+		_attackId = packet.readByte(); // 0 for simple click 1 for shift-click
 	}
 	
 	@Override

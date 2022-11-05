@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.MailManager;
 import org.l2jmobius.gameserver.model.Message;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -30,27 +30,27 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * @author Migi, DS
  */
-public class RequestDeleteSentPost implements IClientIncomingPacket
+public class RequestDeleteSentPost implements ClientPacket
 {
 	private static final int BATCH_LENGTH = 4; // length of the one item
 	
 	int[] _msgIds = null;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		final int count = packet.readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getReadableBytes()))
+		final int count = packet.readInt();
+		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getRemainingLength()))
 		{
-			return false;
+			return;
 		}
 		
 		_msgIds = new int[count];
 		for (int i = 0; i < count; i++)
 		{
-			_msgIds[i] = packet.readD();
+			_msgIds[i] = packet.readInt();
 		}
-		return true;
+		return;
 	}
 	
 	@Override

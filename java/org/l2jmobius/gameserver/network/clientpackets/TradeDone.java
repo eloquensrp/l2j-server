@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.TradeList;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -26,15 +26,14 @@ import org.l2jmobius.gameserver.network.SystemMessageId;
 /**
  * This packet manages the trade response.
  */
-public class TradeDone implements IClientIncomingPacket
+public class TradeDone implements ClientPacket
 {
 	private int _response;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_response = packet.readD();
-		return true;
+		_response = packet.readInt();
 	}
 	
 	@Override

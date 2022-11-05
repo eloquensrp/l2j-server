@@ -312,7 +312,7 @@ public class ClanMember
 	
 	/**
 	 * Gets the player's sex.
-	 * @return the sex
+	 * @return true if female
 	 */
 	public boolean getSex()
 	{

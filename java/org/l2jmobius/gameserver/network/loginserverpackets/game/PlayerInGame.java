@@ -18,33 +18,27 @@ package org.l2jmobius.gameserver.network.loginserverpackets.game;
 
 import java.util.List;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author -Wooden-
  */
-public class PlayerInGame extends BaseSendablePacket
+public class PlayerInGame extends WritablePacket
 {
 	public PlayerInGame(String player)
 	{
-		writeC(0x02);
-		writeH(1);
-		writeS(player);
+		writeByte(0x02);
+		writeShort(1);
+		writeString(player);
 	}
 	
 	public PlayerInGame(List<String> players)
 	{
-		writeC(0x02);
-		writeH(players.size());
-		for (String pc : players)
+		writeByte(0x02);
+		writeShort(players.size());
+		for (String player : players)
 		{
-			writeS(pc);
+			writeString(player);
 		}
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
 	}
 }

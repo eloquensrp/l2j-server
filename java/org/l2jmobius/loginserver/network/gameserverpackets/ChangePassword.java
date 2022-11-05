@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.logging.Logger;
 
 import org.l2jmobius.commons.database.DatabaseFactory;
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.GameServerTable;
 import org.l2jmobius.loginserver.GameServerTable.GameServerInfo;
 import org.l2jmobius.loginserver.GameServerThread;
@@ -34,7 +34,7 @@ import org.l2jmobius.loginserver.GameServerThread;
 /**
  * @author Nik
  */
-public class ChangePassword extends BaseRecievePacket
+public class ChangePassword extends ReadablePacket
 {
 	protected static final Logger LOGGER = Logger.getLogger(ChangePassword.class.getName());
 	private static GameServerThread gst = null;
@@ -42,11 +42,12 @@ public class ChangePassword extends BaseRecievePacket
 	public ChangePassword(byte[] decrypt)
 	{
 		super(decrypt);
+		readByte(); // id (already processed)
 		
-		final String accountName = readS();
-		final String characterName = readS();
-		final String curpass = readS();
-		final String newpass = readS();
+		final String accountName = readString();
+		final String characterName = readString();
+		final String curpass = readString();
+		final String newpass = readString();
 		
 		// get the GameServerThread
 		final Collection<GameServerInfo> serverList = GameServerTable.getInstance().getRegisteredGameServers().values();
@@ -65,7 +66,7 @@ public class ChangePassword extends BaseRecievePacket
 		
 		if ((curpass == null) || (newpass == null))
 		{
-			gst.ChangePasswordResponse((byte) 0, characterName, "Invalid password data! Try again.");
+			gst.changePasswordResponse((byte) 0, characterName, "Invalid password data! Try again.");
 		}
 		else
 		{
@@ -106,16 +107,16 @@ public class ChangePassword extends BaseRecievePacket
 					LOGGER.info("The password for account " + accountName + " has been changed from " + curpassEnc + " to " + Base64.getEncoder().encodeToString(password));
 					if (passUpdated > 0)
 					{
-						gst.ChangePasswordResponse((byte) 1, characterName, "You have successfully changed your password!");
+						gst.changePasswordResponse((byte) 1, characterName, "You have successfully changed your password!");
 					}
 					else
 					{
-						gst.ChangePasswordResponse((byte) 0, characterName, "The password change was unsuccessful!");
+						gst.changePasswordResponse((byte) 0, characterName, "The password change was unsuccessful!");
 					}
 				}
 				else
 				{
-					gst.ChangePasswordResponse((byte) 0, characterName, "The typed current password doesn't match with your current one.");
+					gst.changePasswordResponse((byte) 0, characterName, "The typed current password doesn't match with your current one.");
 				}
 			}
 			catch (Exception e)

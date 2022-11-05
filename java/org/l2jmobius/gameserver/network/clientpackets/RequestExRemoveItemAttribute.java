@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.Elementals;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.Weapon;
@@ -28,18 +28,17 @@ import org.l2jmobius.gameserver.network.serverpackets.InventoryUpdate;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 import org.l2jmobius.gameserver.network.serverpackets.UserInfo;
 
-public class RequestExRemoveItemAttribute implements IClientIncomingPacket
+public class RequestExRemoveItemAttribute implements ClientPacket
 {
 	private int _objectId;
 	private long _price;
 	private byte _element;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_objectId = packet.readD();
-		_element = (byte) packet.readD();
-		return true;
+		_objectId = packet.readInt();
+		_element = (byte) packet.readInt();
 	}
 	
 	@Override

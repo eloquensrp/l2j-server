@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.network.clientpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.ItemLocation;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.instance.Item;
@@ -30,7 +30,7 @@ import org.l2jmobius.gameserver.network.GameClient;
  * Format:(ch) d[dd]
  * @author -Wooden-
  */
-public class RequestSaveInventoryOrder implements IClientIncomingPacket
+public class RequestSaveInventoryOrder implements ClientPacket
 {
 	private List<InventoryOrder> _order;
 	
@@ -38,18 +38,17 @@ public class RequestSaveInventoryOrder implements IClientIncomingPacket
 	private static final int LIMIT = 125;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		int sz = packet.readD();
+		int sz = packet.readInt();
 		sz = Math.min(sz, LIMIT);
 		_order = new ArrayList<>(sz);
 		for (int i = 0; i < sz; i++)
 		{
-			final int objectId = packet.readD();
-			final int order = packet.readD();
+			final int objectId = packet.readInt();
+			final int order = packet.readInt();
 			_order.add(new InventoryOrder(objectId, order));
 		}
-		return true;
 	}
 	
 	@Override

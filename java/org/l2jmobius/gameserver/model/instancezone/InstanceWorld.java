@@ -31,7 +31,7 @@ import org.l2jmobius.gameserver.model.actor.Creature;
 import org.l2jmobius.gameserver.model.actor.Npc;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.actor.instance.Door;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 
 /**
  * Basic instance zone data transfer object.
@@ -369,14 +369,14 @@ public class InstanceWorld
 	 * Send packet to each player from instance world.
 	 * @param packets packets to be send
 	 */
-	public void broadcastPacket(IClientOutgoingPacket... packets)
+	public void broadcastPacket(ServerPacket... packets)
 	{
 		for (int objectId : _instance.getPlayers())
 		{
 			final Player player = World.getInstance().getPlayer(objectId);
 			if ((player != null) && (player.getInstanceId() == _instance.getId()))
 			{
-				for (IClientOutgoingPacket packet : packets)
+				for (ServerPacket packet : packets)
 				{
 					player.sendPacket(packet);
 				}

@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.sevensigns.SevenSigns;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ShowMiniMap implements IClientOutgoingPacket
+public class ShowMiniMap extends ServerPacket
 {
 	private final int _mapId;
 	
@@ -33,11 +32,10 @@ public class ShowMiniMap implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SHOW_MINIMAP.writeId(packet);
-		packet.writeD(_mapId);
-		packet.writeC(SevenSigns.getInstance().getCurrentPeriod());
-		return true;
+		ServerPackets.SHOW_MINIMAP.writeId(this);
+		writeInt(_mapId);
+		writeByte(SevenSigns.getInstance().getCurrentPeriod());
 	}
 }

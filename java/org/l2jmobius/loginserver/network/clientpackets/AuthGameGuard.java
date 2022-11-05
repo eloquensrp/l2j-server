@@ -16,8 +16,7 @@
  */
 package org.l2jmobius.loginserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.IIncomingPacket;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.enums.LoginFailReason;
 import org.l2jmobius.loginserver.network.ConnectionState;
 import org.l2jmobius.loginserver.network.LoginClient;
@@ -27,7 +26,7 @@ import org.l2jmobius.loginserver.network.serverpackets.GGAuth;
  * Format: ddddd
  * @author -Wooden-
  */
-public class AuthGameGuard implements IIncomingPacket<LoginClient>
+public class AuthGameGuard implements LoginClientPacket
 {
 	private int _sessionId;
 	
@@ -41,18 +40,16 @@ public class AuthGameGuard implements IIncomingPacket<LoginClient>
 	private int _data4;
 	
 	@Override
-	public boolean read(LoginClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		if (packet.getReadableBytes() >= 20)
+		if (packet.getRemainingLength() >= 20)
 		{
-			_sessionId = packet.readD();
-			_data1 = packet.readD();
-			_data2 = packet.readD();
-			_data3 = packet.readD();
-			_data4 = packet.readD();
-			return true;
+			_sessionId = packet.readInt();
+			_data1 = packet.readInt();
+			_data2 = packet.readInt();
+			_data3 = packet.readInt();
+			_data4 = packet.readInt();
 		}
-		return false;
 	}
 	
 	@Override

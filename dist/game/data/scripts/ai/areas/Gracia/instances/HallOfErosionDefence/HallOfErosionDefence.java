@@ -38,8 +38,8 @@ import org.l2jmobius.gameserver.model.quest.QuestState;
 import org.l2jmobius.gameserver.network.NpcStringId;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.serverpackets.ExShowScreenMessage;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
 import org.l2jmobius.gameserver.network.serverpackets.NpcSay;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 import org.l2jmobius.gameserver.util.Util;
 
@@ -665,7 +665,7 @@ public class HallOfErosionDefence extends AbstractNpcAI
 		}
 	}
 	
-	protected void broadCastPacket(HEDWorld world, IClientOutgoingPacket packet)
+	protected void broadCastPacket(HEDWorld world, ServerPacket packet)
 	{
 		for (Player player : world.getAllowed())
 		{

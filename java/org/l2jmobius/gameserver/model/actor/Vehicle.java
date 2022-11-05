@@ -37,8 +37,8 @@ import org.l2jmobius.gameserver.model.item.Weapon;
 import org.l2jmobius.gameserver.model.item.instance.Item;
 import org.l2jmobius.gameserver.model.zone.ZoneRegion;
 import org.l2jmobius.gameserver.network.SystemMessageId;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
 import org.l2jmobius.gameserver.network.serverpackets.InventoryUpdate;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.taskmanager.GameTimeTaskManager;
 import org.l2jmobius.gameserver.taskmanager.MovementTaskManager;
 import org.l2jmobius.gameserver.util.Util;
@@ -300,13 +300,13 @@ public abstract class Vehicle extends Creature
 		return _passengers;
 	}
 	
-	public void broadcastToPassengers(IClientOutgoingPacket sm)
+	public void broadcastToPassengers(ServerPacket packet)
 	{
 		for (Player player : _passengers)
 		{
 			if (player != null)
 			{
-				player.sendPacket(sm);
+				player.sendPacket(packet);
 			}
 		}
 	}

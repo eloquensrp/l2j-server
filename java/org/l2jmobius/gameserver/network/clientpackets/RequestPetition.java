@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.AdminData;
 import org.l2jmobius.gameserver.instancemanager.PetitionManager;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -35,17 +35,16 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
  * </p>
  * @author -Wooden-, TempyIncursion
  */
-public class RequestPetition implements IClientIncomingPacket
+public class RequestPetition implements ClientPacket
 {
 	private String _content;
 	private int _type; // 1 = on : 0 = off;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_content = packet.readS();
-		_type = packet.readD();
-		return true;
+		_content = packet.readString();
+		_type = packet.readInt();
 	}
 	
 	@Override

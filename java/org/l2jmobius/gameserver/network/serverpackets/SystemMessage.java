@@ -18,7 +18,6 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Arrays;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.ItemTable;
 import org.l2jmobius.gameserver.model.actor.Npc;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -27,15 +26,15 @@ import org.l2jmobius.gameserver.model.actor.templates.NpcTemplate;
 import org.l2jmobius.gameserver.model.item.ItemTemplate;
 import org.l2jmobius.gameserver.model.item.instance.Item;
 import org.l2jmobius.gameserver.model.skill.Skill;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
 import org.l2jmobius.gameserver.network.PacketLogger;
+import org.l2jmobius.gameserver.network.ServerPackets;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.SystemMessageId.SMLocalisation;
 
 /**
  * @author Forsaiken
  */
-public class SystemMessage implements IClientOutgoingPacket
+public class SystemMessage extends ServerPacket
 {
 	private static final SMParam[] EMPTY_PARAM_ARRAY = new SMParam[0];
 	
@@ -338,9 +337,9 @@ public class SystemMessage implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SYSTEM_MESSAGE.writeId(packet);
+		ServerPackets.SYSTEM_MESSAGE.writeId(this);
 		// Localisation related.
 		if (_lang != null)
 		{
@@ -352,15 +351,16 @@ public class SystemMessage implements IClientOutgoingPacket
 				{
 					params[i] = _params[i].getValue();
 				}
-				packet.writeD(SystemMessageId.S1_2.getId());
-				packet.writeD(1);
-				packet.writeD(TYPE_TEXT);
-				packet.writeS(sml.getLocalisation(params));
-				return true;
+				writeInt(SystemMessageId.S1_2.getId());
+				writeInt(1);
+				writeInt(TYPE_TEXT);
+				writeString(sml.getLocalisation(params));
+				return;
 			}
 		}
-		packet.writeD(_smId.getId());
-		packet.writeD(_params.length);
+		
+		writeInt(_smId.getId());
+		writeInt(_params.length);
 		for (SMParam param : _params)
 		{
 			if (param == null)
@@ -368,18 +368,18 @@ public class SystemMessage implements IClientOutgoingPacket
 				PacketLogger.warning("Found null parameter for SystemMessageId " + _smId);
 				continue;
 			}
-			packet.writeD(param.getType());
+			writeInt(param.getType());
 			switch (param.getType())
 			{
 				case TYPE_TEXT:
 				case TYPE_PLAYER_NAME:
 				{
-					packet.writeS(param.getStringValue());
+					writeString(param.getStringValue());
 					break;
 				}
 				case TYPE_LONG_NUMBER:
 				{
-					packet.writeQ(param.getLongValue());
+					writeLong(param.getLongValue());
 					break;
 				}
 				case TYPE_ITEM_NAME:
@@ -391,26 +391,25 @@ public class SystemMessage implements IClientOutgoingPacket
 				case TYPE_INSTANCE_NAME:
 				case TYPE_DOOR_NAME:
 				{
-					packet.writeD(param.getIntValue());
+					writeInt(param.getIntValue());
 					break;
 				}
 				case TYPE_SKILL_NAME:
 				{
 					final int[] array = param.getIntArrayValue();
-					packet.writeD(array[0]); // SkillId
-					packet.writeD(array[1]); // SkillLevel
+					writeInt(array[0]); // SkillId
+					writeInt(array[1]); // SkillLevel
 					break;
 				}
 				case TYPE_ZONE_NAME:
 				{
 					final int[] array = param.getIntArrayValue();
-					packet.writeD(array[0]); // x
-					packet.writeD(array[1]); // y
-					packet.writeD(array[2]); // z
+					writeInt(array[0]); // x
+					writeInt(array[1]); // y
+					writeInt(array[2]); // z
 					break;
 				}
 			}
 		}
-		return true;
 	}
 }

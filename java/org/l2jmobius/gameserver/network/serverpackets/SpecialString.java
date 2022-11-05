@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class SpecialString implements IClientOutgoingPacket
+public class SpecialString extends ServerPacket
 {
 	private final int _strId;
 	private final int _fontSize;
@@ -41,16 +40,15 @@ public class SpecialString implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SERVER_CLOSE_SOCKET.writeId(packet);
-		packet.writeC(_strId); // string ID
-		packet.writeC(_isDraw ? 1 : 0); // 1 - draw / 0 - hide
-		packet.writeC(_fontSize); // -1 to 3 (font size)
-		packet.writeD(_x); // ClientRight - x
-		packet.writeD(_y); // ClientTop + y
-		packet.writeD(_color); // AARRGGBB
-		packet.writeS(_text); // wide string max len = 63
-		return true;
+		ServerPackets.SERVER_CLOSE_SOCKET.writeId(this);
+		writeByte(_strId); // string ID
+		writeByte(_isDraw); // 1 - draw / 0 - hide
+		writeByte(_fontSize); // -1 to 3 (font size)
+		writeInt(_x); // ClientRight - x
+		writeInt(_y); // ClientTop + y
+		writeInt(_color); // AARRGGBB
+		writeString(_text); // wide string max len = 63
 	}
 }

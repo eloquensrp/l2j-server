@@ -16,21 +16,20 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author mrTJO
  */
-public class ExCubeGameExtendedChangePoints implements IClientOutgoingPacket
+public class ExCubeGameExtendedChangePoints extends ServerPacket
 {
-	int _timeLeft;
-	int _bluePoints;
-	int _redPoints;
-	boolean _isRedTeam;
-	Player _player;
-	int _playerPoints;
+	private final int _timeLeft;
+	private final int _bluePoints;
+	private final int _redPoints;
+	private final boolean _isRedTeam;
+	private final Player _player;
+	private final int _playerPoints;
 	
 	/**
 	 * Update a Secret Point Counter (used by client when receive ExCubeGameEnd)
@@ -52,16 +51,15 @@ public class ExCubeGameExtendedChangePoints implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BLOCK_UP_SET_STATE.writeId(packet);
-		packet.writeD(0);
-		packet.writeD(_timeLeft);
-		packet.writeD(_bluePoints);
-		packet.writeD(_redPoints);
-		packet.writeD(_isRedTeam ? 1 : 0);
-		packet.writeD(_player.getObjectId());
-		packet.writeD(_playerPoints);
-		return true;
+		ServerPackets.EX_BLOCK_UP_SET_STATE.writeId(this);
+		writeInt(0);
+		writeInt(_timeLeft);
+		writeInt(_bluePoints);
+		writeInt(_redPoints);
+		writeInt(_isRedTeam);
+		writeInt(_player.getObjectId());
+		writeInt(_playerPoints);
 	}
 }

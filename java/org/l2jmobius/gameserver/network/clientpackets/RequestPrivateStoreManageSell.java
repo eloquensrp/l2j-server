@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.ActionFailed;
@@ -24,15 +24,14 @@ import org.l2jmobius.gameserver.network.serverpackets.ActionFailed;
 /**
  * @version $Revision: 1.2.2.1.2.4 $ $Date: 2005/03/27 15:29:30 $
  */
-public class RequestPrivateStoreManageSell implements IClientIncomingPacket
+public class RequestPrivateStoreManageSell implements ClientPacket
 {
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
 		// TODO: implement me properly
-		// readD();
-		// readQ();
-		return true;
+		// packet.readInt();
+		// packet.readLong();
 	}
 	
 	@Override

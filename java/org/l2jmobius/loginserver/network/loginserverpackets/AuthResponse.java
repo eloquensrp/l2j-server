@@ -16,27 +16,18 @@
  */
 package org.l2jmobius.loginserver.network.loginserverpackets;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 import org.l2jmobius.loginserver.GameServerTable;
 
 /**
  * @author -Wooden-
  */
-public class AuthResponse extends BaseSendablePacket
+public class AuthResponse extends WritablePacket
 {
-	/**
-	 * @param serverId
-	 */
 	public AuthResponse(int serverId)
 	{
-		writeC(0x02);
-		writeC(serverId);
-		writeS(GameServerTable.getInstance().getServerNameById(serverId));
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
+		writeByte(0x02);
+		writeByte(serverId);
+		writeString(GameServerTable.getInstance().getServerNameById(serverId));
 	}
 }

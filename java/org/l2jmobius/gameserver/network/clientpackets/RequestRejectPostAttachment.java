@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.MailManager;
 import org.l2jmobius.gameserver.model.Message;
 import org.l2jmobius.gameserver.model.World;
@@ -32,15 +32,14 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * @author Migi, DS
  */
-public class RequestRejectPostAttachment implements IClientIncomingPacket
+public class RequestRejectPostAttachment implements ClientPacket
 {
 	private int _msgId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_msgId = packet.readD();
-		return true;
+		_msgId = packet.readInt();
 	}
 	
 	@Override

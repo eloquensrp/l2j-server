@@ -18,62 +18,60 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Collection;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.xml.PrimeShopData;
 import org.l2jmobius.gameserver.model.holders.PrimeShopProductHolder;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Mobius
  */
-public class ExBrProductList implements IClientOutgoingPacket
+public class ExBrProductList extends ServerPacket
 {
 	private final Collection<PrimeShopProductHolder> _itemList = PrimeShopData.getInstance().getAllItems();
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BR_PRODUCT_LIST.writeId(packet);
-		packet.writeD(_itemList.size());
+		ServerPackets.EX_BR_PRODUCT_LIST.writeId(this);
+		writeInt(_itemList.size());
 		for (PrimeShopProductHolder product : _itemList)
 		{
 			final int category = product.getCategory();
-			packet.writeD(product.getProductId()); // product id
-			packet.writeH(category); // category id
-			packet.writeD(product.getPrice()); // points
+			writeInt(product.getProductId()); // product id
+			writeShort(category); // category id
+			writeInt(product.getPrice()); // points
 			switch (category)
 			{
 				case 6:
 				{
-					packet.writeD(1); // event
+					writeInt(1); // event
 					break;
 				}
 				case 7:
 				{
-					packet.writeD(2); // best
+					writeInt(2); // best
 					break;
 				}
 				case 8:
 				{
-					packet.writeD(3); // event & best
+					writeInt(3); // event & best
 					break;
 				}
 				default:
 				{
-					packet.writeD(0); // normal
+					writeInt(0); // normal
 					break;
 				}
 			}
-			packet.writeD(0); // start sale
-			packet.writeD(0); // end sale
-			packet.writeC(0); // day week
-			packet.writeC(0); // start hour
-			packet.writeC(0); // start min
-			packet.writeC(0); // end hour
-			packet.writeC(0); // end min
-			packet.writeD(0); // current stock
-			packet.writeD(0); // max stock
+			writeInt(0); // start sale
+			writeInt(0); // end sale
+			writeByte(0); // day week
+			writeByte(0); // start hour
+			writeByte(0); // start min
+			writeByte(0); // end hour
+			writeByte(0); // end min
+			writeInt(0); // current stock
+			writeInt(0); // max stock
 		}
-		return true;
 	}
 }

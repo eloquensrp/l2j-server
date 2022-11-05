@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExSetCompassZoneCode implements IClientOutgoingPacket
+public class ExSetCompassZoneCode extends ServerPacket
 {
 	public static final int ALTEREDZONE = 0x08;
 	public static final int SIEGEWARZONE1 = 0x0A;
@@ -40,10 +39,9 @@ public class ExSetCompassZoneCode implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SET_COMPASS_ZONE_CODE.writeId(packet);
-		packet.writeD(_zoneType);
-		return true;
+		ServerPackets.EX_SET_COMPASS_ZONE_CODE.writeId(this);
+		writeInt(_zoneType);
 	}
 }

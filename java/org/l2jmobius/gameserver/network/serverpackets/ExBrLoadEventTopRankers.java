@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Halloween rank list server packet.
  */
-public class ExBrLoadEventTopRankers implements IClientOutgoingPacket
+public class ExBrLoadEventTopRankers extends ServerPacket
 {
 	private final int _eventId;
 	private final int _day;
@@ -40,14 +39,13 @@ public class ExBrLoadEventTopRankers implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BR_LOAD_EVENT_TOP_RANKERS.writeId(packet);
-		packet.writeD(_eventId);
-		packet.writeD(_day);
-		packet.writeD(_count);
-		packet.writeD(_bestScore);
-		packet.writeD(_myScore);
-		return true;
+		ServerPackets.EX_BR_LOAD_EVENT_TOP_RANKERS.writeId(this);
+		writeInt(_eventId);
+		writeInt(_day);
+		writeInt(_count);
+		writeInt(_bestScore);
+		writeInt(_myScore);
 	}
 }

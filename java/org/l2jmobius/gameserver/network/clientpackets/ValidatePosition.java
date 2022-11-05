@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.DoorData;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -24,7 +24,7 @@ import org.l2jmobius.gameserver.model.zone.ZoneId;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.ValidateLocation;
 
-public class ValidatePosition implements IClientIncomingPacket
+public class ValidatePosition implements ClientPacket
 {
 	private int _x;
 	private int _y;
@@ -32,14 +32,13 @@ public class ValidatePosition implements IClientIncomingPacket
 	private int _heading;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_x = packet.readD();
-		_y = packet.readD();
-		_z = packet.readD();
-		_heading = packet.readD();
-		packet.readD(); // vehicle id
-		return true;
+		_x = packet.readInt();
+		_y = packet.readInt();
+		_z = packet.readInt();
+		_heading = packet.readInt();
+		packet.readInt(); // vehicle id
 	}
 	
 	@Override

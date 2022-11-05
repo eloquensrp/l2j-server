@@ -17,7 +17,7 @@
 
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.TerritoryWarManager;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.clan.Clan;
@@ -29,19 +29,18 @@ import org.l2jmobius.gameserver.network.serverpackets.ExShowDominionRegistry;
 /**
  * @author Gigiikun
  */
-public class RequestJoinDominionWar implements IClientIncomingPacket
+public class RequestJoinDominionWar implements ClientPacket
 {
 	private int _territoryId;
 	private int _isClan;
 	private int _isJoining;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_territoryId = packet.readD();
-		_isClan = packet.readD();
-		_isJoining = packet.readD();
-		return true;
+		_territoryId = packet.readInt();
+		_isClan = packet.readInt();
+		_isJoining = packet.readInt();
 	}
 	
 	@Override

@@ -16,9 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.loginserverpackets.login;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 
-public class LoginServerFail extends BaseRecievePacket
+public class LoginServerFail extends ReadablePacket
 {
 	private static final String[] REASONS =
 	{
@@ -39,7 +39,9 @@ public class LoginServerFail extends BaseRecievePacket
 	public LoginServerFail(byte[] decrypt)
 	{
 		super(decrypt);
-		_reason = readC();
+		readByte(); // id (already processed)
+		
+		_reason = readByte();
 	}
 	
 	public String getReasonString()

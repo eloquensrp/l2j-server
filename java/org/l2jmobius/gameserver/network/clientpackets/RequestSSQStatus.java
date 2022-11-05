@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.sevensigns.SevenSigns;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -26,15 +26,14 @@ import org.l2jmobius.gameserver.network.serverpackets.SSQStatus;
  * Seven Signs Record Update Request packet type id 0xc7 format: cc
  * @author Tempy
  */
-public class RequestSSQStatus implements IClientIncomingPacket
+public class RequestSSQStatus implements ClientPacket
 {
 	private int _page;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_page = packet.readC();
-		return true;
+		_page = packet.readByte();
 	}
 	
 	@Override

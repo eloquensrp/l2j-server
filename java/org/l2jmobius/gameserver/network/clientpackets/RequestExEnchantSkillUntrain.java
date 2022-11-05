@@ -20,13 +20,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.EnchantSkillGroupsData;
 import org.l2jmobius.gameserver.data.xml.SkillData;
 import org.l2jmobius.gameserver.model.EnchantSkillGroup.EnchantSkillHolder;
+import org.l2jmobius.gameserver.model.EnchantSkillLearn;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.instance.Item;
-import org.l2jmobius.gameserver.model.EnchantSkillLearn;
 import org.l2jmobius.gameserver.model.itemcontainer.Inventory;
 import org.l2jmobius.gameserver.model.skill.Skill;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -42,7 +42,7 @@ import org.l2jmobius.gameserver.network.serverpackets.UserInfo;
  * Format (ch) dd c: (id) 0xD0 h: (subid) 0x33 d: skill id d: skill level
  * @author -Wooden-
  */
-public class RequestExEnchantSkillUntrain implements IClientIncomingPacket
+public class RequestExEnchantSkillUntrain implements ClientPacket
 {
 	private static final Logger LOGGER_ENCHANT = Logger.getLogger("enchant.skills");
 	
@@ -50,11 +50,10 @@ public class RequestExEnchantSkillUntrain implements IClientIncomingPacket
 	private int _skillLevel;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_skillId = packet.readD();
-		_skillLevel = packet.readD();
-		return true;
+		_skillId = packet.readInt();
+		_skillLevel = packet.readInt();
 	}
 	
 	@Override

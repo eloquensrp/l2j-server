@@ -35,7 +35,7 @@ import org.l2jmobius.gameserver.model.events.impl.creature.OnCreatureZoneEnter;
 import org.l2jmobius.gameserver.model.events.impl.creature.OnCreatureZoneExit;
 import org.l2jmobius.gameserver.model.instancezone.InstanceWorld;
 import org.l2jmobius.gameserver.model.interfaces.ILocational;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 
 /**
  * Abstract base class for any zone type handles basic operations.
@@ -510,7 +510,7 @@ public abstract class ZoneType extends ListenersContainer
 	 * Broadcasts packet to all players inside the zone
 	 * @param packet
 	 */
-	public void broadcastPacket(IClientOutgoingPacket packet)
+	public void broadcastPacket(ServerPacket packet)
 	{
 		if (_characterList.isEmpty())
 		{

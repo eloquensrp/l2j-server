@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author janiii
  */
-public class ExEventMatchMessage implements IClientOutgoingPacket
+public class ExEventMatchMessage extends ServerPacket
 {
 	private final int _type;
 	private final String _message;
@@ -39,11 +38,10 @@ public class ExEventMatchMessage implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_EVENT_MATCH_MESSAGE.writeId(packet);
-		packet.writeC(_type);
-		packet.writeS(_message);
-		return true;
+		ServerPackets.EX_EVENT_MATCH_MESSAGE.writeId(this);
+		writeByte(_type);
+		writeString(_message);
 	}
 }

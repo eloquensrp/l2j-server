@@ -18,15 +18,14 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.model.skill.Skill;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author -Wooden-
  */
-public class PledgeSkillList implements IClientOutgoingPacket
+public class PledgeSkillList extends ServerPacket
 {
 	private final Skill[] _skills;
 	private final List<SubPledgeSkill> _subSkills;
@@ -39,7 +38,6 @@ public class PledgeSkillList implements IClientOutgoingPacket
 		
 		public SubPledgeSkill(int subType, int skillId, int skillLevel)
 		{
-			super();
 			_subType = subType;
 			_skillId = skillId;
 			_skillLevel = skillLevel;
@@ -53,22 +51,21 @@ public class PledgeSkillList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PLEDGE_SKILL_LIST.writeId(packet);
-		packet.writeD(_skills.length);
-		packet.writeD(_subSkills.size()); // Squad skill length
+		ServerPackets.PLEDGE_SKILL_LIST.writeId(this);
+		writeInt(_skills.length);
+		writeInt(_subSkills.size()); // Squad skill length
 		for (Skill sk : _skills)
 		{
-			packet.writeD(sk.getDisplayId());
-			packet.writeD(sk.getDisplayLevel());
+			writeInt(sk.getDisplayId());
+			writeInt(sk.getDisplayLevel());
 		}
 		for (SubPledgeSkill sk : _subSkills)
 		{
-			packet.writeD(sk._subType); // Clan Sub-unit types
-			packet.writeD(sk._skillId);
-			packet.writeD(sk._skillLevel);
+			writeInt(sk._subType); // Clan Sub-unit types
+			writeInt(sk._skillId);
+			writeInt(sk._skillLevel);
 		}
-		return true;
 	}
 }

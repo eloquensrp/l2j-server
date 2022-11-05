@@ -21,7 +21,7 @@ import java.sql.PreparedStatement;
 
 import org.l2jmobius.Config;
 import org.l2jmobius.commons.database.DatabaseFactory;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.ItemTable;
 import org.l2jmobius.gameserver.data.xml.PrimeShopData;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -36,17 +36,16 @@ import org.l2jmobius.gameserver.network.serverpackets.StatusUpdate;
 /**
  * @author Mobius
  */
-public class RequestBrBuyProduct implements IClientIncomingPacket
+public class RequestBrBuyProduct implements ClientPacket
 {
 	private int _productId;
 	private int _count;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_productId = packet.readD();
-		_count = packet.readD();
-		return true;
+		_productId = packet.readInt();
+		_count = packet.readInt();
 	}
 	
 	@Override

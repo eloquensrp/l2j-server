@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.instance.Door;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class DoorInfo implements IClientOutgoingPacket
+public class DoorInfo extends ServerPacket
 {
 	private final Door _door;
 	
@@ -30,11 +29,10 @@ public class DoorInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.DOOR_INFO.writeId(packet);
-		packet.writeD(_door.getObjectId());
-		packet.writeD(_door.getId());
-		return true;
+		ServerPackets.DOOR_INFO.writeId(this);
+		writeInt(_door.getObjectId());
+		writeInt(_door.getId());
 	}
 }

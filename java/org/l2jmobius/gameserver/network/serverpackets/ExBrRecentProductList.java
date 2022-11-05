@@ -23,17 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.l2jmobius.commons.database.DatabaseFactory;
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.xml.PrimeShopData;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.holders.PrimeShopProductHolder;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
 import org.l2jmobius.gameserver.network.PacketLogger;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Mobius
  */
-public class ExBrRecentProductList implements IClientOutgoingPacket
+public class ExBrRecentProductList extends ServerPacket
 {
 	private final List<PrimeShopProductHolder> _itemList = new ArrayList<>();
 	
@@ -63,30 +62,30 @@ public class ExBrRecentProductList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
 		if (_itemList.isEmpty())
 		{
-			return false;
+			return;
 		}
-		OutgoingPackets.EX_BR_RECENT_PRODUCT_LIST.writeId(packet);
-		packet.writeD(_itemList.size());
+		
+		ServerPackets.EX_BR_RECENT_PRODUCT_LIST.writeId(this);
+		writeInt(_itemList.size());
 		for (PrimeShopProductHolder product : _itemList)
 		{
-			packet.writeD(product.getProductId());
-			packet.writeH(product.getCategory());
-			packet.writeD(product.getPrice());
-			packet.writeD(0); // category
-			packet.writeD(0); // start sale
-			packet.writeD(0); // end sale
-			packet.writeC(0); // day week
-			packet.writeC(0); // start hour
-			packet.writeC(0); // start min
-			packet.writeC(0); // end hour
-			packet.writeC(0); // end min
-			packet.writeD(0); // current stock
-			packet.writeD(0); // max stock
+			writeInt(product.getProductId());
+			writeShort(product.getCategory());
+			writeInt(product.getPrice());
+			writeInt(0); // category
+			writeInt(0); // start sale
+			writeInt(0); // end sale
+			writeByte(0); // day week
+			writeByte(0); // start hour
+			writeByte(0); // start min
+			writeByte(0); // end hour
+			writeByte(0); // end min
+			writeInt(0); // current stock
+			writeInt(0); // max stock
 		}
-		return true;
 	}
 }

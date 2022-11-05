@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.Henna;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Zoey76
  */
-public class HennaRemoveList implements IClientOutgoingPacket
+public class HennaRemoveList extends ServerPacket
 {
 	private final Player _player;
 	
@@ -34,25 +33,24 @@ public class HennaRemoveList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.HENNA_UNEQUIP_LIST.writeId(packet);
-		packet.writeQ(_player.getAdena());
-		packet.writeD(0);
-		packet.writeD(3 - _player.getHennaEmptySlots());
+		ServerPackets.HENNA_UNEQUIP_LIST.writeId(this);
+		writeLong(_player.getAdena());
+		writeInt(0);
+		writeInt(3 - _player.getHennaEmptySlots());
 		for (Henna henna : _player.getHennaList())
 		{
 			if (henna != null)
 			{
-				packet.writeD(henna.getDyeId());
-				packet.writeD(henna.getDyeItemId());
-				packet.writeD(henna.getCancelCount());
-				packet.writeD(0);
-				packet.writeD(henna.getCancelFee());
-				packet.writeD(0);
-				packet.writeD(1);
+				writeInt(henna.getDyeId());
+				writeInt(henna.getDyeItemId());
+				writeInt(henna.getCancelCount());
+				writeInt(0);
+				writeInt(henna.getCancelFee());
+				writeInt(0);
+				writeInt(1);
 			}
 		}
-		return true;
 	}
 }

@@ -20,7 +20,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.PacketLogger;
 
@@ -28,7 +28,7 @@ import org.l2jmobius.gameserver.network.PacketLogger;
  * Format: c dddd
  * @author KenM
  */
-public class GameGuardReply implements IClientIncomingPacket
+public class GameGuardReply implements ClientPacket
 {
 	private static final byte[] VALID =
 	{
@@ -57,12 +57,17 @@ public class GameGuardReply implements IClientIncomingPacket
 	private final byte[] _reply = new byte[8];
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		packet.readB(_reply, 0, 4);
-		packet.readD();
-		packet.readB(_reply, 4, 4);
-		return true;
+		_reply[0] = (byte) packet.readByte();
+		_reply[1] = (byte) packet.readByte();
+		_reply[2] = (byte) packet.readByte();
+		_reply[3] = (byte) packet.readByte();
+		packet.readInt();
+		_reply[4] = (byte) packet.readByte();
+		_reply[5] = (byte) packet.readByte();
+		_reply[6] = (byte) packet.readByte();
+		_reply[7] = (byte) packet.readByte();
 	}
 	
 	@Override

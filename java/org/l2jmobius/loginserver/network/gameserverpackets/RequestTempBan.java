@@ -16,20 +16,19 @@
  */
 package org.l2jmobius.loginserver.network.gameserverpackets;
 
-import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
 import org.l2jmobius.commons.database.DatabaseFactory;
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.LoginController;
 
 /**
  * @author mrTJO
  */
-public class RequestTempBan extends BaseRecievePacket
+public class RequestTempBan extends ReadablePacket
 {
 	private static final Logger LOGGER = Logger.getLogger(RequestTempBan.class.getName());
 	
@@ -39,19 +38,18 @@ public class RequestTempBan extends BaseRecievePacket
 	private final String _ip;
 	long _banTime;
 	
-	/**
-	 * @param decrypt
-	 */
 	public RequestTempBan(byte[] decrypt)
 	{
 		super(decrypt);
-		_accountName = readS();
-		_ip = readS();
-		_banTime = readQ();
-		final boolean haveReason = readC() != 0;
+		readByte(); // id (already processed)
+		
+		_accountName = readString();
+		_ip = readString();
+		_banTime = readLong();
+		final boolean haveReason = readByte() != 0;
 		if (haveReason)
 		{
-			_banReason = readS();
+			_banReason = readString();
 		}
 		banUser();
 	}
@@ -72,13 +70,6 @@ public class RequestTempBan extends BaseRecievePacket
 			LOGGER.warning(getClass().getSimpleName() + ": " + e.getMessage());
 		}
 		
-		try
-		{
-			LoginController.getInstance().addBanForAddress(_ip, _banTime);
-		}
-		catch (UnknownHostException e)
-		{
-			// Ignore.
-		}
+		LoginController.getInstance().addBanForAddress(_ip, _banTime);
 	}
 }

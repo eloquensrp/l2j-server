@@ -19,15 +19,14 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.interfaces.ILocational;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Note: <b>There is known issue with this packet, it cannot be removed unless game client is restarted!</b>
  * @author UnAfraid
  */
-public class ExShowTerritory implements IClientOutgoingPacket
+public class ExShowTerritory extends ServerPacket
 {
 	private final int _minZ;
 	private final int _maxZ;
@@ -45,17 +44,16 @@ public class ExShowTerritory implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SHOW_TERRITORY.writeId(packet);
-		packet.writeD(_vertices.size());
-		packet.writeD(_minZ);
-		packet.writeD(_maxZ);
+		ServerPackets.EX_SHOW_TERRITORY.writeId(this);
+		writeInt(_vertices.size());
+		writeInt(_minZ);
+		writeInt(_maxZ);
 		for (ILocational loc : _vertices)
 		{
-			packet.writeD(loc.getX());
-			packet.writeD(loc.getY());
+			writeInt(loc.getX());
+			writeInt(loc.getY());
 		}
-		return true;
 	}
 }

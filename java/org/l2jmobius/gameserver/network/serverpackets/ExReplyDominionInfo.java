@@ -18,16 +18,15 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.instancemanager.CastleManager;
 import org.l2jmobius.gameserver.instancemanager.TerritoryWarManager;
 import org.l2jmobius.gameserver.instancemanager.TerritoryWarManager.Territory;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author JIV
  */
-public class ExReplyDominionInfo implements IClientOutgoingPacket
+public class ExReplyDominionInfo extends ServerPacket
 {
 	public static final ExReplyDominionInfo STATIC_PACKET = new ExReplyDominionInfo();
 	
@@ -36,23 +35,22 @@ public class ExReplyDominionInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_REPLY_DOMINION_INFO.writeId(packet);
+		ServerPackets.EX_REPLY_DOMINION_INFO.writeId(this);
 		final List<Territory> territoryList = TerritoryWarManager.getInstance().getAllTerritories();
-		packet.writeD(territoryList.size()); // Territory Count
+		writeInt(territoryList.size()); // Territory Count
 		for (Territory t : territoryList)
 		{
-			packet.writeD(t.getTerritoryId()); // Territory Id
-			packet.writeS(CastleManager.getInstance().getCastleById(t.getCastleId()).getName().toLowerCase() + "_dominion"); // territory name
-			packet.writeS(t.getOwnerClan().getName());
-			packet.writeD(t.getOwnedWardIds().size()); // Emblem Count
+			writeInt(t.getTerritoryId()); // Territory Id
+			writeString(CastleManager.getInstance().getCastleById(t.getCastleId()).getName().toLowerCase() + "_dominion"); // territory name
+			writeString(t.getOwnerClan().getName());
+			writeInt(t.getOwnedWardIds().size()); // Emblem Count
 			for (int i : t.getOwnedWardIds())
 			{
-				packet.writeD(i); // Emblem ID - should be in for loop for emblem count
+				writeInt(i); // Emblem ID - should be in for loop for emblem count
 			}
-			packet.writeD((int) (TerritoryWarManager.getInstance().getTWStartTimeInMillis() / 1000));
+			writeInt((int) (TerritoryWarManager.getInstance().getTWStartTimeInMillis() / 1000));
 		}
-		return true;
 	}
 }

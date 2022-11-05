@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.xml.AdminData;
 import org.l2jmobius.gameserver.instancemanager.CHSiegeManager;
 import org.l2jmobius.gameserver.instancemanager.CastleManager;
@@ -31,9 +30,9 @@ import org.l2jmobius.gameserver.model.siege.Castle;
 import org.l2jmobius.gameserver.model.siege.Fort;
 import org.l2jmobius.gameserver.model.siege.SiegeClan;
 import org.l2jmobius.gameserver.model.siege.clanhalls.SiegableHall;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class Die implements IClientOutgoingPacket
+public class Die extends ServerPacket
 {
 	private final int _objectId;
 	private final boolean _canTeleport;
@@ -60,11 +59,11 @@ public class Die implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.DIE.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeD(_canTeleport ? 1 : 0);
+		ServerPackets.DIE.writeId(this);
+		writeInt(_objectId);
+		writeInt(_canTeleport);
 		if (_creature.isPlayer())
 		{
 			if (!OlympiadManager.getInstance().isRegistered(_creature.getActingPlayer()) && !_creature.getActingPlayer().isOnEvent())
@@ -103,34 +102,25 @@ public class Die implements IClientOutgoingPacket
 					isInFortDefense = true;
 				}
 			}
-			packet.writeD(_clan.getHideoutId() > 0 ? 1 : 0); // 6d 01 00 00 00 - to hide away
-			packet.writeD((_clan.getCastleId() > 0) || isInCastleDefense ? 1 : 0); // 6d 02 00 00 00 - to castle
-			packet.writeD((TerritoryWarManager.getInstance().getHQForClan(_clan) != null) || ((siegeClan != null) && !isInCastleDefense && !isInFortDefense && !siegeClan.getFlag().isEmpty()) || ((hall != null) && (hall.getSiege() != null) && hall.getSiege().checkIsAttacker(_clan)) ? 1 : 0); // 6d
-																																																																									// 03
-																																																																									// 00
-																																																																									// 00
-																																																																									// 00
-																																																																									// -
-																																																																									// to
-																																																																									// siege
-																																																																									// HQ
-			packet.writeD(_sweepable ? 1 : 0); // sweepable (blue glow)
-			packet.writeD(_staticRes ? 1 : 0); // 6d 04 00 00 00 - to FIXED
-			packet.writeD((_clan.getFortId() > 0) || isInFortDefense ? 1 : 0); // 6d 05 00 00 00 - to fortress
+			writeInt(_clan.getHideoutId() > 0); // 6d 01 00 00 00 - to hide away
+			writeInt((_clan.getCastleId() > 0) || isInCastleDefense); // 6d 02 00 00 00 - to castle
+			writeInt((TerritoryWarManager.getInstance().getHQForClan(_clan) != null) || ((siegeClan != null) && !isInCastleDefense && !isInFortDefense && !siegeClan.getFlag().isEmpty()) || ((hall != null) && (hall.getSiege() != null) && hall.getSiege().checkIsAttacker(_clan))); // siege HQ
+			writeInt(_sweepable); // sweepable (blue glow)
+			writeInt(_staticRes); // 6d 04 00 00 00 - to FIXED
+			writeInt((_clan.getFortId() > 0) || isInFortDefense); // 6d 05 00 00 00 - to fortress
 		}
 		else
 		{
-			packet.writeD(0); // 6d 01 00 00 00 - to hide away
-			packet.writeD(0); // 6d 02 00 00 00 - to castle
-			packet.writeD(0); // 6d 03 00 00 00 - to siege HQ
-			packet.writeD(_sweepable ? 1 : 0); // sweepable (blue glow)
-			packet.writeD(_staticRes ? 1 : 0); // 6d 04 00 00 00 - to FIXED
-			packet.writeD(0); // 6d 05 00 00 00 - to fortress
+			writeInt(0); // 6d 01 00 00 00 - to hide away
+			writeInt(0); // 6d 02 00 00 00 - to castle
+			writeInt(0); // 6d 03 00 00 00 - to siege HQ
+			writeInt(_sweepable); // sweepable (blue glow)
+			writeInt(_staticRes); // 6d 04 00 00 00 - to FIXED
+			writeInt(0); // 6d 05 00 00 00 - to fortress
 		}
 		// TODO: protocol 152
-		// packet.writeC(0); // show die animation
-		// packet.writeD(0); // agathion ress button
-		// packet.writeD(0); // additional free space
-		return true;
+		// writeByte(0); // show die animation
+		// writeInt(0); // agathion ress button
+		// writeInt(0); // additional free space
 	}
 }

@@ -17,14 +17,13 @@
 package org.l2jmobius.gameserver.network.serverpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Mobius
  */
-public class ExBrGamePoint implements IClientOutgoingPacket
+public class ExBrGamePoint extends ServerPacket
 {
 	private final int _playerObj;
 	private long _points;
@@ -43,12 +42,11 @@ public class ExBrGamePoint implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BR_GAME_POINT.writeId(packet);
-		packet.writeD(_playerObj);
-		packet.writeQ(_points);
-		packet.writeD(0);
-		return true;
+		ServerPackets.EX_BR_GAME_POINT.writeId(this);
+		writeInt(_playerObj);
+		writeLong(_points);
+		writeInt(0);
 	}
 }

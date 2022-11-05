@@ -24,7 +24,6 @@ import java.util.logging.LogRecord;
 import org.l2jmobius.Config;
 import org.l2jmobius.commons.util.StringUtil;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.ConnectionState;
 import org.l2jmobius.gameserver.network.GameClient;
 
 public class AccountingFormatter extends Formatter
@@ -56,7 +55,7 @@ public class AccountingFormatter extends Formatter
 					{
 						if (!client.isDetached())
 						{
-							address = client.getConnectionAddress().getHostAddress();
+							address = client.getIp();
 						}
 					}
 					catch (Exception e)
@@ -64,7 +63,7 @@ public class AccountingFormatter extends Formatter
 						// Ignore.
 					}
 					
-					switch ((ConnectionState) client.getConnectionState())
+					switch (client.getConnectionState())
 					{
 						case ENTERING:
 						case IN_GAME:

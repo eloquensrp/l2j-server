@@ -16,12 +16,10 @@
  */
 package org.l2jmobius.gameserver.network;
 
-import org.l2jmobius.commons.network.IConnectionState;
-
 /**
  * @author KenM
  */
-public enum ConnectionState implements IConnectionState
+public enum ConnectionState
 {
 	CONNECTED,
 	DISCONNECTED,

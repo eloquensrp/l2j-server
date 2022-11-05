@@ -19,13 +19,12 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.ManufactureItem;
 import org.l2jmobius.gameserver.model.RecipeList;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class RecipeShopManageList implements IClientOutgoingPacket
+public class RecipeShopManageList extends ServerPacket
 {
 	private final Player _seller;
 	private final boolean _isDwarven;
@@ -59,41 +58,40 @@ public class RecipeShopManageList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.RECIPE_SHOP_MANAGE_LIST.writeId(packet);
-		packet.writeD(_seller.getObjectId());
-		packet.writeD((int) _seller.getAdena());
-		packet.writeD(_isDwarven ? 0 : 1);
+		ServerPackets.RECIPE_SHOP_MANAGE_LIST.writeId(this);
+		writeInt(_seller.getObjectId());
+		writeInt((int) _seller.getAdena());
+		writeInt(!_isDwarven);
 		if (_recipes == null)
 		{
-			packet.writeD(0);
+			writeInt(0);
 		}
 		else
 		{
-			packet.writeD(_recipes.size()); // number of items in recipe book
+			writeInt(_recipes.size()); // number of items in recipe book
 			int count = 0;
 			for (RecipeList recipe : _recipes)
 			{
 				count++;
-				packet.writeD(recipe.getId());
-				packet.writeD(count);
+				writeInt(recipe.getId());
+				writeInt(count);
 			}
 		}
 		if (!_seller.hasManufactureShop())
 		{
-			packet.writeD(0);
+			writeInt(0);
 		}
 		else
 		{
-			packet.writeD(_seller.getManufactureItems().size());
+			writeInt(_seller.getManufactureItems().size());
 			for (ManufactureItem item : _seller.getManufactureItems().values())
 			{
-				packet.writeD(item.getRecipeId());
-				packet.writeD(0);
-				packet.writeQ(item.getCost());
+				writeInt(item.getRecipeId());
+				writeInt(0);
+				writeLong(item.getCost());
 			}
 		}
-		return true;
 	}
 }

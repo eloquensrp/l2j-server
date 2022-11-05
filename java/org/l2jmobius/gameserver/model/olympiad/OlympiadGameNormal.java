@@ -37,7 +37,7 @@ import org.l2jmobius.gameserver.model.zone.type.OlympiadStadiumZone;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.serverpackets.ExOlympiadMatchResult;
 import org.l2jmobius.gameserver.network.serverpackets.ExOlympiadUserInfo;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 
 /**
@@ -119,7 +119,7 @@ public abstract class OlympiadGameNormal extends AbstractOlympiadGame
 	}
 	
 	@Override
-	protected final void broadcastPacket(IClientOutgoingPacket packet)
+	protected final void broadcastPacket(ServerPacket packet)
 	{
 		if (_playerOne.updatePlayer())
 		{

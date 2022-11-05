@@ -53,12 +53,12 @@ import org.l2jmobius.gameserver.network.serverpackets.ExOpenMPCC;
 import org.l2jmobius.gameserver.network.serverpackets.ExPartyPetWindowAdd;
 import org.l2jmobius.gameserver.network.serverpackets.ExPartyPetWindowDelete;
 import org.l2jmobius.gameserver.network.serverpackets.ExSetPartyLooting;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
 import org.l2jmobius.gameserver.network.serverpackets.PartyMemberPosition;
 import org.l2jmobius.gameserver.network.serverpackets.PartySmallWindowAdd;
 import org.l2jmobius.gameserver.network.serverpackets.PartySmallWindowAll;
 import org.l2jmobius.gameserver.network.serverpackets.PartySmallWindowDelete;
 import org.l2jmobius.gameserver.network.serverpackets.PartySmallWindowDeleteAll;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 import org.l2jmobius.gameserver.taskmanager.GameTimeTaskManager;
 import org.l2jmobius.gameserver.util.Util;
@@ -251,15 +251,15 @@ public class Party extends AbstractPlayerGroup
 	/**
 	 * Send a Server->Client packet to all other Player of the Party.
 	 * @param player
-	 * @param msg
+	 * @param packet
 	 */
-	public void broadcastToPartyMembers(Player player, IClientOutgoingPacket msg)
+	public void broadcastToPartyMembers(Player player, ServerPacket packet)
 	{
 		for (Player member : _members)
 		{
 			if ((member != null) && (member.getObjectId() != player.getObjectId()))
 			{
-				member.sendPacket(msg);
+				member.sendPacket(packet);
 			}
 		}
 	}

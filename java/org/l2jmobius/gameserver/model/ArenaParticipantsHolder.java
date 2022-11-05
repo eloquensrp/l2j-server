@@ -23,7 +23,7 @@ import org.l2jmobius.gameserver.instancemanager.HandysBlockCheckerManager;
 import org.l2jmobius.gameserver.instancemanager.games.BlockChecker;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.SystemMessageId;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 
 /**
@@ -111,7 +111,7 @@ public class ArenaParticipantsHolder
 		return _bluePlayers.size();
 	}
 	
-	public void broadCastPacketToTeam(IClientOutgoingPacket packet)
+	public void broadCastPacketToTeam(ServerPacket packet)
 	{
 		for (Player p : _redPlayers)
 		{

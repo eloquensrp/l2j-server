@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.Location;
 import org.l2jmobius.gameserver.model.actor.Creature;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ExGetOnAirShip implements IClientOutgoingPacket
+public class ExGetOnAirShip extends ServerPacket
 {
 	private final int _playerId;
 	private final int _airShipId;
@@ -36,14 +35,13 @@ public class ExGetOnAirShip implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_GET_ON_AIRSHIP.writeId(packet);
-		packet.writeD(_playerId);
-		packet.writeD(_airShipId);
-		packet.writeD(_pos.getX());
-		packet.writeD(_pos.getY());
-		packet.writeD(_pos.getZ());
-		return true;
+		ServerPackets.EX_GET_ON_AIRSHIP.writeId(this);
+		writeInt(_playerId);
+		writeInt(_airShipId);
+		writeInt(_pos.getX());
+		writeInt(_pos.getY());
+		writeInt(_pos.getZ());
 	}
 }

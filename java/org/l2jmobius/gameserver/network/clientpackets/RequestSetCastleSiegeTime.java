@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.CastleManager;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.siege.Castle;
@@ -34,18 +34,17 @@ import org.l2jmobius.gameserver.util.Broadcast;
 /**
  * @author UnAfraid
  */
-public class RequestSetCastleSiegeTime implements IClientIncomingPacket
+public class RequestSetCastleSiegeTime implements ClientPacket
 {
 	private int _castleId;
 	private long _time;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_castleId = packet.readD();
-		_time = packet.readD();
+		_castleId = packet.readInt();
+		_time = packet.readInt();
 		_time *= 1000;
-		return true;
 	}
 	
 	@Override

@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.loginserver.network.gameserverpackets;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.GameServerThread;
 import org.l2jmobius.loginserver.LoginController;
 import org.l2jmobius.loginserver.SessionKey;
@@ -25,20 +25,18 @@ import org.l2jmobius.loginserver.network.loginserverpackets.PlayerAuthResponse;
 /**
  * @author -Wooden-
  */
-public class PlayerAuthRequest extends BaseRecievePacket
+public class PlayerAuthRequest extends ReadablePacket
 {
-	/**
-	 * @param decrypt
-	 * @param server
-	 */
 	public PlayerAuthRequest(byte[] decrypt, GameServerThread server)
 	{
 		super(decrypt);
-		final String account = readS();
-		final int playKey1 = readD();
-		final int playKey2 = readD();
-		final int loginKey1 = readD();
-		final int loginKey2 = readD();
+		readByte(); // id (already processed)
+		
+		final String account = readString();
+		final int playKey1 = readInt();
+		final int playKey2 = readInt();
+		final int loginKey1 = readInt();
+		final int loginKey2 = readInt();
 		final SessionKey sessionKey = new SessionKey(loginKey1, loginKey2, playKey1, playKey2);
 		PlayerAuthResponse authResponse;
 		final SessionKey key = LoginController.getInstance().getKeyForAccount(account);

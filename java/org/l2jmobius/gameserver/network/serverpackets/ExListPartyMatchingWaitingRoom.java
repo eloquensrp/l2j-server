@@ -19,15 +19,14 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.partymatching.PartyMatchWaitingList;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Gnacik
  */
-public class ExListPartyMatchingWaitingRoom implements IClientOutgoingPacket
+public class ExListPartyMatchingWaitingRoom extends ServerPacket
 {
 	private final Player _player;
 	// private final int _page;
@@ -47,15 +46,16 @@ public class ExListPartyMatchingWaitingRoom implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_LIST_PARTY_MATCHING_WAITING_ROOM.writeId(packet);
+		ServerPackets.EX_LIST_PARTY_MATCHING_WAITING_ROOM.writeId(this);
 		if (_mode == 0)
 		{
-			packet.writeD(0);
-			packet.writeD(0);
-			return true;
+			writeInt(0);
+			writeInt(0);
+			return;
 		}
+		
 		for (Player cha : PartyMatchWaitingList.getInstance().getPlayers())
 		{
 			if ((cha == null) || (cha == _player))
@@ -73,14 +73,13 @@ public class ExListPartyMatchingWaitingRoom implements IClientOutgoingPacket
 			}
 			_members.add(cha);
 		}
-		packet.writeD(1); // Page?
-		packet.writeD(_members.size());
+		writeInt(1); // Page?
+		writeInt(_members.size());
 		for (Player member : _members)
 		{
-			packet.writeS(member.getName());
-			packet.writeD(member.getActiveClass());
-			packet.writeD(member.getLevel());
+			writeString(member.getName());
+			writeInt(member.getActiveClass());
+			writeInt(member.getLevel());
 		}
-		return true;
 	}
 }

@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.instancemanager.SoDManager;
 import org.l2jmobius.gameserver.instancemanager.SoIManager;
 import org.l2jmobius.gameserver.model.Location;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ExShowSeedMapInfo implements IClientOutgoingPacket
+public class ExShowSeedMapInfo extends ServerPacket
 {
 	public static final ExShowSeedMapInfo STATIC_PACKET = new ExShowSeedMapInfo();
 	
@@ -37,29 +36,28 @@ public class ExShowSeedMapInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SHOW_SEED_MAP_INFO.writeId(packet);
-		packet.writeD(ENTRANCES.length);
+		ServerPackets.EX_SHOW_SEED_MAP_INFO.writeId(this);
+		writeInt(ENTRANCES.length);
 		for (Location loc : ENTRANCES)
 		{
-			packet.writeD(loc.getX());
-			packet.writeD(loc.getY());
-			packet.writeD(loc.getZ());
+			writeInt(loc.getX());
+			writeInt(loc.getY());
+			writeInt(loc.getZ());
 			switch (loc.getHeading())
 			{
 				case 1: // Seed of Destruction
 				{
-					packet.writeD(2770 + SoDManager.getInstance().getSoDState());
+					writeInt(2770 + SoDManager.getInstance().getSoDState());
 					break;
 				}
 				case 2: // Seed of Immortality
 				{
-					packet.writeD(SoIManager.getCurrentStage() + 2765);
+					writeInt(SoIManager.getCurrentStage() + 2765);
 					break;
 				}
 			}
 		}
-		return true;
 	}
 }

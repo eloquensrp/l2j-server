@@ -36,7 +36,6 @@ import org.l2jmobius.gameserver.handler.PunishmentHandler;
 import org.l2jmobius.gameserver.handler.TargetHandler;
 import org.l2jmobius.gameserver.handler.UserCommandHandler;
 import org.l2jmobius.gameserver.handler.VoicedCommandHandler;
-import org.l2jmobius.gameserver.network.telnet.TelnetServer;
 
 import handlers.actionhandlers.ArtefactAction;
 import handlers.actionhandlers.DecoyAction;
@@ -254,30 +253,6 @@ import handlers.targethandlers.Servitor;
 import handlers.targethandlers.Summon;
 import handlers.targethandlers.TargetParty;
 import handlers.targethandlers.Unlockable;
-import handlers.telnethandlers.chat.Announce;
-import handlers.telnethandlers.chat.GMChat;
-import handlers.telnethandlers.chat.Msg;
-import handlers.telnethandlers.player.AccessLevel;
-import handlers.telnethandlers.player.Ban;
-import handlers.telnethandlers.player.BanChat;
-import handlers.telnethandlers.player.Enchant;
-import handlers.telnethandlers.player.GMList;
-import handlers.telnethandlers.player.Give;
-import handlers.telnethandlers.player.Jail;
-import handlers.telnethandlers.player.Kick;
-import handlers.telnethandlers.player.SendMail;
-import handlers.telnethandlers.player.Unban;
-import handlers.telnethandlers.player.UnbanChat;
-import handlers.telnethandlers.player.Unjail;
-import handlers.telnethandlers.server.ForceGC;
-import handlers.telnethandlers.server.Memusage;
-import handlers.telnethandlers.server.Performance;
-import handlers.telnethandlers.server.Purge;
-import handlers.telnethandlers.server.Reload;
-import handlers.telnethandlers.server.ServerAbort;
-import handlers.telnethandlers.server.ServerRestart;
-import handlers.telnethandlers.server.ServerShutdown;
-import handlers.telnethandlers.server.Status;
 import handlers.usercommandhandlers.ChannelDelete;
 import handlers.usercommandhandlers.ChannelInfo;
 import handlers.usercommandhandlers.ChannelLeave;
@@ -651,35 +626,6 @@ public class MasterHandler
 					LOGGER.log(Level.WARNING, "Failed loading handler: " + c.getSimpleName(), e);
 				}
 			}
-		}
-		
-		if (Config.TELNET_ENABLED)
-		{
-			TelnetServer.getInstance().addHandler(new Announce());
-			TelnetServer.getInstance().addHandler(new GMChat());
-			TelnetServer.getInstance().addHandler(new Msg());
-			TelnetServer.getInstance().addHandler(new AccessLevel());
-			TelnetServer.getInstance().addHandler(new Ban());
-			TelnetServer.getInstance().addHandler(new BanChat());
-			TelnetServer.getInstance().addHandler(new Enchant());
-			TelnetServer.getInstance().addHandler(new Give());
-			TelnetServer.getInstance().addHandler(new GMList());
-			TelnetServer.getInstance().addHandler(new Jail());
-			TelnetServer.getInstance().addHandler(new Kick());
-			TelnetServer.getInstance().addHandler(new Unban());
-			TelnetServer.getInstance().addHandler(new UnbanChat());
-			TelnetServer.getInstance().addHandler(new Unjail());
-			TelnetServer.getInstance().addHandler(new ForceGC());
-			TelnetServer.getInstance().addHandler(new Memusage());
-			TelnetServer.getInstance().addHandler(new Performance());
-			TelnetServer.getInstance().addHandler(new Purge());
-			TelnetServer.getInstance().addHandler(new Reload());
-			TelnetServer.getInstance().addHandler(new SendMail());
-			TelnetServer.getInstance().addHandler(new ServerAbort());
-			TelnetServer.getInstance().addHandler(new ServerRestart());
-			TelnetServer.getInstance().addHandler(new ServerShutdown());
-			TelnetServer.getInstance().addHandler(new Status());
-			TelnetServer.getInstance().addHandler(new handlers.telnethandlers.server.Debug());
 		}
 		
 		for (IHandler<?, ?> loadInstance : LOAD_INSTANCES)

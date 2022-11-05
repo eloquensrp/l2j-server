@@ -18,11 +18,10 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Collection;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.clan.Clan;
 import org.l2jmobius.gameserver.model.item.instance.Item;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 public class GMViewWarehouseWithdrawList extends AbstractItemPacket
 {
@@ -45,17 +44,16 @@ public class GMViewWarehouseWithdrawList extends AbstractItemPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.GM_VIEW_WAREHOUSE_WITHDRAW_LIST.writeId(packet);
-		packet.writeS(_playerName);
-		packet.writeQ(_money);
-		packet.writeH(_items.size());
+		ServerPackets.GM_VIEW_WAREHOUSE_WITHDRAW_LIST.writeId(this);
+		writeString(_playerName);
+		writeLong(_money);
+		writeShort(_items.size());
 		for (Item item : _items)
 		{
-			writeItem(packet, item);
-			packet.writeD(item.getObjectId());
+			writeItem(item);
+			writeInt(item.getObjectId());
 		}
-		return true;
 	}
 }

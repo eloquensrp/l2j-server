@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Migi
  */
-public class ExNoticePostArrived implements IClientOutgoingPacket
+public class ExNoticePostArrived extends ServerPacket
 {
 	private static final ExNoticePostArrived STATIC_PACKET_TRUE = new ExNoticePostArrived(true);
 	private static final ExNoticePostArrived STATIC_PACKET_FALSE = new ExNoticePostArrived(false);
@@ -40,10 +39,9 @@ public class ExNoticePostArrived implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_NOTICE_POST_ARRIVED.writeId(packet);
-		packet.writeD(_showAnim ? 1 : 0);
-		return true;
+		ServerPackets.EX_NOTICE_POST_ARRIVED.writeId(this);
+		writeInt(_showAnim);
 	}
 }

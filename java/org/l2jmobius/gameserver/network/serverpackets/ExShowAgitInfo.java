@@ -18,30 +18,28 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Map;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.sql.ClanHallTable;
 import org.l2jmobius.gameserver.data.sql.ClanTable;
 import org.l2jmobius.gameserver.model.residences.AuctionableHall;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExShowAgitInfo implements IClientOutgoingPacket
+public class ExShowAgitInfo extends ServerPacket
 {
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SHOW_AGIT_INFO.writeId(packet);
+		ServerPackets.EX_SHOW_AGIT_INFO.writeId(this);
 		final Map<Integer, AuctionableHall> clannhalls = ClanHallTable.getInstance().getAllAuctionableClanHalls();
-		packet.writeD(clannhalls.size());
+		writeInt(clannhalls.size());
 		for (AuctionableHall ch : clannhalls.values())
 		{
-			packet.writeD(ch.getId());
-			packet.writeS(ch.getOwnerId() <= 0 ? "" : ClanTable.getInstance().getClan(ch.getOwnerId()).getName()); // owner clan name
-			packet.writeS(ch.getOwnerId() <= 0 ? "" : ClanTable.getInstance().getClan(ch.getOwnerId()).getLeaderName()); // leader name
-			packet.writeD(ch.getGrade() > 0 ? 0 : 1); // 0 - auction 1 - war clanhall 2 - ETC (rainbow spring clanhall)
+			writeInt(ch.getId());
+			writeString(ch.getOwnerId() <= 0 ? "" : ClanTable.getInstance().getClan(ch.getOwnerId()).getName()); // owner clan name
+			writeString(ch.getOwnerId() <= 0 ? "" : ClanTable.getInstance().getClan(ch.getOwnerId()).getLeaderName()); // leader name
+			writeInt(ch.getGrade() < 1); // 0 - auction 1 - war clanhall 2 - ETC (rainbow spring clanhall)
 		}
-		return true;
 	}
 }

@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.loginserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.IOutgoingPacket;
-import org.l2jmobius.commons.network.PacketWriter;
+import org.l2jmobius.commons.network.WritablePacket;
 import org.l2jmobius.loginserver.enums.PlayFailReason;
-import org.l2jmobius.loginserver.network.OutgoingPackets;
+import org.l2jmobius.loginserver.network.LoginServerPackets;
 
 /**
  * @version $Revision: 1.2.4.1 $ $Date: 2005/03/27 15:30:11 $
  */
-public class PlayFail implements IOutgoingPacket
+public class PlayFail extends WritablePacket
 {
 	private final PlayFailReason _reason;
 	
@@ -34,10 +33,9 @@ public class PlayFail implements IOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PLAY_FAIL.writeId(packet);
-		packet.writeC(_reason.getCode());
-		return true;
+		LoginServerPackets.PLAY_FAIL.writeId(this);
+		writeByte(_reason.getCode());
 	}
 }

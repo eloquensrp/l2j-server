@@ -16,14 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.RecipeData;
 import org.l2jmobius.gameserver.model.RecipeList;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.RecipeBookItemList;
 
-public class RequestRecipeBookDestroy implements IClientIncomingPacket
+public class RequestRecipeBookDestroy implements ClientPacket
 {
 	private int _recipeID;
 	
@@ -31,10 +31,9 @@ public class RequestRecipeBookDestroy implements IClientIncomingPacket
 	 * Unknown Packet:ad 0000: ad 02 00 00 00
 	 */
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_recipeID = packet.readD();
-		return true;
+		_recipeID = packet.readInt();
 	}
 	
 	@Override

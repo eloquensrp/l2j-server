@@ -16,22 +16,16 @@
  */
 package org.l2jmobius.loginserver.network.loginserverpackets;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author mrTJO
  */
-public class RequestCharacters extends BaseSendablePacket
+public class RequestCharacters extends WritablePacket
 {
 	public RequestCharacters(String account)
 	{
-		writeC(0x05);
-		writeS(account);
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
+		writeByte(0x05);
+		writeString(account);
 	}
 }

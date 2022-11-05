@@ -446,7 +446,7 @@ public class BotReportTable
 	 */
 	private static int hashIp(Player player)
 	{
-		final String con = player.getClient().getConnectionAddress().getHostAddress();
+		final String con = player.getClient().getIp();
 		final String[] rawByte = con.split("\\.");
 		final int[] rawIp = new int[4];
 		for (int i = 0; i < 4; i++)

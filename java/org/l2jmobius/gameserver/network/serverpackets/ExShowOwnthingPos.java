@@ -18,15 +18,14 @@ package org.l2jmobius.gameserver.network.serverpackets;
 
 import java.util.Collection;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.instancemanager.TerritoryWarManager;
 import org.l2jmobius.gameserver.model.TerritoryWard;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author -Gigiikun-
  */
-public class ExShowOwnthingPos implements IClientOutgoingPacket
+public class ExShowOwnthingPos extends ServerPacket
 {
 	public static final ExShowOwnthingPos STATIC_PACKET = new ExShowOwnthingPos();
 	
@@ -35,40 +34,39 @@ public class ExShowOwnthingPos implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SHOW_OWNTHING_POS.writeId(packet);
+		ServerPackets.EX_SHOW_OWNTHING_POS.writeId(this);
 		if (TerritoryWarManager.getInstance().isTWInProgress())
 		{
 			final Collection<TerritoryWard> territoryWardList = TerritoryWarManager.getInstance().getAllTerritoryWards();
-			packet.writeD(territoryWardList.size());
+			writeInt(territoryWardList.size());
 			for (TerritoryWard ward : territoryWardList)
 			{
-				packet.writeD(ward.getTerritoryId());
+				writeInt(ward.getTerritoryId());
 				if (ward.getNpc() != null)
 				{
-					packet.writeD(ward.getNpc().getX());
-					packet.writeD(ward.getNpc().getY());
-					packet.writeD(ward.getNpc().getZ());
+					writeInt(ward.getNpc().getX());
+					writeInt(ward.getNpc().getY());
+					writeInt(ward.getNpc().getZ());
 				}
 				else if (ward.getPlayer() != null)
 				{
-					packet.writeD(ward.getPlayer().getX());
-					packet.writeD(ward.getPlayer().getY());
-					packet.writeD(ward.getPlayer().getZ());
+					writeInt(ward.getPlayer().getX());
+					writeInt(ward.getPlayer().getY());
+					writeInt(ward.getPlayer().getZ());
 				}
 				else
 				{
-					packet.writeD(0);
-					packet.writeD(0);
-					packet.writeD(0);
+					writeInt(0);
+					writeInt(0);
+					writeInt(0);
 				}
 			}
 		}
 		else
 		{
-			packet.writeD(0);
+			writeInt(0);
 		}
-		return true;
 	}
 }

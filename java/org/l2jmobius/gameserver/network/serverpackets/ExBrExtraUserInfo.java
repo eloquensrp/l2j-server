@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * ExBrExtraUserInfo server packet implementation.
  * @author Kerberos, Zoey76
  */
-public class ExBrExtraUserInfo implements IClientOutgoingPacket
+public class ExBrExtraUserInfo extends ServerPacket
 {
 	/** Player object ID. */
 	private final int _objectId;
@@ -41,12 +40,11 @@ public class ExBrExtraUserInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BR_EXTRA_USER_INFO.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeD(_abnormalVisualEffectsEvent);
-		packet.writeC(_lectureMark);
-		return true;
+		ServerPackets.EX_BR_EXTRA_USER_INFO.writeId(this);
+		writeInt(_objectId);
+		writeInt(_abnormalVisualEffectsEvent);
+		writeByte(_lectureMark);
 	}
 }

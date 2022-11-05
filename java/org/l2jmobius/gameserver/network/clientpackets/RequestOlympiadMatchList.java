@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
 import org.l2jmobius.gameserver.handler.BypassHandler;
 import org.l2jmobius.gameserver.handler.IBypassHandler;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -26,15 +25,9 @@ import org.l2jmobius.gameserver.network.GameClient;
  * format ch c: (id) 0xD0 h: (subid) 0x13
  * @author -Wooden-
  */
-public class RequestOlympiadMatchList implements IClientIncomingPacket
+public class RequestOlympiadMatchList implements ClientPacket
 {
 	private static final String COMMAND = "arenalist";
-	
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
 	
 	@Override
 	public void run(GameClient client)

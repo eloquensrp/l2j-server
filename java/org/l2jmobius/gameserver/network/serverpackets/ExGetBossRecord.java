@@ -19,13 +19,12 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExGetBossRecord implements IClientOutgoingPacket
+public class ExGetBossRecord extends ServerPacket
 {
 	private final Map<Integer, Integer> _bossRecordInfo;
 	private final int _ranking;
@@ -39,28 +38,27 @@ public class ExGetBossRecord implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_GET_BOSS_RECORD.writeId(packet);
-		packet.writeD(_ranking);
-		packet.writeD(_totalPoints);
+		ServerPackets.EX_GET_BOSS_RECORD.writeId(this);
+		writeInt(_ranking);
+		writeInt(_totalPoints);
 		if (_bossRecordInfo == null)
 		{
-			packet.writeD(0);
-			packet.writeD(0);
-			packet.writeD(0);
-			packet.writeD(0);
+			writeInt(0);
+			writeInt(0);
+			writeInt(0);
+			writeInt(0);
 		}
 		else
 		{
-			packet.writeD(_bossRecordInfo.size()); // list size
+			writeInt(_bossRecordInfo.size()); // list size
 			for (Entry<Integer, Integer> entry : _bossRecordInfo.entrySet())
 			{
-				packet.writeD(entry.getKey());
-				packet.writeD(entry.getValue());
-				packet.writeD(0); // ??
+				writeInt(entry.getKey());
+				writeInt(entry.getValue());
+				writeInt(0); // ??
 			}
 		}
-		return true;
 	}
 }

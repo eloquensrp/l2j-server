@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import org.l2jmobius.commons.threads.ThreadPool;
 import org.l2jmobius.gameserver.instancemanager.AntiFeedManager;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.taskmanager.AttackStanceTaskManager;
 
 /**
@@ -146,7 +146,7 @@ public class Disconnection
 		return this;
 	}
 	
-	public Disconnection close(IClientOutgoingPacket packet)
+	public Disconnection close(ServerPacket packet)
 	{
 		if (_client != null)
 		{
@@ -155,7 +155,7 @@ public class Disconnection
 		return this;
 	}
 	
-	public void defaultSequence(IClientOutgoingPacket packet)
+	public void defaultSequence(ServerPacket packet)
 	{
 		defaultSequence();
 		close(packet);

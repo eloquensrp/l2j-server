@@ -33,7 +33,7 @@ import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.instance.Item;
 import org.l2jmobius.gameserver.network.SystemMessageId;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 
 /**
@@ -391,12 +391,12 @@ public class ItemAuction
 		}
 	}
 	
-	public void broadcastToAllBidders(IClientOutgoingPacket packet)
+	public void broadcastToAllBidders(ServerPacket packet)
 	{
 		ThreadPool.execute(() -> broadcastToAllBiddersInternal(packet));
 	}
 	
-	public void broadcastToAllBiddersInternal(IClientOutgoingPacket packet)
+	public void broadcastToAllBiddersInternal(ServerPacket packet)
 	{
 		for (int i = _auctionBids.size(); i-- > 0;)
 		{

@@ -16,7 +16,6 @@
  */
 package org.l2jmobius.loginserver.network.clientpackets;
 
-import java.net.InetAddress;
 import java.security.GeneralSecurityException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,12 +23,11 @@ import java.util.logging.Logger;
 import javax.crypto.Cipher;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.IIncomingPacket;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.GameServerTable.GameServerInfo;
+import org.l2jmobius.loginserver.LoginController;
 import org.l2jmobius.loginserver.enums.AccountKickedReason;
 import org.l2jmobius.loginserver.enums.LoginFailReason;
-import org.l2jmobius.loginserver.LoginController;
 import org.l2jmobius.loginserver.model.data.AccountInfo;
 import org.l2jmobius.loginserver.network.ConnectionState;
 import org.l2jmobius.loginserver.network.LoginClient;
@@ -40,7 +38,7 @@ import org.l2jmobius.loginserver.network.serverpackets.ServerList;
 /**
  * Format: x 0 (a leading null) x: the rsa encrypted block with the login an password.
  */
-public class RequestAuthLogin implements IIncomingPacket<LoginClient>
+public class RequestAuthLogin implements LoginClientPacket
 {
 	private static final Logger LOGGER = Logger.getLogger(RequestAuthLogin.class.getName());
 	
@@ -49,21 +47,18 @@ public class RequestAuthLogin implements IIncomingPacket<LoginClient>
 	private boolean _newAuthMethod = false;
 	
 	@Override
-	public boolean read(LoginClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		if (packet.getReadableBytes() >= 256)
+		if (packet.getRemainingLength() >= 256)
 		{
 			_newAuthMethod = true;
-			packet.readB(_raw1, 0, _raw1.length);
-			packet.readB(_raw2, 0, _raw2.length);
-			return true;
+			packet.readBytes(_raw1);
+			packet.readBytes(_raw2);
 		}
-		else if (packet.getReadableBytes() >= 128)
+		else if (packet.getRemainingLength() >= 128)
 		{
-			packet.readB(_raw1, 0, _raw1.length);
-			return true;
+			packet.readBytes(_raw1);
 		}
-		return false;
 	}
 	
 	@Override
@@ -107,7 +102,7 @@ public class RequestAuthLogin implements IIncomingPacket<LoginClient>
 			return;
 		}
 		
-		final InetAddress clientAddr = client.getConnectionAddress();
+		final String clientAddr = client.getIp();
 		final LoginController lc = LoginController.getInstance();
 		final AccountInfo info = lc.retriveAccountInfo(clientAddr, user, password);
 		if (info == null)

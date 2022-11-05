@@ -16,12 +16,11 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.data.sql.CrestTable;
 import org.l2jmobius.gameserver.model.Crest;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class AllyCrest implements IClientOutgoingPacket
+public class AllyCrest extends ServerPacket
 {
 	private final int _crestId;
 	private final byte[] _data;
@@ -40,19 +39,18 @@ public class AllyCrest implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.ALLIANCE_CREST.writeId(packet);
-		packet.writeD(_crestId);
+		ServerPackets.ALLIANCE_CREST.writeId(this);
+		writeInt(_crestId);
 		if (_data != null)
 		{
-			packet.writeD(_data.length);
-			packet.writeB(_data);
+			writeInt(_data.length);
+			writeBytes(_data);
 		}
 		else
 		{
-			packet.writeD(0);
+			writeInt(0);
 		}
-		return true;
 	}
 }

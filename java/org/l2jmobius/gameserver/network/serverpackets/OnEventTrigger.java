@@ -16,36 +16,34 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.instance.Door;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Gnacik, UnAfraid
  */
-public class OnEventTrigger implements IClientOutgoingPacket
+public class OnEventTrigger extends ServerPacket
 {
 	private final int _emitterId;
-	private final int _enabled;
+	private final boolean _enabled;
 	
 	public OnEventTrigger(Door door, boolean enabled)
 	{
 		_emitterId = door.getEmitter();
-		_enabled = enabled ? 1 : 0;
+		_enabled = enabled;
 	}
 	
 	public OnEventTrigger(int id, boolean enabled)
 	{
 		_emitterId = id;
-		_enabled = enabled ? 1 : 0;
+		_enabled = enabled;
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EVENT_TRIGGER.writeId(packet);
-		packet.writeD(_emitterId);
-		packet.writeC(_enabled);
-		return true;
+		ServerPackets.EVENT_TRIGGER.writeId(this);
+		writeInt(_emitterId);
+		writeByte(_enabled);
 	}
 }

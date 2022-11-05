@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class CSShowComBoard implements IClientOutgoingPacket
+public class CSShowComBoard extends ServerPacket
 {
 	private final byte[] _html;
 	
@@ -29,11 +28,10 @@ public class CSShowComBoard implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.SHOW_BOARD.writeId(packet);
-		packet.writeC(1); // c4 1 to show community 00 to hide
-		packet.writeB(_html);
-		return true;
+		ServerPackets.SHOW_BOARD.writeId(this);
+		writeByte(1); // c4 1 to show community 00 to hide
+		writeBytes(_html);
 	}
 }

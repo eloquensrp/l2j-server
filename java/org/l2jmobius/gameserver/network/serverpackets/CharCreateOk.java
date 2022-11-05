@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class CharCreateOk implements IClientOutgoingPacket
+public class CharCreateOk extends ServerPacket
 {
 	public static final CharCreateOk STATIC_PACKET = new CharCreateOk();
 	
@@ -28,10 +27,9 @@ public class CharCreateOk implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.CHARACTER_CREATE_SUCCESS.writeId(packet);
-		packet.writeD(1);
-		return true;
+		ServerPackets.CHARACTER_CREATE_SUCCESS.writeId(this);
+		writeInt(1);
 	}
 }

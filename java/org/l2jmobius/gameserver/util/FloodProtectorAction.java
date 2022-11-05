@@ -190,7 +190,7 @@ public class FloodProtectorAction
 		{
 			if (!_client.isDetached())
 			{
-				address = _client.getConnectionAddress().getHostAddress();
+				address = _client.getIp();
 			}
 		}
 		catch (Exception e)
@@ -198,7 +198,7 @@ public class FloodProtectorAction
 			// Ignore.
 		}
 		
-		final ConnectionState state = (ConnectionState) _client.getConnectionState();
+		final ConnectionState state = _client.getConnectionState();
 		switch (state)
 		{
 			case ENTERING:
@@ -232,7 +232,7 @@ public class FloodProtectorAction
 			}
 			default:
 			{
-				throw new IllegalStateException("Missing state on switch");
+				throw new IllegalStateException("Missing state on switch.");
 			}
 		}
 		

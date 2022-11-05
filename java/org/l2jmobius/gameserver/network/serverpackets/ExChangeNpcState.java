@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author JIV
  */
-public class ExChangeNpcState implements IClientOutgoingPacket
+public class ExChangeNpcState extends ServerPacket
 {
 	private final int _objId;
 	private final int _state;
@@ -34,11 +33,10 @@ public class ExChangeNpcState implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_CHANGE_NPC_STATE.writeId(packet);
-		packet.writeD(_objId);
-		packet.writeD(_state);
-		return true;
+		ServerPackets.EX_CHANGE_NPC_STATE.writeId(this);
+		writeInt(_objId);
+		writeInt(_state);
 	}
 }

@@ -19,12 +19,12 @@ package org.l2jmobius.gameserver.network.loginserverpackets.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author -Wooden-
  */
-public class ServerStatus extends BaseSendablePacket
+public class ServerStatus extends WritablePacket
 {
 	private final List<Attribute> _attributes;
 	
@@ -92,15 +92,14 @@ public class ServerStatus extends BaseSendablePacket
 	}
 	
 	@Override
-	public byte[] getContent()
+	public void write()
 	{
-		writeC(0x06);
-		writeD(_attributes.size());
+		writeByte(0x06);
+		writeInt(_attributes.size());
 		for (Attribute temp : _attributes)
 		{
-			writeD(temp.id);
-			writeD(temp.value);
+			writeInt(temp.id);
+			writeInt(temp.value);
 		}
-		return getBytes();
 	}
 }

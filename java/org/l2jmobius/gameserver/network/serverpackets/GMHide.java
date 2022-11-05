@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Kerberos
  */
-public class GMHide implements IClientOutgoingPacket
+public class GMHide extends ServerPacket
 {
 	private final int _mode;
 	
@@ -35,10 +34,9 @@ public class GMHide implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.GM_HIDE.writeId(packet);
-		packet.writeD(_mode);
-		return true;
+		ServerPackets.GM_HIDE.writeId(this);
+		writeInt(_mode);
 	}
 }

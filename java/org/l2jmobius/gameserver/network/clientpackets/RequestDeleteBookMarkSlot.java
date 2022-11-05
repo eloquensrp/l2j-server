@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 
@@ -24,15 +24,14 @@ import org.l2jmobius.gameserver.network.GameClient;
  * @author ShanSoft
  * @structure: chdd
  */
-public class RequestDeleteBookMarkSlot implements IClientIncomingPacket
+public class RequestDeleteBookMarkSlot implements ClientPacket
 {
 	private int id;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		id = packet.readD();
-		return true;
+		id = packet.readInt();
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ package org.l2jmobius.loginserver.network.gameserverpackets;
 
 import java.util.logging.Logger;
 
-import org.l2jmobius.commons.network.BaseRecievePacket;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.loginserver.GameServerTable;
 import org.l2jmobius.loginserver.GameServerTable.GameServerInfo;
 import org.l2jmobius.loginserver.GameServerThread;
@@ -26,10 +26,11 @@ import org.l2jmobius.loginserver.GameServerThread;
 /**
  * @author -Wooden-
  */
-public class ServerStatus extends BaseRecievePacket
+public class ServerStatus extends ReadablePacket
 {
 	protected static final Logger LOGGER = Logger.getLogger(ServerStatus.class.getName());
 	
+	// Ids
 	public static final int SERVER_LIST_STATUS = 0x01;
 	public static final int SERVER_TYPE = 0x02;
 	public static final int SERVER_LIST_SQUARE_BRACKET = 0x03;
@@ -62,22 +63,19 @@ public class ServerStatus extends BaseRecievePacket
 	public static final int ON = 0x01;
 	public static final int OFF = 0x00;
 	
-	/**
-	 * @param decrypt
-	 * @param server
-	 */
 	public ServerStatus(byte[] decrypt, GameServerThread server)
 	{
 		super(decrypt);
+		readByte(); // id (already processed)
 		
 		final GameServerInfo gsi = GameServerTable.getInstance().getRegisteredGameServerById(server.getServerId());
 		if (gsi != null)
 		{
-			final int size = readD();
+			final int size = readInt();
 			for (int i = 0; i < size; i++)
 			{
-				final int type = readD();
-				final int value = readD();
+				final int type = readInt();
+				final int value = readInt();
 				switch (type)
 				{
 					case SERVER_LIST_STATUS:

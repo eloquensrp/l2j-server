@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.ExPledgeEmblem;
@@ -25,15 +25,14 @@ import org.l2jmobius.gameserver.network.serverpackets.ExPledgeEmblem;
  * Fomat : chd c: (id) 0xD0 h: (subid) 0x10 d: the crest id This is a trigger
  * @author -Wooden-
  */
-public class RequestExPledgeCrestLarge implements IClientIncomingPacket
+public class RequestExPledgeCrestLarge implements ClientPacket
 {
 	private int _crestId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_crestId = packet.readD();
-		return true;
+		_crestId = packet.readInt();
 	}
 	
 	@Override

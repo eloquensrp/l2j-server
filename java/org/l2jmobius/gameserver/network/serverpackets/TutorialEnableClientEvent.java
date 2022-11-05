@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class TutorialEnableClientEvent implements IClientOutgoingPacket
+public class TutorialEnableClientEvent extends ServerPacket
 {
 	private int _eventId = 0;
 	
@@ -29,10 +28,9 @@ public class TutorialEnableClientEvent implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.TUTORIAL_ENABLE_CLIENT_EVENT.writeId(packet);
-		packet.writeD(_eventId);
-		return true;
+		ServerPackets.TUTORIAL_ENABLE_CLIENT_EVENT.writeId(this);
+		writeInt(_eventId);
 	}
 }

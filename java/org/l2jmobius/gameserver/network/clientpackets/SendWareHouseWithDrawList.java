@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Npc;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.clan.ClanPrivilege;
@@ -36,34 +36,33 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * @version $Revision: 1.2.2.1.2.4 $ $Date: 2005/03/29 23:15:16 $
  */
-public class SendWareHouseWithDrawList implements IClientIncomingPacket
+public class SendWareHouseWithDrawList implements ClientPacket
 {
 	private static final int BATCH_LENGTH = 12; // length of the one item
 	
 	private ItemHolder[] _items = null;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		final int count = packet.readD();
-		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getReadableBytes()))
+		final int count = packet.readInt();
+		if ((count <= 0) || (count > Config.MAX_ITEM_IN_PACKET) || ((count * BATCH_LENGTH) != packet.getRemainingLength()))
 		{
-			return false;
+			return;
 		}
 		
 		_items = new ItemHolder[count];
 		for (int i = 0; i < count; i++)
 		{
-			final int objId = packet.readD();
-			final long cnt = packet.readQ();
+			final int objId = packet.readInt();
+			final long cnt = packet.readLong();
 			if ((objId < 1) || (cnt < 0))
 			{
 				_items = null;
-				return false;
+				return;
 			}
 			_items[i] = new ItemHolder(objId, cnt);
 		}
-		return true;
 	}
 	
 	@Override

@@ -19,11 +19,10 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.WorldObject;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class StatusUpdate implements IClientOutgoingPacket
+public class StatusUpdate extends ServerPacket
 {
 	public static final int LEVEL = 0x01;
 	public static final int EXP = 0x02;
@@ -101,16 +100,15 @@ public class StatusUpdate implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.STATUS_UPDATE.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeD(_attributes.size());
+		ServerPackets.STATUS_UPDATE.writeId(this);
+		writeInt(_objectId);
+		writeInt(_attributes.size());
 		for (Attribute temp : _attributes)
 		{
-			packet.writeD(temp.id);
-			packet.writeD(temp.value);
+			writeInt(temp.id);
+			writeInt(temp.value);
 		}
-		return true;
 	}
 }

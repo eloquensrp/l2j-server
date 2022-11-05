@@ -20,17 +20,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.enums.ChatType;
 import org.l2jmobius.gameserver.model.actor.Npc;
 import org.l2jmobius.gameserver.network.NpcStringId;
 import org.l2jmobius.gameserver.network.NpcStringId.NSLocalisation;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Kerberos
  */
-public class NpcSay implements IClientOutgoingPacket
+public class NpcSay extends ServerPacket
 {
 	private final int _objectId;
 	private final ChatType _textType;
@@ -123,12 +122,12 @@ public class NpcSay implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.NPC_SAY.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeD(_textType.getClientId());
-		packet.writeD(_npcId);
+		ServerPackets.NPC_SAY.writeId(this);
+		writeInt(_objectId);
+		writeInt(_textType.getClientId());
+		writeInt(_npcId);
 		// Localisation related.
 		if (_lang != null)
 		{
@@ -138,24 +137,23 @@ public class NpcSay implements IClientOutgoingPacket
 				final NSLocalisation nsl = ns.getLocalisation(_lang);
 				if (nsl != null)
 				{
-					packet.writeD(-1);
-					packet.writeS(nsl.getLocalisation(_parameters != null ? _parameters : Collections.emptyList()));
-					return true;
+					writeInt(-1);
+					writeString(nsl.getLocalisation(_parameters != null ? _parameters : Collections.emptyList()));
+					return;
 				}
 			}
 		}
-		packet.writeD(_npcString);
+		writeInt(_npcString);
 		if (_npcString == -1)
 		{
-			packet.writeS(_text);
+			writeString(_text);
 		}
 		else if (_parameters != null)
 		{
 			for (String s : _parameters)
 			{
-				packet.writeS(s);
+				writeString(s);
 			}
 		}
-		return true;
 	}
 }

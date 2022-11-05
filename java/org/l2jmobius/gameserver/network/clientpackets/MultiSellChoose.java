@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.MultisellData;
 import org.l2jmobius.gameserver.model.Augmentation;
 import org.l2jmobius.gameserver.model.Elementals;
@@ -41,7 +41,7 @@ import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 /**
  * The Class MultiSellChoose.
  */
-public class MultiSellChoose implements IClientIncomingPacket
+public class MultiSellChoose implements ClientPacket
 {
 	private int _listId;
 	private int _entryId;
@@ -70,23 +70,22 @@ public class MultiSellChoose implements IClientIncomingPacket
 	private int _unk11;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_listId = packet.readD();
-		_entryId = packet.readD();
-		_amount = packet.readQ();
-		_unk1 = packet.readH();
-		_unk2 = packet.readD();
-		_unk3 = packet.readD();
-		_unk4 = packet.readH(); // elemental attributes
-		_unk5 = packet.readH(); // elemental attributes
-		_unk6 = packet.readH(); // elemental attributes
-		_unk7 = packet.readH(); // elemental attributes
-		_unk8 = packet.readH(); // elemental attributes
-		_unk9 = packet.readH(); // elemental attributes
-		_unk10 = packet.readH(); // elemental attributes
-		_unk11 = packet.readH(); // elemental attributes
-		return true;
+		_listId = packet.readInt();
+		_entryId = packet.readInt();
+		_amount = packet.readLong();
+		_unk1 = packet.readShort();
+		_unk2 = packet.readInt();
+		_unk3 = packet.readInt();
+		_unk4 = packet.readShort(); // elemental attributes
+		_unk5 = packet.readShort(); // elemental attributes
+		_unk6 = packet.readShort(); // elemental attributes
+		_unk7 = packet.readShort(); // elemental attributes
+		_unk8 = packet.readShort(); // elemental attributes
+		_unk9 = packet.readShort(); // elemental attributes
+		_unk10 = packet.readShort(); // elemental attributes
+		_unk11 = packet.readShort(); // elemental attributes
 	}
 	
 	@Override

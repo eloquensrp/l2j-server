@@ -16,8 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Eva's Inferno event packet. info params:<br>
@@ -25,7 +24,7 @@ import org.l2jmobius.gameserver.network.OutgoingPackets;
  * value (depending on type: for type 1 - % value; for type 2 - 20573-20575),<br>
  * state (0-1), endtime (only when type 2)
  */
-public class ExBrBuffEventState implements IClientOutgoingPacket
+public class ExBrBuffEventState extends ServerPacket
 {
 	private final int _type; // 1 - %, 2 - npcId
 	private final int _value; // depending on type: for type 1 - % value; for type 2 - 20573-20575
@@ -41,13 +40,12 @@ public class ExBrBuffEventState implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BR_BUFF_EVENT_STATE.writeId(packet);
-		packet.writeD(_type);
-		packet.writeD(_value);
-		packet.writeD(_state);
-		packet.writeD(_endtime);
-		return true;
+		ServerPackets.EX_BR_BUFF_EVENT_STATE.writeId(this);
+		writeInt(_type);
+		writeInt(_value);
+		writeInt(_state);
+		writeInt(_endtime);
 	}
 }

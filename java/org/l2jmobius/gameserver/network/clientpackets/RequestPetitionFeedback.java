@@ -21,7 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.l2jmobius.commons.database.DatabaseFactory;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.PacketLogger;
@@ -29,7 +29,7 @@ import org.l2jmobius.gameserver.network.PacketLogger;
 /**
  * @author Plim
  */
-public class RequestPetitionFeedback implements IClientIncomingPacket
+public class RequestPetitionFeedback implements ClientPacket
 {
 	private static final String INSERT_FEEDBACK = "INSERT INTO petition_feedback VALUES (?,?,?,?,?)";
 	
@@ -39,12 +39,11 @@ public class RequestPetitionFeedback implements IClientIncomingPacket
 	private String _message;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		packet.readD(); // unknown
-		_rate = packet.readD();
-		_message = packet.readS();
-		return true;
+		packet.readInt(); // unknown
+		_rate = packet.readInt();
+		_message = packet.readString();
 	}
 	
 	@Override

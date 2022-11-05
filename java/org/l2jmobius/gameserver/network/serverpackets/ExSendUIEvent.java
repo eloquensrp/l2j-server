@@ -19,12 +19,11 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.Arrays;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.NpcStringId;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class ExSendUIEvent implements IClientOutgoingPacket
+public class ExSendUIEvent extends ServerPacket
 {
 	private final int _objectId;
 	private final boolean _type;
@@ -82,27 +81,26 @@ public class ExSendUIEvent implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SEND_UI_EVENT.writeId(packet);
-		packet.writeD(_objectId);
-		packet.writeD(_type ? 1 : 0); // 0 = show, 1 = hide (there is 2 = pause and 3 = resume also but they don't work well you can only pause count down and you cannot resume it because resume hides the counter).
-		packet.writeD(0); // unknown
-		packet.writeD(0); // unknown
-		packet.writeS(_countUp ? "1" : "0"); // 0 = count down, 1 = count up
+		ServerPackets.EX_SEND_UI_EVENT.writeId(this);
+		writeInt(_objectId);
+		writeInt(_type); // 0 = show, 1 = hide (there is 2 = pause and 3 = resume also but they don't work well you can only pause count down and you cannot resume it because resume hides the counter).
+		writeInt(0); // unknown
+		writeInt(0); // unknown
+		writeString(_countUp ? "1" : "0"); // 0 = count down, 1 = count up
 		// timer always disappears 10 seconds before end
-		packet.writeS(String.valueOf(_startTime / 60));
-		packet.writeS(String.valueOf(_startTime % 60));
-		packet.writeS(String.valueOf(_endTime / 60));
-		packet.writeS(String.valueOf(_endTime % 60));
-		packet.writeD(_npcstringId);
+		writeString(String.valueOf(_startTime / 60));
+		writeString(String.valueOf(_startTime % 60));
+		writeString(String.valueOf(_endTime / 60));
+		writeString(String.valueOf(_endTime % 60));
+		writeInt(_npcstringId);
 		if (_params != null)
 		{
 			for (String param : _params)
 			{
-				packet.writeS(param);
+				writeString(param);
 			}
 		}
-		return true;
 	}
 }

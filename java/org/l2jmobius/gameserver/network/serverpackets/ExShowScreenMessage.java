@@ -20,10 +20,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.network.NpcStringId;
 import org.l2jmobius.gameserver.network.NpcStringId.NSLocalisation;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.SystemMessageId.SMLocalisation;
 
@@ -31,7 +30,7 @@ import org.l2jmobius.gameserver.network.SystemMessageId.SMLocalisation;
  * ExShowScreenMessage server packet implementation.
  * @author Kerberos
  */
-public class ExShowScreenMessage implements IClientOutgoingPacket
+public class ExShowScreenMessage extends ServerPacket
 {
 	// Positions
 	public static final byte TOP_LEFT = 1;
@@ -235,9 +234,9 @@ public class ExShowScreenMessage implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SHOW_SCREEN_MESSAGE.writeId(packet);
+		ServerPackets.EX_SHOW_SCREEN_MESSAGE.writeId(this);
 		// Localisation related.
 		if (_lang != null)
 		{
@@ -249,19 +248,19 @@ public class ExShowScreenMessage implements IClientOutgoingPacket
 					final SMLocalisation sml = sm.getLocalisation(_lang);
 					if (sml != null)
 					{
-						packet.writeD(_type);
-						packet.writeD(-1);
-						packet.writeD(_position);
-						packet.writeD(_unk1);
-						packet.writeD(_size);
-						packet.writeD(_unk2);
-						packet.writeD(_unk3);
-						packet.writeD(_effect ? 1 : 0);
-						packet.writeD(_time);
-						packet.writeD(_fade ? 1 : 0);
-						packet.writeD(-1);
-						packet.writeS(sml.getLocalisation(_parameters != null ? _parameters : Collections.emptyList()));
-						return true;
+						writeInt(_type);
+						writeInt(-1);
+						writeInt(_position);
+						writeInt(_unk1);
+						writeInt(_size);
+						writeInt(_unk2);
+						writeInt(_unk3);
+						writeInt(_effect);
+						writeInt(_time);
+						writeInt(_fade);
+						writeInt(-1);
+						writeString(sml.getLocalisation(_parameters != null ? _parameters : Collections.emptyList()));
+						return;
 					}
 				}
 			}
@@ -273,45 +272,45 @@ public class ExShowScreenMessage implements IClientOutgoingPacket
 					final NSLocalisation nsl = ns.getLocalisation(_lang);
 					if (nsl != null)
 					{
-						packet.writeD(_type);
-						packet.writeD(-1);
-						packet.writeD(_position);
-						packet.writeD(_unk1);
-						packet.writeD(_size);
-						packet.writeD(_unk2);
-						packet.writeD(_unk3);
-						packet.writeD(_effect ? 1 : 0);
-						packet.writeD(_time);
-						packet.writeD(_fade ? 1 : 0);
-						packet.writeD(-1);
-						packet.writeS(nsl.getLocalisation(_parameters != null ? _parameters : Collections.emptyList()));
-						return true;
+						writeInt(_type);
+						writeInt(-1);
+						writeInt(_position);
+						writeInt(_unk1);
+						writeInt(_size);
+						writeInt(_unk2);
+						writeInt(_unk3);
+						writeInt(_effect);
+						writeInt(_time);
+						writeInt(_fade);
+						writeInt(-1);
+						writeString(nsl.getLocalisation(_parameters != null ? _parameters : Collections.emptyList()));
+						return;
 					}
 				}
 			}
 		}
-		packet.writeD(_type);
-		packet.writeD(_sysMessageId);
-		packet.writeD(_position);
-		packet.writeD(_unk1);
-		packet.writeD(_size);
-		packet.writeD(_unk2);
-		packet.writeD(_unk3);
-		packet.writeD(_effect ? 1 : 0);
-		packet.writeD(_time);
-		packet.writeD(_fade ? 1 : 0);
-		packet.writeD(_npcString);
+		writeInt(_type);
+		writeInt(_sysMessageId);
+		writeInt(_position);
+		writeInt(_unk1);
+		writeInt(_size);
+		writeInt(_unk2);
+		writeInt(_unk3);
+		writeInt(_effect);
+		writeInt(_time);
+		writeInt(_fade);
+		writeInt(_npcString);
 		if (_npcString == -1)
 		{
-			packet.writeS(_text);
+			writeString(_text);
 		}
 		else if (_parameters != null)
 		{
 			for (String s : _parameters)
 			{
-				packet.writeS(s);
+				writeString(s);
 			}
 		}
-		return true;
+		return;
 	}
 }

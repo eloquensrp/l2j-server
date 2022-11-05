@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.olympiad.Hero;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -25,15 +25,14 @@ import org.l2jmobius.gameserver.network.GameClient;
  * Format chS c (id) 0xD0 h (subid) 0x0C S the hero's words :)
  * @author -Wooden-
  */
-public class RequestWriteHeroWords implements IClientIncomingPacket
+public class RequestWriteHeroWords implements ClientPacket
 {
 	private String _heroWords;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_heroWords = packet.readS();
-		return true;
+		_heroWords = packet.readString();
 	}
 	
 	@Override

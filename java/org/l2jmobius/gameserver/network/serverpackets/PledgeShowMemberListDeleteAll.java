@@ -16,10 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class PledgeShowMemberListDeleteAll implements IClientOutgoingPacket
+public class PledgeShowMemberListDeleteAll extends ServerPacket
 {
 	public static final PledgeShowMemberListDeleteAll STATIC_PACKET = new PledgeShowMemberListDeleteAll();
 	
@@ -28,9 +27,8 @@ public class PledgeShowMemberListDeleteAll implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PLEDGE_SHOW_MEMBER_LIST_DELETE_ALL.writeId(packet);
-		return true;
+		ServerPackets.PLEDGE_SHOW_MEMBER_LIST_DELETE_ALL.writeId(this);
 	}
 }

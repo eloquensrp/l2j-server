@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.TeleportBookmark;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author ShanSoft
  */
-public class ExGetBookMarkInfoPacket implements IClientOutgoingPacket
+public class ExGetBookMarkInfoPacket extends ServerPacket
 {
 	private final Player _player;
 	
@@ -34,22 +33,21 @@ public class ExGetBookMarkInfoPacket implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_GET_BOOKMARK_INFO.writeId(packet);
-		packet.writeD(0); // Dummy
-		packet.writeD(_player.getBookmarkSlot());
-		packet.writeD(_player.getTeleportBookmarks().size());
+		ServerPackets.EX_GET_BOOKMARK_INFO.writeId(this);
+		writeInt(0); // Dummy
+		writeInt(_player.getBookmarkSlot());
+		writeInt(_player.getTeleportBookmarks().size());
 		for (TeleportBookmark tpbm : _player.getTeleportBookmarks())
 		{
-			packet.writeD(tpbm.getId());
-			packet.writeD(tpbm.getX());
-			packet.writeD(tpbm.getY());
-			packet.writeD(tpbm.getZ());
-			packet.writeS(tpbm.getName());
-			packet.writeD(tpbm.getIcon());
-			packet.writeS(tpbm.getTag());
+			writeInt(tpbm.getId());
+			writeInt(tpbm.getX());
+			writeInt(tpbm.getY());
+			writeInt(tpbm.getZ());
+			writeString(tpbm.getName());
+			writeInt(tpbm.getIcon());
+			writeString(tpbm.getTag());
 		}
-		return true;
 	}
 }

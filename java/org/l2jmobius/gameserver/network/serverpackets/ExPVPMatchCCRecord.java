@@ -19,14 +19,13 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Mobius
  */
-public class ExPVPMatchCCRecord implements IClientOutgoingPacket
+public class ExPVPMatchCCRecord extends ServerPacket
 {
 	public static final int INITIALIZE = 0;
 	public static final int UPDATE = 1;
@@ -42,11 +41,11 @@ public class ExPVPMatchCCRecord implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_PVP_MATCH_CC_RECORD.writeId(packet);
-		packet.writeD(_state); // 0 - initialize, 1 - update, 2 - finish
-		packet.writeD(Math.min(_players.size(), 25));
+		ServerPackets.EX_PVP_MATCH_CC_RECORD.writeId(this);
+		writeInt(_state); // 0 - initialize, 1 - update, 2 - finish
+		writeInt(Math.min(_players.size(), 25));
 		int counter = 0;
 		for (Entry<Player, Integer> entry : _players.entrySet())
 		{
@@ -55,9 +54,8 @@ public class ExPVPMatchCCRecord implements IClientOutgoingPacket
 			{
 				break;
 			}
-			packet.writeS(entry.getKey().getName());
-			packet.writeD(entry.getValue());
+			writeString(entry.getKey().getName());
+			writeInt(entry.getValue());
 		}
-		return true;
 	}
 }

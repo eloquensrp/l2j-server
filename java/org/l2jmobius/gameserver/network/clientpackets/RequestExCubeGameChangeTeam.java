@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.HandysBlockCheckerManager;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -26,18 +26,17 @@ import org.l2jmobius.gameserver.network.PacketLogger;
  * Format: chdd d: Arena d: Team
  * @author mrTJO
  */
-public class RequestExCubeGameChangeTeam implements IClientIncomingPacket
+public class RequestExCubeGameChangeTeam implements ClientPacket
 {
 	private int _arena;
 	private int _team;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
 		// client sends -1,0,1,2 for arena parameter
-		_arena = packet.readD() + 1;
-		_team = packet.readD();
-		return true;
+		_arena = packet.readInt() + 1;
+		_team = packet.readInt();
 	}
 	
 	@Override

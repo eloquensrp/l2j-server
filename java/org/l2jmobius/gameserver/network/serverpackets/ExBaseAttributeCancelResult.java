@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author JIV
  */
-public class ExBaseAttributeCancelResult implements IClientOutgoingPacket
+public class ExBaseAttributeCancelResult extends ServerPacket
 {
 	private final int _objId;
 	private final byte _attribute;
@@ -34,12 +33,11 @@ public class ExBaseAttributeCancelResult implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BASE_ATTRIBUTE_CANCEL_RESULT.writeId(packet);
-		packet.writeD(1); // result
-		packet.writeD(_objId);
-		packet.writeD(_attribute);
-		return true;
+		ServerPackets.EX_BASE_ATTRIBUTE_CANCEL_RESULT.writeId(this);
+		writeInt(1); // result
+		writeInt(_objId);
+		writeInt(_attribute);
 	}
 }

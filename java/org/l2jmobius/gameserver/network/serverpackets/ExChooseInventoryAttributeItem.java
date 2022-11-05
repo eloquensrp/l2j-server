@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.Elementals;
 import org.l2jmobius.gameserver.model.item.instance.Item;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Kerberos
  */
-public class ExChooseInventoryAttributeItem implements IClientOutgoingPacket
+public class ExChooseInventoryAttributeItem extends ServerPacket
 {
 	private final int _itemId;
 	private final byte _atribute;
@@ -42,19 +41,18 @@ public class ExChooseInventoryAttributeItem implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_CHOOSE_INVENTORY_ATTRIBUTE_ITEM.writeId(packet);
-		packet.writeD(_itemId);
+		ServerPackets.EX_CHOOSE_INVENTORY_ATTRIBUTE_ITEM.writeId(this);
+		writeInt(_itemId);
 		// Structure for now
 		// Must be 0x01 for stone/crystal attribute type
-		packet.writeD(_atribute == Elementals.FIRE ? 1 : 0); // Fire
-		packet.writeD(_atribute == Elementals.WATER ? 1 : 0); // Water
-		packet.writeD(_atribute == Elementals.WIND ? 1 : 0); // Wind
-		packet.writeD(_atribute == Elementals.EARTH ? 1 : 0); // Earth
-		packet.writeD(_atribute == Elementals.HOLY ? 1 : 0); // Holy
-		packet.writeD(_atribute == Elementals.DARK ? 1 : 0); // Unholy
-		packet.writeD(_level); // Item max attribute level
-		return true;
+		writeInt(_atribute == Elementals.FIRE); // Fire
+		writeInt(_atribute == Elementals.WATER); // Water
+		writeInt(_atribute == Elementals.WIND); // Wind
+		writeInt(_atribute == Elementals.EARTH); // Earth
+		writeInt(_atribute == Elementals.HOLY); // Holy
+		writeInt(_atribute == Elementals.DARK); // Unholy
+		writeInt(_level); // Item max attribute level
 	}
 }

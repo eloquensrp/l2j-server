@@ -37,7 +37,7 @@ import org.l2jmobius.gameserver.model.zone.ZoneRespawn;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.serverpackets.ExOlympiadMatchEnd;
 import org.l2jmobius.gameserver.network.serverpackets.ExOlympiadUserInfo;
-import org.l2jmobius.gameserver.network.serverpackets.IClientOutgoingPacket;
+import org.l2jmobius.gameserver.network.serverpackets.ServerPacket;
 import org.l2jmobius.gameserver.network.serverpackets.SystemMessage;
 
 /**
@@ -153,7 +153,7 @@ public class OlympiadStadiumZone extends ZoneRespawn
 		}
 	}
 	
-	public void broadcastPacketToObservers(IClientOutgoingPacket packet)
+	public void broadcastPacketToObservers(ServerPacket packet)
 	{
 		for (Player creature : getPlayersInside())
 		{
@@ -165,7 +165,7 @@ public class OlympiadStadiumZone extends ZoneRespawn
 	}
 	
 	@Override
-	public void broadcastPacket(IClientOutgoingPacket packet)
+	public void broadcastPacket(ServerPacket packet)
 	{
 		for (Player creature : getPlayersInside())
 		{

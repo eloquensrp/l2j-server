@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author mrTJO
  */
-public class ExCubeGameChangeTimeToStart implements IClientOutgoingPacket
+public class ExCubeGameChangeTimeToStart extends ServerPacket
 {
-	int _seconds;
+	private final int _seconds;
 	
 	/**
 	 * Update Minigame Waiting List Time to Start
@@ -36,11 +35,10 @@ public class ExCubeGameChangeTimeToStart implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BLOCK_UP_SET_LIST.writeId(packet);
-		packet.writeD(3);
-		packet.writeD(_seconds);
-		return true;
+		ServerPackets.EX_BLOCK_UP_SET_LIST.writeId(this);
+		writeInt(3);
+		writeInt(_seconds);
 	}
 }

@@ -16,17 +16,16 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author mrTJO
  */
-public class ExCubeGameChangeTeam implements IClientOutgoingPacket
+public class ExCubeGameChangeTeam extends ServerPacket
 {
-	Player _player;
-	boolean _fromRedTeam;
+	private final Player _player;
+	private final boolean _fromRedTeam;
 	
 	/**
 	 * Move Player from Team x to Team y
@@ -40,13 +39,12 @@ public class ExCubeGameChangeTeam implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BLOCK_UP_SET_LIST.writeId(packet);
-		packet.writeD(5);
-		packet.writeD(_player.getObjectId());
-		packet.writeD(_fromRedTeam ? 1 : 0);
-		packet.writeD(_fromRedTeam ? 0 : 1);
-		return true;
+		ServerPackets.EX_BLOCK_UP_SET_LIST.writeId(this);
+		writeInt(5);
+		writeInt(_player.getObjectId());
+		writeInt(_fromRedTeam);
+		writeInt(!_fromRedTeam);
 	}
 }

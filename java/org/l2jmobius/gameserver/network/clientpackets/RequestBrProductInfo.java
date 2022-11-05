@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.ExBrProductInfo;
@@ -24,15 +24,14 @@ import org.l2jmobius.gameserver.network.serverpackets.ExBrProductInfo;
 /**
  * @author Mobius
  */
-public class RequestBrProductInfo implements IClientIncomingPacket
+public class RequestBrProductInfo implements ClientPacket
 {
 	private int _productId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_productId = packet.readD();
-		return true;
+		_productId = packet.readInt();
 	}
 	
 	@Override

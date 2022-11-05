@@ -19,28 +19,26 @@ package org.l2jmobius.gameserver.network.serverpackets;
 import java.util.Comparator;
 import java.util.List;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.instancemanager.CastleManager;
 import org.l2jmobius.gameserver.model.siege.Castle;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author l3x
  */
-public class ExSendManorList implements IClientOutgoingPacket
+public class ExSendManorList extends ServerPacket
 {
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
 		final List<Castle> castles = CastleManager.getInstance().getCastles();
 		castles.sort(Comparator.comparing(Castle::getResidenceId));
-		OutgoingPackets.EX_SEND_MANOR_LIST.writeId(packet);
-		packet.writeD(castles.size());
+		ServerPackets.EX_SEND_MANOR_LIST.writeId(this);
+		writeInt(castles.size());
 		for (Castle castle : castles)
 		{
-			packet.writeD(castle.getResidenceId());
-			packet.writeS(castle.getName().toLowerCase());
+			writeInt(castle.getResidenceId());
+			writeString(castle.getName().toLowerCase());
 		}
-		return true;
 	}
 }

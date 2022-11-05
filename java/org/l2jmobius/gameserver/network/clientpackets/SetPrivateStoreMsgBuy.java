@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.PrivateStoreMsgBuy;
@@ -26,17 +26,16 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  * @version $Revision: 1.2.4.2 $ $Date: 2005/03/27 15:29:30 $
  */
-public class SetPrivateStoreMsgBuy implements IClientIncomingPacket
+public class SetPrivateStoreMsgBuy implements ClientPacket
 {
 	private static final int MAX_MSG_LENGTH = 29;
 	
 	private String _storeMsg;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_storeMsg = packet.readS();
-		return true;
+		_storeMsg = packet.readString();
 	}
 	
 	@Override

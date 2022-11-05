@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * Special event info packet.
  * @author Kerberos
  * @author mrTJO
  */
-public class ExBrBroadcastEventState implements IClientOutgoingPacket
+public class ExBrBroadcastEventState extends ServerPacket
 {
 	public static final int APRIL_FOOLS = 20090401;
 	public static final int EVAS_INFERNO = 20090801; // event state (0 - hide, 1 - show), day (1-14), percent (0-100)
@@ -62,18 +61,17 @@ public class ExBrBroadcastEventState implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BR_BROADCAST_EVENT_STATE.writeId(packet);
-		packet.writeD(_eventId);
-		packet.writeD(_eventState);
-		packet.writeD(_param0);
-		packet.writeD(_param1);
-		packet.writeD(_param2);
-		packet.writeD(_param3);
-		packet.writeD(_param4);
-		packet.writeS(_param5);
-		packet.writeS(_param6);
-		return true;
+		ServerPackets.EX_BR_BROADCAST_EVENT_STATE.writeId(this);
+		writeInt(_eventId);
+		writeInt(_eventState);
+		writeInt(_param0);
+		writeInt(_param1);
+		writeInt(_param2);
+		writeInt(_param3);
+		writeInt(_param4);
+		writeString(_param5);
+		writeString(_param6);
 	}
 }

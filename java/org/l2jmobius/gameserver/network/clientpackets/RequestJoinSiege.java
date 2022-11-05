@@ -17,7 +17,7 @@
 
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.instancemanager.CHSiegeManager;
 import org.l2jmobius.gameserver.instancemanager.CastleManager;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -32,19 +32,18 @@ import org.l2jmobius.gameserver.network.serverpackets.SiegeInfo;
 /**
  * @author KenM
  */
-public class RequestJoinSiege implements IClientIncomingPacket
+public class RequestJoinSiege implements ClientPacket
 {
 	private int _castleId;
 	private int _isAttacker;
 	private int _isJoining;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_castleId = packet.readD();
-		_isAttacker = packet.readD();
-		_isJoining = packet.readD();
-		return true;
+		_castleId = packet.readInt();
+		_isAttacker = packet.readInt();
+		_isJoining = packet.readInt();
 	}
 	
 	@Override

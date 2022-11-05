@@ -16,22 +16,9 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
-import org.l2jmobius.gameserver.network.GameClient;
-
 /**
  * @author KenM
  */
-public class RequestPVPMatchRecord implements IClientIncomingPacket
+public class RequestPVPMatchRecord implements ClientPacket
 {
-	@Override
-	public boolean read(GameClient client, PacketReader packet)
-	{
-		return true;
-	}
-	
-	@Override
-	public void run(GameClient client)
-	{
-	}
 }

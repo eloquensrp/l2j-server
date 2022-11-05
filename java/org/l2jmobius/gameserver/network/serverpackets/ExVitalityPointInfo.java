@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author GodKratos
  */
-public class ExVitalityPointInfo implements IClientOutgoingPacket
+public class ExVitalityPointInfo extends ServerPacket
 {
 	private final int _vitalityPoints;
 	
@@ -32,10 +31,9 @@ public class ExVitalityPointInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_VITALITY_POINT_INFO.writeId(packet);
-		packet.writeD(_vitalityPoints);
-		return true;
+		ServerPackets.EX_VITALITY_POINT_INFO.writeId(this);
+		writeInt(_vitalityPoints);
 	}
 }

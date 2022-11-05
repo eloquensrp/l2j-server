@@ -16,8 +16,6 @@
  */
 package org.l2jmobius.loginserver;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.security.KeyPairGenerator;
@@ -42,12 +40,12 @@ import javax.crypto.SecretKey;
 import org.l2jmobius.Config;
 import org.l2jmobius.commons.database.DatabaseFactory;
 import org.l2jmobius.commons.util.Rnd;
-import org.l2jmobius.commons.util.crypt.ScrambledKeyPair;
 import org.l2jmobius.loginserver.GameServerTable.GameServerInfo;
 import org.l2jmobius.loginserver.enums.LoginFailReason;
 import org.l2jmobius.loginserver.enums.LoginResult;
 import org.l2jmobius.loginserver.model.data.AccountInfo;
 import org.l2jmobius.loginserver.network.LoginClient;
+import org.l2jmobius.loginserver.network.ScrambledKeyPair;
 
 public class LoginController
 {
@@ -61,8 +59,8 @@ public class LoginController
 	/** Authed Clients on LoginServer */
 	protected Map<String, LoginClient> _loginServerClients = new ConcurrentHashMap<>();
 	
-	private final Map<InetAddress, Integer> _failedLoginAttemps = new HashMap<>();
-	private final Map<InetAddress, Long> _bannedIps = new ConcurrentHashMap<>();
+	private final Map<String, Integer> _failedLoginAttemps = new HashMap<>();
+	private final Map<String, Long> _bannedIps = new ConcurrentHashMap<>();
 	
 	private final ScrambledKeyPair[] _keyPairs;
 	private final KeyGenerator _blowfishKeyGenerator;
@@ -123,12 +121,12 @@ public class LoginController
 		return _loginServerClients.get(account);
 	}
 	
-	public AccountInfo retriveAccountInfo(InetAddress clientAddr, String login, String password)
+	public AccountInfo retriveAccountInfo(String clientAddr, String login, String password)
 	{
 		return retriveAccountInfo(clientAddr, login, password, true);
 	}
 	
-	private void recordFailedLoginAttemp(InetAddress addr)
+	private void recordFailedLoginAttemp(String addr)
 	{
 		// We need to synchronize this!
 		// When multiple connections from the same address fail to login at the
@@ -154,19 +152,19 @@ public class LoginController
 			addBanForAddress(addr, Config.LOGIN_BLOCK_AFTER_BAN * 1000);
 			// we need to clear the failed login attempts here, so after the ip ban is over the client has another 5 attempts
 			clearFailedLoginAttemps(addr);
-			LOGGER.warning("Added banned address " + addr.getHostAddress() + "! Too many login attempts.");
+			LOGGER.warning("Added banned address " + addr + "! Too many login attempts.");
 		}
 	}
 	
-	private void clearFailedLoginAttemps(InetAddress addr)
+	private void clearFailedLoginAttemps(String clientAddr)
 	{
 		synchronized (_failedLoginAttemps)
 		{
-			_failedLoginAttemps.remove(addr);
+			_failedLoginAttemps.remove(clientAddr);
 		}
 	}
 	
-	private AccountInfo retriveAccountInfo(InetAddress addr, String login, String password, boolean autoCreateIfEnabled)
+	private AccountInfo retriveAccountInfo(String clientAddr, String login, String password, boolean autoCreateIfEnabled)
 	{
 		try
 		{
@@ -187,11 +185,11 @@ public class LoginController
 						if (!info.checkPassHash(hashBase64))
 						{
 							// wrong password
-							recordFailedLoginAttemp(addr);
+							recordFailedLoginAttemp(clientAddr);
 							return null;
 						}
 						
-						clearFailedLoginAttemps(addr);
+						clearFailedLoginAttemps(clientAddr);
 						return info;
 					}
 				}
@@ -200,7 +198,7 @@ public class LoginController
 			if (!autoCreateIfEnabled || !Config.AUTO_CREATE_ACCOUNTS)
 			{
 				// account does not exist and auto create account is not desired
-				recordFailedLoginAttemp(addr);
+				recordFailedLoginAttemp(clientAddr);
 				return null;
 			}
 			
@@ -211,7 +209,7 @@ public class LoginController
 				ps.setString(2, hashBase64);
 				ps.setLong(3, System.currentTimeMillis());
 				ps.setInt(4, 0);
-				ps.setString(5, addr.getHostAddress());
+				ps.setString(5, clientAddr);
 				ps.execute();
 			}
 			catch (Exception e)
@@ -221,7 +219,7 @@ public class LoginController
 			}
 			
 			LOGGER.info("Auto created account '" + login + "'.");
-			return retriveAccountInfo(addr, login, password, false);
+			return retriveAccountInfo(clientAddr, login, password, false);
 		}
 		catch (Exception e)
 		{
@@ -230,7 +228,7 @@ public class LoginController
 		}
 	}
 	
-	public LoginResult tryCheckinAccount(LoginClient client, InetAddress address, AccountInfo info)
+	public LoginResult tryCheckinAccount(LoginClient client, String address, AccountInfo info)
 	{
 		if (info.getAccessLevel() < 0)
 		{
@@ -257,48 +255,44 @@ public class LoginController
 	}
 	
 	/**
-	 * Adds the address to the ban list of the login server, with the given end time in milliseconds.
-	 * @param address The Address to be banned.
-	 * @param expiration Timestamp in milliseconds when this ban expires
-	 * @throws UnknownHostException if the address is invalid.
-	 */
-	public void addBanForAddress(String address, long expiration) throws UnknownHostException
-	{
-		_bannedIps.putIfAbsent(InetAddress.getByName(address), expiration);
-	}
-	
-	/**
 	 * Adds the address to the ban list of the login server, with the given duration.
 	 * @param address The Address to be banned.
 	 * @param duration is milliseconds
 	 */
-	public void addBanForAddress(InetAddress address, long duration)
+	public void addBanForAddress(String address, long duration)
 	{
-		_bannedIps.putIfAbsent(address, System.currentTimeMillis() + duration);
+		if (duration > 0)
+		{
+			_bannedIps.putIfAbsent(address, System.currentTimeMillis() + duration);
+		}
+		else // Permanent ban.
+		{
+			_bannedIps.putIfAbsent(address, Long.MAX_VALUE);
+		}
 	}
 	
-	public boolean isBannedAddress(InetAddress address) throws UnknownHostException
+	public boolean isBannedAddress(String address)
 	{
-		final String[] parts = address.getHostAddress().split("\\.");
+		final String[] parts = address.split("\\.");
 		Long bi = _bannedIps.get(address);
 		if (bi == null)
 		{
-			bi = _bannedIps.get(InetAddress.getByName(parts[0] + "." + parts[1] + "." + parts[2] + ".0"));
+			bi = _bannedIps.get(parts[0] + "." + parts[1] + "." + parts[2] + ".0");
 		}
 		if (bi == null)
 		{
-			bi = _bannedIps.get(InetAddress.getByName(parts[0] + "." + parts[1] + ".0.0"));
+			bi = _bannedIps.get(parts[0] + "." + parts[1] + ".0.0");
 		}
 		if (bi == null)
 		{
-			bi = _bannedIps.get(InetAddress.getByName(parts[0] + ".0.0.0"));
+			bi = _bannedIps.get(parts[0] + ".0.0.0");
 		}
 		if (bi != null)
 		{
 			if ((bi > 0) && (bi < System.currentTimeMillis()))
 			{
 				_bannedIps.remove(address);
-				LOGGER.info("Removed expired ip address ban " + address.getHostAddress() + ".");
+				LOGGER.info("Removed expired ip address ban " + address + ".");
 				return false;
 			}
 			return true;
@@ -306,7 +300,7 @@ public class LoginController
 		return false;
 	}
 	
-	public Map<InetAddress, Long> getBannedIps()
+	public Map<String, Long> getBannedIps()
 	{
 		return _bannedIps;
 	}
@@ -316,26 +310,9 @@ public class LoginController
 	 * @param address The address to be removed from the ban list
 	 * @return true if the ban was removed, false if there was no ban for this ip
 	 */
-	public boolean removeBanForAddress(InetAddress address)
-	{
-		return _bannedIps.remove(address) != null;
-	}
-	
-	/**
-	 * Remove the specified address from the ban list
-	 * @param address The address to be removed from the ban list
-	 * @return true if the ban was removed, false if there was no ban for this ip or the address was invalid.
-	 */
 	public boolean removeBanForAddress(String address)
 	{
-		try
-		{
-			return removeBanForAddress(InetAddress.getByName(address));
-		}
-		catch (UnknownHostException e)
-		{
-			return false;
-		}
+		return _bannedIps.remove(address) != null;
 	}
 	
 	public SessionKey getKeyForAccount(String account)
@@ -487,12 +464,12 @@ public class LoginController
 	 * @param info the account info to checkin
 	 * @return true when ok to checkin, false otherwise
 	 */
-	public boolean canCheckin(LoginClient client, InetAddress address, AccountInfo info)
+	public boolean canCheckin(LoginClient client, String address, AccountInfo info)
 	{
 		try
 		{
-			final List<InetAddress> ipWhiteList = new ArrayList<>();
-			final List<InetAddress> ipBlackList = new ArrayList<>();
+			final List<String> ipWhiteList = new ArrayList<>();
+			final List<String> ipBlackList = new ArrayList<>();
 			try (Connection con = DatabaseFactory.getConnection();
 				PreparedStatement ps = con.prepareStatement(ACCOUNT_IPAUTH_SELECT))
 			{
@@ -511,11 +488,11 @@ public class LoginController
 						}
 						if (type.equals("allow"))
 						{
-							ipWhiteList.add(InetAddress.getByName(ip));
+							ipWhiteList.add(ip);
 						}
 						else if (type.equals("deny"))
 						{
-							ipBlackList.add(InetAddress.getByName(ip));
+							ipBlackList.add(ip);
 						}
 					}
 				}
@@ -526,13 +503,13 @@ public class LoginController
 			{
 				if (!ipWhiteList.isEmpty() && !ipWhiteList.contains(address))
 				{
-					LOGGER.warning("Account checkin attemp from address(" + address.getHostAddress() + ") not present on whitelist for account '" + info.getLogin() + "'.");
+					LOGGER.warning("Account checkin attemp from address(" + address + ") not present on whitelist for account '" + info.getLogin() + "'.");
 					return false;
 				}
 				
 				if (!ipBlackList.isEmpty() && ipBlackList.contains(address))
 				{
-					LOGGER.warning("Account checkin attemp from address(" + address.getHostAddress() + ") on blacklist for account '" + info.getLogin() + "'.");
+					LOGGER.warning("Account checkin attemp from address(" + address + ") on blacklist for account '" + info.getLogin() + "'.");
 					return false;
 				}
 			}
@@ -543,7 +520,7 @@ public class LoginController
 				PreparedStatement ps = con.prepareStatement(ACCOUNT_INFO_UPDATE))
 			{
 				ps.setLong(1, System.currentTimeMillis());
-				ps.setString(2, address.getHostAddress());
+				ps.setString(2, address);
 				ps.setString(3, info.getLogin());
 				ps.execute();
 			}

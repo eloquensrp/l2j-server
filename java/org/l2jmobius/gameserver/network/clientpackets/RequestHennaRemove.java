@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.Henna;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -27,15 +27,14 @@ import org.l2jmobius.gameserver.network.serverpackets.ActionFailed;
 /**
  * @author Zoey76
  */
-public class RequestHennaRemove implements IClientIncomingPacket
+public class RequestHennaRemove implements ClientPacket
 {
 	private int _symbolId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_symbolId = packet.readD();
-		return true;
+		_symbolId = packet.readInt();
 	}
 	
 	@Override

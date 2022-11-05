@@ -16,14 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.ExBrLoadEventTopRankers;
 
 /**
  * Halloween rank list client packet. Format: (ch)ddd
  */
-public class BrEventRankerList implements IClientIncomingPacket
+public class BrEventRankerList implements ClientPacket
 {
 	private int _eventId;
 	private int _day;
@@ -31,12 +31,11 @@ public class BrEventRankerList implements IClientIncomingPacket
 	private int _ranking;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_eventId = packet.readD();
-		_day = packet.readD(); // 0 - current, 1 - previous
-		_ranking = packet.readD();
-		return true;
+		_eventId = packet.readInt();
+		_day = packet.readInt(); // 0 - current, 1 - previous
+		_ranking = packet.readInt();
 	}
 	
 	@Override

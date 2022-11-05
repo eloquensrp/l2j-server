@@ -17,7 +17,7 @@
 package org.l2jmobius.gameserver.network.clientpackets;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.enums.PlayerCondOverride;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.WorldObject;
@@ -30,7 +30,7 @@ import org.l2jmobius.gameserver.network.PacketLogger;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 import org.l2jmobius.gameserver.network.serverpackets.ActionFailed;
 
-public class Action implements IClientIncomingPacket
+public class Action implements ClientPacket
 {
 	private int _objectId;
 	@SuppressWarnings("unused")
@@ -42,14 +42,13 @@ public class Action implements IClientIncomingPacket
 	private int _actionId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_objectId = packet.readD(); // Target object Identifier
-		_originX = packet.readD();
-		_originY = packet.readD();
-		_originZ = packet.readD();
-		_actionId = packet.readC(); // Action identifier : 0-Simple click, 1-Shift click
-		return true;
+		_objectId = packet.readInt(); // Target object Identifier
+		_originX = packet.readInt();
+		_originY = packet.readInt();
+		_originZ = packet.readInt();
+		_actionId = packet.readByte(); // Action identifier : 0-Simple click, 1-Shift click
 	}
 	
 	@Override

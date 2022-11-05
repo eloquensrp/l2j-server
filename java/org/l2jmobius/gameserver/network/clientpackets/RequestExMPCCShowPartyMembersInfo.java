@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.World;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -26,15 +26,14 @@ import org.l2jmobius.gameserver.network.serverpackets.ExMPCCShowPartyMemberInfo;
  * Format:(ch) d
  * @author chris_00
  */
-public class RequestExMPCCShowPartyMembersInfo implements IClientIncomingPacket
+public class RequestExMPCCShowPartyMembersInfo implements ClientPacket
 {
 	private int _partyLeaderId;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_partyLeaderId = packet.readD();
-		return true;
+		_partyLeaderId = packet.readInt();
 	}
 	
 	@Override

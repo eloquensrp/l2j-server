@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExUseSharedGroupItem implements IClientOutgoingPacket
+public class ExUseSharedGroupItem extends ServerPacket
 {
 	private final int _itemId;
 	private final int _grpId;
@@ -38,13 +37,12 @@ public class ExUseSharedGroupItem implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_USE_SHARED_GROUP_ITEM.writeId(packet);
-		packet.writeD(_itemId);
-		packet.writeD(_grpId);
-		packet.writeD(_remainingTime);
-		packet.writeD(_totalTime);
-		return true;
+		ServerPackets.EX_USE_SHARED_GROUP_ITEM.writeId(this);
+		writeInt(_itemId);
+		writeInt(_grpId);
+		writeInt(_remainingTime);
+		writeInt(_totalTime);
 	}
 }

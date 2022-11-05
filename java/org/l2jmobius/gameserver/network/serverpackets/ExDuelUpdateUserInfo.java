@@ -16,14 +16,13 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author KenM
  */
-public class ExDuelUpdateUserInfo implements IClientOutgoingPacket
+public class ExDuelUpdateUserInfo extends ServerPacket
 {
 	private final Player _player;
 	
@@ -33,19 +32,18 @@ public class ExDuelUpdateUserInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_DUEL_UPDATE_USER_INFO.writeId(packet);
-		packet.writeS(_player.getName());
-		packet.writeD(_player.getObjectId());
-		packet.writeD(_player.getClassId().getId());
-		packet.writeD(_player.getLevel());
-		packet.writeD((int) _player.getCurrentHp());
-		packet.writeD(_player.getMaxHp());
-		packet.writeD((int) _player.getCurrentMp());
-		packet.writeD(_player.getMaxMp());
-		packet.writeD((int) _player.getCurrentCp());
-		packet.writeD(_player.getMaxCp());
-		return true;
+		ServerPackets.EX_DUEL_UPDATE_USER_INFO.writeId(this);
+		writeString(_player.getName());
+		writeInt(_player.getObjectId());
+		writeInt(_player.getClassId().getId());
+		writeInt(_player.getLevel());
+		writeInt((int) _player.getCurrentHp());
+		writeInt(_player.getMaxHp());
+		writeInt((int) _player.getCurrentMp());
+		writeInt(_player.getMaxMp());
+		writeInt((int) _player.getCurrentCp());
+		writeInt(_player.getMaxCp());
 	}
 }

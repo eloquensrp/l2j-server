@@ -16,13 +16,12 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Mobius
  */
-public class ExBrBuyProduct implements IClientOutgoingPacket
+public class ExBrBuyProduct extends ServerPacket
 {
 	public static final int RESULT_OK = 1; // ok
 	public static final int RESULT_NOT_ENOUGH_POINTS = -1;
@@ -40,10 +39,9 @@ public class ExBrBuyProduct implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_BR_BUY_PRODUCT.writeId(packet);
-		packet.writeD(_result);
-		return true;
+		ServerPackets.EX_BR_BUY_PRODUCT.writeId(this);
+		writeInt(_result);
 	}
 }

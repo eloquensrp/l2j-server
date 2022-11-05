@@ -22,12 +22,12 @@ import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 
-import org.l2jmobius.commons.network.BaseSendablePacket;
+import org.l2jmobius.commons.network.WritablePacket;
 
 /**
  * @author -Wooden-
  */
-public class BlowFishKey extends BaseSendablePacket
+public class BlowFishKey extends WritablePacket
 {
 	private static final Logger LOGGER = Logger.getLogger(BlowFishKey.class.getName());
 	
@@ -37,24 +37,18 @@ public class BlowFishKey extends BaseSendablePacket
 	 */
 	public BlowFishKey(byte[] blowfishKey, RSAPublicKey publicKey)
 	{
-		writeC(0x00);
+		writeByte(0x00);
 		try
 		{
 			final Cipher rsaCipher = Cipher.getInstance("RSA/ECB/nopadding");
 			rsaCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			final byte[] encrypted = rsaCipher.doFinal(blowfishKey);
-			writeD(encrypted.length);
-			writeB(encrypted);
+			writeInt(encrypted.length);
+			writeBytes(encrypted);
 		}
 		catch (Exception e)
 		{
 			LOGGER.log(Level.SEVERE, "Error While encrypting blowfish key for transmision (Crypt error): " + e.getMessage(), e);
 		}
-	}
-	
-	@Override
-	public byte[] getContent()
-	{
-		return getBytes();
 	}
 }

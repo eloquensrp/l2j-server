@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.commons.threads.ThreadPool;
 import org.l2jmobius.gameserver.data.xml.BuyListData;
 import org.l2jmobius.gameserver.model.WorldObject;
@@ -46,7 +46,7 @@ import org.l2jmobius.gameserver.util.Util;
 /**
  ** @author Gnacik
  */
-public class RequestPreviewItem implements IClientIncomingPacket
+public class RequestPreviewItem implements ClientPacket
 {
 	@SuppressWarnings("unused")
 	private int _unk;
@@ -79,18 +79,18 @@ public class RequestPreviewItem implements IClientIncomingPacket
 	}
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_unk = packet.readD();
-		_listId = packet.readD();
-		_count = packet.readD();
+		_unk = packet.readInt();
+		_listId = packet.readInt();
+		_count = packet.readInt();
 		if (_count < 0)
 		{
 			_count = 0;
 		}
 		if (_count > 100)
 		{
-			return false; // prevent too long lists
+			return; // prevent too long lists
 		}
 		
 		// Create _items table that will contain all ItemID to Wear
@@ -99,9 +99,8 @@ public class RequestPreviewItem implements IClientIncomingPacket
 		// Fill _items table with all ItemID to Wear
 		for (int i = 0; i < _count; i++)
 		{
-			_items[i] = packet.readD();
+			_items[i] = packet.readInt();
 		}
-		return true;
 	}
 	
 	@Override

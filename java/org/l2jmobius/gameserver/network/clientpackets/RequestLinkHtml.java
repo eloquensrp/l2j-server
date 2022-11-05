@@ -17,7 +17,7 @@
 
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.model.actor.Npc;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.network.GameClient;
@@ -29,15 +29,14 @@ import org.l2jmobius.gameserver.util.Util;
  * Lets drink to code!
  * @author zabbix, HorridoJoho
  */
-public class RequestLinkHtml implements IClientIncomingPacket
+public class RequestLinkHtml implements ClientPacket
 {
 	private String _link;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_link = packet.readS();
-		return true;
+		_link = packet.readString();
 	}
 	
 	@Override

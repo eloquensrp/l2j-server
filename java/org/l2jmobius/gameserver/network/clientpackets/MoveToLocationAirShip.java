@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.ai.CtrlIntention;
 import org.l2jmobius.gameserver.instancemanager.AirShipManager;
 import org.l2jmobius.gameserver.model.Location;
@@ -27,7 +27,7 @@ import org.l2jmobius.gameserver.model.actor.instance.AirShip;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.SystemMessageId;
 
-public class MoveToLocationAirShip implements IClientIncomingPacket
+public class MoveToLocationAirShip implements ClientPacket
 {
 	public static final int MIN_Z = -895;
 	public static final int MAX_Z = 6105;
@@ -38,15 +38,14 @@ public class MoveToLocationAirShip implements IClientIncomingPacket
 	private int _param2 = 0;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_command = packet.readD();
-		_param1 = packet.readD();
-		if (packet.getReadableBytes() > 0)
+		_command = packet.readInt();
+		_param1 = packet.readInt();
+		if (packet.getRemainingLength() > 0)
 		{
-			_param2 = packet.readD();
+			_param2 = packet.readInt();
 		}
-		return true;
 	}
 	
 	@Override

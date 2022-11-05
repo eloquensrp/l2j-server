@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.xml.SecondaryAuthData;
 import org.l2jmobius.gameserver.network.GameClient;
 import org.l2jmobius.gameserver.network.serverpackets.Ex2ndPasswordAck;
@@ -26,22 +26,21 @@ import org.l2jmobius.gameserver.security.SecondaryPasswordAuth;
  * (ch)cS{S} c: change pass? S: current password S: new password
  * @author mrTJO
  */
-public class RequestEx2ndPasswordReq implements IClientIncomingPacket
+public class RequestEx2ndPasswordReq implements ClientPacket
 {
 	private int _changePass;
 	private String _password;
 	private String _newPassword;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		_changePass = packet.readC();
-		_password = packet.readS();
+		_changePass = packet.readByte();
+		_password = packet.readString();
 		if (_changePass == 2)
 		{
-			_newPassword = packet.readS();
+			_newPassword = packet.readString();
 		}
-		return true;
 	}
 	
 	@Override

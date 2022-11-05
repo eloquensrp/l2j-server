@@ -16,15 +16,14 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.actor.Player;
 import org.l2jmobius.gameserver.model.item.Henna;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author Zoey76
  */
-public class HennaItemRemoveInfo implements IClientOutgoingPacket
+public class HennaItemRemoveInfo extends ServerPacket
 {
 	private final Player _player;
 	private final Henna _henna;
@@ -36,27 +35,26 @@ public class HennaItemRemoveInfo implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.HENNA_UNEQUIP_INFO.writeId(packet);
-		packet.writeD(_henna.getDyeId()); // symbol Id
-		packet.writeD(_henna.getDyeItemId()); // item id of dye
-		packet.writeQ(_henna.getCancelCount()); // total amount of dye require
-		packet.writeQ(_henna.getCancelFee()); // total amount of Adena require to remove symbol
-		packet.writeD(_henna.isAllowedClass(_player.getClassId()) ? 1 : 0); // able to remove or not
-		packet.writeQ(_player.getAdena());
-		packet.writeD(_player.getINT()); // current INT
-		packet.writeC(_player.getINT() - _henna.getStatINT()); // equip INT
-		packet.writeD(_player.getSTR()); // current STR
-		packet.writeC(_player.getSTR() - _henna.getStatSTR()); // equip STR
-		packet.writeD(_player.getCON()); // current CON
-		packet.writeC(_player.getCON() - _henna.getStatCON()); // equip CON
-		packet.writeD(_player.getMEN()); // current MEN
-		packet.writeC(_player.getMEN() - _henna.getStatMEN()); // equip MEN
-		packet.writeD(_player.getDEX()); // current DEX
-		packet.writeC(_player.getDEX() - _henna.getStatDEX()); // equip DEX
-		packet.writeD(_player.getWIT()); // current WIT
-		packet.writeC(_player.getWIT() - _henna.getStatWIT()); // equip WIT
-		return true;
+		ServerPackets.HENNA_UNEQUIP_INFO.writeId(this);
+		writeInt(_henna.getDyeId()); // symbol Id
+		writeInt(_henna.getDyeItemId()); // item id of dye
+		writeLong(_henna.getCancelCount()); // total amount of dye require
+		writeLong(_henna.getCancelFee()); // total amount of Adena require to remove symbol
+		writeInt(_henna.isAllowedClass(_player.getClassId())); // able to remove or not
+		writeLong(_player.getAdena());
+		writeInt(_player.getINT()); // current INT
+		writeByte(_player.getINT() - _henna.getStatINT()); // equip INT
+		writeInt(_player.getSTR()); // current STR
+		writeByte(_player.getSTR() - _henna.getStatSTR()); // equip STR
+		writeInt(_player.getCON()); // current CON
+		writeByte(_player.getCON() - _henna.getStatCON()); // equip CON
+		writeInt(_player.getMEN()); // current MEN
+		writeByte(_player.getMEN() - _henna.getStatMEN()); // equip MEN
+		writeInt(_player.getDEX()); // current DEX
+		writeByte(_player.getDEX() - _henna.getStatDEX()); // equip DEX
+		writeInt(_player.getWIT()); // current WIT
+		writeByte(_player.getWIT() - _henna.getStatWIT()); // equip WIT
 	}
 }

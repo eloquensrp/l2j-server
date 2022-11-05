@@ -16,14 +16,13 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.enums.PartyDistributionType;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
 /**
  * @author JIV
  */
-public class ExSetPartyLooting implements IClientOutgoingPacket
+public class ExSetPartyLooting extends ServerPacket
 {
 	private final int _result;
 	private final PartyDistributionType _partyDistributionType;
@@ -35,11 +34,10 @@ public class ExSetPartyLooting implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.EX_SET_PARTY_LOOTING.writeId(packet);
-		packet.writeD(_result);
-		packet.writeD(_partyDistributionType.getId());
-		return true;
+		ServerPackets.EX_SET_PARTY_LOOTING.writeId(this);
+		writeInt(_result);
+		writeInt(_partyDistributionType.getId());
 	}
 }

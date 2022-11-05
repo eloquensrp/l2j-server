@@ -16,11 +16,10 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import org.l2jmobius.commons.network.PacketWriter;
 import org.l2jmobius.gameserver.model.clan.Clan.RankPrivs;
-import org.l2jmobius.gameserver.network.OutgoingPackets;
+import org.l2jmobius.gameserver.network.ServerPackets;
 
-public class PledgePowerGradeList implements IClientOutgoingPacket
+public class PledgePowerGradeList extends ServerPacket
 {
 	private final RankPrivs[] _privs;
 	
@@ -30,15 +29,14 @@ public class PledgePowerGradeList implements IClientOutgoingPacket
 	}
 	
 	@Override
-	public boolean write(PacketWriter packet)
+	public void write()
 	{
-		OutgoingPackets.PLEDGE_POWER_GRADE_LIST.writeId(packet);
-		packet.writeD(_privs.length);
+		ServerPackets.PLEDGE_POWER_GRADE_LIST.writeId(this);
+		writeInt(_privs.length);
 		for (RankPrivs temp : _privs)
 		{
-			packet.writeD(temp.getRank());
-			packet.writeD(temp.getParty());
+			writeInt(temp.getRank());
+			writeInt(temp.getParty());
 		}
-		return true;
 	}
 }

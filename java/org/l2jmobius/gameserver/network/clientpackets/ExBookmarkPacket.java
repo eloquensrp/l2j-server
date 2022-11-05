@@ -16,22 +16,20 @@
  */
 package org.l2jmobius.gameserver.network.clientpackets;
 
-import org.l2jmobius.commons.network.IIncomingPacket;
-import org.l2jmobius.commons.network.PacketReader;
+import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.network.GameClient;
 
 /**
  * @author Sdw
  */
-public class ExBookmarkPacket implements IClientIncomingPacket
+public class ExBookmarkPacket implements ClientPacket
 {
-	private IIncomingPacket<GameClient> _exBookmarkPacket;
+	private ClientPacket _exBookmarkPacket;
 	
 	@Override
-	public boolean read(GameClient client, PacketReader packet)
+	public void read(ReadablePacket packet)
 	{
-		final int subId = packet.readD();
-		
+		final int subId = packet.readInt();
 		switch (subId)
 		{
 			case 0:
@@ -65,12 +63,19 @@ public class ExBookmarkPacket implements IClientIncomingPacket
 				break;
 			}
 		}
-		return (_exBookmarkPacket != null) && _exBookmarkPacket.read(client, packet);
+		
+		if (_exBookmarkPacket != null)
+		{
+			_exBookmarkPacket.read(packet);
+		}
 	}
 	
 	@Override
-	public void run(GameClient client) throws Exception
+	public void run(GameClient client)
 	{
-		_exBookmarkPacket.run(client);
+		if (_exBookmarkPacket != null)
+		{
+			_exBookmarkPacket.run(client);
+		}
 	}
 }
