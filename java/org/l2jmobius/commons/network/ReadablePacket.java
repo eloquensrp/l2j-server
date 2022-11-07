@@ -34,7 +34,7 @@ public class ReadablePacket
 		try
 		{
 			int charId;
-			while ((charId = readShort() & 0x00ff) != 0)
+			while ((charId = readShort()) != 0)
 			{
 				result.append((char) charId);
 			}
