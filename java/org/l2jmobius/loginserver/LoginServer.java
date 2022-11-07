@@ -33,6 +33,7 @@ import org.l2jmobius.commons.database.DatabaseBackup;
 import org.l2jmobius.commons.database.DatabaseFactory;
 import org.l2jmobius.commons.enums.ServerMode;
 import org.l2jmobius.commons.network.NetServer;
+import org.l2jmobius.commons.threads.ThreadPool;
 import org.l2jmobius.commons.util.PropertiesParser;
 import org.l2jmobius.gameserver.network.loginserverpackets.game.ServerStatus;
 import org.l2jmobius.loginserver.network.LoginClient;
@@ -94,6 +95,9 @@ public class LoginServer
 		
 		// Prepare Database
 		DatabaseFactory.init();
+		
+		// Initialize ThreadPool.
+		ThreadPool.init();
 		
 		try
 		{

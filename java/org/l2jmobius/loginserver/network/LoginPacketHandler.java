@@ -18,10 +18,11 @@ package org.l2jmobius.loginserver.network;
 
 import java.util.logging.Logger;
 
+import org.l2jmobius.Config;
 import org.l2jmobius.commons.network.PacketHandlerInterface;
 import org.l2jmobius.commons.network.ReadablePacket;
+import org.l2jmobius.commons.threads.ThreadPool;
 import org.l2jmobius.commons.util.CommonUtil;
-import org.l2jmobius.gameserver.network.PacketLogger;
 import org.l2jmobius.loginserver.network.clientpackets.LoginClientPacket;
 
 /**
@@ -42,8 +43,8 @@ public class LoginPacketHandler implements PacketHandlerInterface<LoginClient>
 		}
 		catch (Exception e)
 		{
-			PacketLogger.warning("LoginPacketHandler: Problem receiving packet id from " + client);
-			PacketLogger.warning(CommonUtil.getStackTrace(e));
+			LOGGER.warning("LoginPacketHandler: Problem receiving packet id from " + client);
+			LOGGER.warning(CommonUtil.getStackTrace(e));
 			client.disconnect();
 			return;
 		}
@@ -75,10 +76,23 @@ public class LoginPacketHandler implements PacketHandlerInterface<LoginClient>
 		}
 		
 		// Continue on another thread.
-		final Thread thread = new Thread(new ExecuteTask(client, packet, newPacket, packetId), getClass().getName());
-		thread.setPriority(Thread.NORM_PRIORITY);
-		thread.setDaemon(false);
-		thread.start();
+		if (Config.THREADS_FOR_CLIENT_PACKETS)
+		{
+			ThreadPool.execute(new ExecuteTask(client, packet, newPacket, packetId));
+		}
+		else // Wait for execution.
+		{
+			try
+			{
+				newPacket.read(packet);
+				newPacket.run(client);
+			}
+			catch (Exception e)
+			{
+				LOGGER.warning("LoginPacketHandler: Problem with " + client + " [Packet: 0x" + Integer.toHexString(packetId).toUpperCase() + "]");
+				LOGGER.warning(CommonUtil.getStackTrace(e));
+			}
+		}
 	}
 	
 	private class ExecuteTask implements Runnable
