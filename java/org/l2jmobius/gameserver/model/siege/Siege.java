@@ -82,6 +82,34 @@ public class Siege implements Siegable
 	
 	private int _controlTowerCount;
 	
+	// must support Concurrent Modifications
+	private final Collection<SiegeClan> _attackerClans = ConcurrentHashMap.newKeySet();
+	private final Collection<SiegeClan> _defenderClans = ConcurrentHashMap.newKeySet();
+	private final Collection<SiegeClan> _defenderWaitingClans = ConcurrentHashMap.newKeySet();
+	
+	// Castle setting
+	private final List<ControlTower> _controlTowers = new ArrayList<>();
+	private final List<FlameTower> _flameTowers = new ArrayList<>();
+	private final Castle _castle;
+	boolean _isInProgress = false;
+	private boolean _isNormalSide = true; // true = Atk is Atk, false = Atk is Def
+	protected boolean _isRegistrationOver = false;
+	protected Calendar _siegeEndDate;
+	private SiegeGuardManager _siegeGuardManager;
+	protected ScheduledFuture<?> _scheduledStartSiegeTask = null;
+	protected int _firstOwnerClanId = -1;
+	
+	public Siege(Castle castle)
+	{
+		_castle = castle;
+		_siegeGuardManager = new SiegeGuardManager(getCastle());
+		final SiegeScheduleDate schedule = SiegeScheduleData.getInstance().getScheduleDateForCastleId(_castle.getResidenceId());
+		if ((schedule != null) && schedule.siegeEnabled())
+		{
+			startAutoTask();
+		}
+	}
+	
 	public class ScheduleEndSiegeTask implements Runnable
 	{
 		private final Castle _castleInst;
@@ -221,30 +249,6 @@ public class Siege implements Siegable
 				LOGGER.log(Level.SEVERE, "", e);
 			}
 		}
-	}
-	
-	// must support Concurrent Modifications
-	private final Collection<SiegeClan> _attackerClans = ConcurrentHashMap.newKeySet();
-	private final Collection<SiegeClan> _defenderClans = ConcurrentHashMap.newKeySet();
-	private final Collection<SiegeClan> _defenderWaitingClans = ConcurrentHashMap.newKeySet();
-	
-	// Castle setting
-	private final List<ControlTower> _controlTowers = new ArrayList<>();
-	private final List<FlameTower> _flameTowers = new ArrayList<>();
-	private final Castle _castle;
-	boolean _isInProgress = false;
-	private boolean _isNormalSide = true; // true = Atk is Atk, false = Atk is Def
-	protected boolean _isRegistrationOver = false;
-	protected Calendar _siegeEndDate;
-	private SiegeGuardManager _siegeGuardManager;
-	protected ScheduledFuture<?> _scheduledStartSiegeTask = null;
-	protected int _firstOwnerClanId = -1;
-	
-	public Siege(Castle castle)
-	{
-		_castle = castle;
-		_siegeGuardManager = new SiegeGuardManager(getCastle());
-		startAutoTask();
 	}
 	
 	@Override
