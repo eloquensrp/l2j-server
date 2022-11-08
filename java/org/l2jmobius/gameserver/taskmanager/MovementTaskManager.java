@@ -18,8 +18,10 @@ package org.l2jmobius.gameserver.taskmanager;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 import org.l2jmobius.commons.threads.ThreadPool;
+import org.l2jmobius.commons.util.CommonUtil;
 import org.l2jmobius.gameserver.model.actor.Creature;
 
 /**
@@ -28,6 +30,8 @@ import org.l2jmobius.gameserver.model.actor.Creature;
  */
 public class MovementTaskManager
 {
+	private static final Logger LOGGER = Logger.getLogger(MovementTaskManager.class.getName());
+	
 	private static final Set<Set<Creature>> POOLS = ConcurrentHashMap.newKeySet();
 	private static final int POOL_SIZE = 1000;
 	private static final int TASK_DELAY = 100;
@@ -48,7 +52,22 @@ public class MovementTaskManager
 		@Override
 		public void run()
 		{
-			_creatures.removeIf(Creature::updatePosition);
+			for (Creature creature : _creatures)
+			{
+				try
+				{
+					if (creature.updatePosition())
+					{
+						_creatures.remove(creature);
+					}
+				}
+				catch (Exception e)
+				{
+					_creatures.remove(creature);
+					LOGGER.warning("MovementTaskManager: Problem updating position of " + creature);
+					LOGGER.warning(CommonUtil.getStackTrace(e));
+				}
+			}
 		}
 	}
 	
