@@ -2033,7 +2033,7 @@
 						<player behind="false" />
 					</and>
 				</mul>
-				<mul stat="critDmgPos" val="#ench1cAtk"> <!-- Critical Damage from back + enchant % -->
+				<mul stat="critDmgPos" val="#ench1cAtk"> <!-- Critical Damage from back + enchant% -->
 					<player behind="true" />
 				</mul>
 			</effect>
@@ -2043,7 +2043,7 @@
 				<mul stat="critDmgPos" val="0.7"> <!-- Critical Damage from front -30% -->
 					<player front="true" />
 				</mul>
-				<mul stat="critDmgPos" val="#ench2cAtk"> <!-- Critical Damage from side + enchant % -->
+				<mul stat="critDmgPos" val="#ench2cAtk"> <!-- Critical Damage from side + enchant% -->
 					<and>
 						<player front="false" />
 						<player behind="false" />
