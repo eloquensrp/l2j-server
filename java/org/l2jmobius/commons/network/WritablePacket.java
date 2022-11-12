@@ -70,11 +70,7 @@ public abstract class WritablePacket
 	{
 		if (text != null)
 		{
-			final byte[] bytes = text.getBytes(StandardCharsets.UTF_16LE);
-			for (int i = 0; i < bytes.length; i++)
-			{
-				writeByte(bytes[i]);
-			}
+			writeBytes(text.getBytes(StandardCharsets.UTF_16LE));
 		}
 		writeShort(0);
 	}
