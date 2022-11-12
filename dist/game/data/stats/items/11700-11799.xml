@@ -55,7 +55,7 @@
 		</for>
 	</item>
 	<item id="11702" type="Weapon" name="Common Item - Epee">
-		<!-- Kamael Exclusive Weapon: Shadow weapon - Sword of Revolution conversion. ?p?e with limited ability enhancement. Enchantment, special abilities and augmentation are not possible. -->
+		<!-- Kamael Exclusive Weapon: Shadow weapon - Sword of Revolution conversion. Epee with limited ability enhancement. Enchantment, special abilities and augmentation are not possible. -->
 		<set name="icon" val="icon.weapon_rapier_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="RAPIER" />
@@ -608,7 +608,7 @@
 		</for>
 	</item>
 	<item id="11724" type="Weapon" name="Common Item - Grand Epee">
-		<!-- Kamael Exclusive Weapon: Shadow weapon - Elven Long Sword conversion. Grand ?p?e with limited ability enhancement. Enchantment, special abilities and augmentation are not possible. -->
+		<!-- Kamael Exclusive Weapon: Shadow weapon - Elven Long Sword conversion. Grand Epee with limited ability enhancement. Enchantment, special abilities and augmentation are not possible. -->
 		<set name="icon" val="icon.weapon_rapier_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="RAPIER" />

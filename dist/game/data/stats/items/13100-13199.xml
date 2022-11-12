@@ -1502,7 +1502,7 @@
 		</for>
 	</item>
 	<item id="13175" type="Weapon" name="Player Commendation - Grand Epee - Player Commendation Weapon">
-		<!-- Kamael exclusive weapon. Limited-time item containing the power of a Grand ?p?e. When enchanted to 4 or more, during a critical attack, party members including yourself will receive at a fixed rate increased attack power, magic power, and healing capacity, as well as decreased MP consumption per skill. Cannot be exchanged, dropped, or crystallized. Cannot be granted additional functions. -->
+		<!-- Kamael exclusive weapon. Limited-time item containing the power of a Grand Epee. When enchanted to 4 or more, during a critical attack, party members including yourself will receive at a fixed rate increased attack power, magic power, and healing capacity, as well as decreased MP consumption per skill. Cannot be exchanged, dropped, or crystallized. Cannot be granted additional functions. -->
 		<set name="icon" val="icon.weapon_rapier_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="RAPIER" />

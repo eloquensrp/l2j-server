@@ -985,7 +985,7 @@
 		<set name="item_skill" val="2277-6" /> <!-- Event Gift Box -->
 	</item>
 	<item id="8576" type="Weapon" name="Apprentice's Staff (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_apprentices_staff_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="BLUNT" />
@@ -1011,7 +1011,7 @@
 		</for>
 	</item>
 	<item id="8577" type="Weapon" name="Bone Club (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_club_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="BLUNT" />
@@ -1036,7 +1036,7 @@
 		</for>
 	</item>
 	<item id="8578" type="Weapon" name="Shining Knife (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_shining_knife_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="DAGGER" />
@@ -1061,7 +1061,7 @@
 		</for>
 	</item>
 	<item id="8579" type="Weapon" name="Cestus (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_vipers_canine_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="DUALFIST" />
@@ -1086,7 +1086,7 @@
 		</for>
 	</item>
 	<item id="8580" type="Weapon" name="Forest Bow (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_short_bow_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="BOW" />
@@ -1113,7 +1113,7 @@
 		</for>
 	</item>
 	<item id="8581" type="Weapon" name="Long Sword (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_long_sword_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="SWORD" />
@@ -1137,7 +1137,7 @@
 		</for>
 	</item>
 	<item id="8582" type="Weapon" name="Mace of Prayer (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_mace_of_prayer_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="BLUNT" />
@@ -1164,7 +1164,7 @@
 		</for>
 	</item>
 	<item id="8583" type="Weapon" name="Dark Elven Bow (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_dark_elven_bow_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="BOW" />
@@ -1192,7 +1192,7 @@
 		</for>
 	</item>
 	<item id="8584" type="Weapon" name="Long Bow (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_strengthening_bow_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="BOW" />
@@ -1220,7 +1220,7 @@
 		</for>
 	</item>
 	<item id="8585" type="Weapon" name="Staff of Mana (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_staff_of_mana_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="BLUNT" />
@@ -1247,7 +1247,7 @@
 		</for>
 	</item>
 	<item id="8586" type="Weapon" name="Bastard Sword (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_bastard_sword_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="SWORD" />
@@ -1272,7 +1272,7 @@
 		</for>
 	</item>
 	<item id="8587" type="Weapon" name="Divine Tomb (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_divine_tome_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="ETC" />
@@ -1298,7 +1298,7 @@
 		</for>
 	</item>
 	<item id="8588" type="Weapon" name="Single-Edged Jamadhr (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_baghnakh_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="DUALFIST" />
@@ -1324,7 +1324,7 @@
 		</for>
 	</item>
 	<item id="8589" type="Weapon" name="Tomahawk (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_tomahawk_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="BLUNT" />
@@ -1350,7 +1350,7 @@
 		</for>
 	</item>
 	<item id="8590" type="Weapon" name="Poniard Dagger (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_dirk_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="DAGGER" />
@@ -1376,7 +1376,7 @@
 		</for>
 	</item>
 	<item id="8591" type="Weapon" name="Pike (Event)">
-		<!-- For the PC Caf? coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
+		<!-- For the PC Cafe coupon event. This item cannot be exchanged, dropped, crystallized, or enchanted. If one's PK count is 1 or more, it cannot be used. -->
 		<set name="icon" val="icon.weapon_pike_i00" />
 		<set name="default_action" val="EQUIP" />
 		<set name="weapon_type" val="POLE" />
@@ -1403,7 +1403,7 @@
 		</for>
 	</item>
 	<item id="8592" type="EtcItem" name="Weapon Exchange Coupon - No Grade">
-		<!-- An item that is used for the PC Caf? coupon event. An exchange coupon that can be used to exchange for a no grade weapon at Adventurers' Guide. -->
+		<!-- An item that is used for the PC Cafe coupon event. An exchange coupon that can be used to exchange for a no grade weapon at Adventurers' Guide. -->
 		<set name="icon" val="icon.etc_lottery_card_i00" />
 		<set name="etcitem_type" val="COUPON" />
 		<set name="material" val="PAPER" />
@@ -1413,7 +1413,7 @@
 		<set name="is_sellable" val="false" />
 	</item>
 	<item id="8593" type="EtcItem" name="Weapon Exchange Coupon (C-Grade)">
-		<!-- An item that is used for the PC Caf? coupon event. An exchange coupon that can be used to exchange for a D grade weapon at Adventurers' Guide. -->
+		<!-- An item that is used for the PC Cafe coupon event. An exchange coupon that can be used to exchange for a D grade weapon at Adventurers' Guide. -->
 		<set name="icon" val="icon.etc_lottery_card_i00" />
 		<set name="etcitem_type" val="COUPON" />
 		<set name="material" val="PAPER" />
