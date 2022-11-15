@@ -25,12 +25,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import org.l2jmobius.commons.util.IXmlReader;
+import org.l2jmobius.gameserver.data.ItemTable;
+import org.l2jmobius.gameserver.model.item.ItemTemplate;
 import org.l2jmobius.gameserver.model.item.instance.Item;
 import org.l2jmobius.gameserver.model.options.EnchantOptions;
 import org.l2jmobius.gameserver.util.Util;
 
 /**
- * @author UnAfraid
+ * @author UnAfraid, Mobius
  */
 public class EnchantItemOptionsData implements IXmlReader
 {
@@ -56,28 +58,46 @@ public class EnchantItemOptionsData implements IXmlReader
 		{
 			if ("list".equalsIgnoreCase(n.getNodeName()))
 			{
-				for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling())
+				ITEM: for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling())
 				{
 					if ("item".equalsIgnoreCase(d.getNodeName()))
 					{
 						final int itemId = parseInteger(d.getAttributes(), "id");
-						if (!_data.containsKey(itemId))
+						final ItemTemplate template = ItemTable.getInstance().getTemplate(itemId);
+						if (template == null)
 						{
-							_data.put(itemId, new HashMap<>());
+							LOGGER.warning(getClass().getSimpleName() + ": Could not find item template for id " + itemId);
+							continue ITEM;
 						}
 						for (Node cd = d.getFirstChild(); cd != null; cd = cd.getNextSibling())
 						{
 							if ("options".equalsIgnoreCase(cd.getNodeName()))
 							{
 								final EnchantOptions op = new EnchantOptions(parseInteger(cd.getAttributes(), "level"));
-								_data.get(itemId).put(op.getLevel(), op);
-								
 								for (byte i = 0; i < 3; i++)
 								{
 									final Node att = cd.getAttributes().getNamedItem("option" + (i + 1));
 									if ((att != null) && Util.isDigit(att.getNodeValue()))
 									{
-										op.setOption(i, parseInteger(att));
+										final int id = parseInteger(att);
+										if (OptionData.getInstance().getOptions(id) == null)
+										{
+											LOGGER.warning(getClass().getSimpleName() + ": Could not find option " + id + " for item " + template);
+											continue ITEM;
+										}
+										
+										Map<Integer, EnchantOptions> data = _data.get(itemId);
+										if (data == null)
+										{
+											data = new HashMap<>();
+											_data.put(itemId, data);
+										}
+										if (!data.containsKey(op.getLevel()))
+										{
+											data.put(op.getLevel(), op);
+										}
+										
+										op.setOption(i, id);
 									}
 								}
 								counter++;
