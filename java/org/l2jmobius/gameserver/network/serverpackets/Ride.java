@@ -42,7 +42,7 @@ public class Ride extends ServerPacket
 	{
 		ServerPackets.RIDE.writeId(this);
 		writeInt(_objectId);
-		writeByte(_mounted);
+		writeInt(_mounted);
 		writeInt(_rideType);
 		writeInt(_rideNpcId);
 		writeInt(_loc.getX());
