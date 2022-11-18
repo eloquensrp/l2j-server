@@ -8338,28 +8338,33 @@ public class Player extends Playable
 			
 			// Get Player
 			final Player attackerPlayer = attacker.getActingPlayer();
-			if (_clan != null)
+			final Clan clan = getClan();
+			final Clan attackerClan = attackerPlayer.getClan();
+			if ((clan != null) && (attackerClan != null))
 			{
-				final Siege siege = SiegeManager.getInstance().getSiege(getX(), getY(), getZ());
-				if (siege != null)
+				if (clan != attackerClan)
 				{
-					// Check if a siege is in progress and if attacker and the Player aren't in the Defender clan.
-					if (siege.checkIsDefender(attackerPlayer.getClan()) && siege.checkIsDefender(getClan()))
+					final Siege siege = SiegeManager.getInstance().getSiege(getX(), getY(), getZ());
+					if (siege != null)
 					{
-						return false;
-					}
-					
-					// Check if a siege is in progress and if attacker and the Player aren't in the Attacker clan.
-					if (siege.checkIsAttacker(attackerPlayer.getClan()) && siege.checkIsAttacker(getClan()))
-					{
-						// If first mid victory is achieved, attackers can attack attackers.
-						final Castle castle = CastleManager.getInstance().getCastleById(_siegeSide);
-						return (castle != null) && castle.isFirstMidVictory();
+						// Check if a siege is in progress and if attacker and the Player aren't in the Defender clan.
+						if (siege.checkIsDefender(attackerClan) && siege.checkIsDefender(clan))
+						{
+							return false;
+						}
+						
+						// Check if a siege is in progress and if attacker and the Player aren't in the Attacker clan.
+						if (siege.checkIsAttacker(attackerClan) && siege.checkIsAttacker(clan))
+						{
+							// If first mid victory is achieved, attackers can attack attackers.
+							final Castle castle = CastleManager.getInstance().getCastleById(_siegeSide);
+							return (castle != null) && castle.isFirstMidVictory();
+						}
 					}
 				}
 				
 				// Check if clan is at war
-				if ((getClan() != null) && (attackerPlayer.getClan() != null) && getClan().isAtWarWith(attackerPlayer.getClanId()) && attackerPlayer.getClan().isAtWarWith(getClanId()) && (getWantsPeace() == 0) && (attackerPlayer.getWantsPeace() == 0) && !isAcademyMember())
+				if ((getWantsPeace() == 0) && (attackerPlayer.getWantsPeace() == 0) && !isAcademyMember() && clan.isAtWarWith(attackerPlayer.getClanId()) && attackerClan.isAtWarWith(getClanId()))
 				{
 					return true;
 				}
@@ -8373,7 +8378,7 @@ public class Player extends Playable
 			}
 			
 			// Check if the attacker is not in the same clan
-			if ((_clan != null) && _clan.isMember(attacker.getObjectId()))
+			if ((clan != null) && clan.isMember(attacker.getObjectId()))
 			{
 				return false;
 			}
@@ -8385,7 +8390,7 @@ public class Player extends Playable
 			}
 			
 			// Now check again if the Player is in pvp zone, but this time at siege PvP zone, applying clan/ally checks
-			if ((isInsideZone(ZoneId.PVP) && attackerPlayer.isInsideZone(ZoneId.PVP)) && (isInsideZone(ZoneId.SIEGE) && attackerPlayer.isInsideZone(ZoneId.SIEGE)))
+			if (isInsideZone(ZoneId.PVP) && attackerPlayer.isInsideZone(ZoneId.PVP) && isInsideZone(ZoneId.SIEGE) && attackerPlayer.isInsideZone(ZoneId.SIEGE))
 			{
 				return true;
 			}
