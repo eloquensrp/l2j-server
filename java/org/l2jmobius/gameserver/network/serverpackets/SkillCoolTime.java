@@ -45,7 +45,6 @@ public class SkillCoolTime extends ServerPacket
 	@Override
 	public void write()
 	{
-		final long currentTime = System.currentTimeMillis();
 		ServerPackets.SKILL_COOL_TIME.writeId(this);
 		writeInt(_reuseTimestamps.size());
 		for (TimeStamp ts : _reuseTimestamps)
@@ -53,7 +52,7 @@ public class SkillCoolTime extends ServerPacket
 			writeInt(ts.getSkillId());
 			writeInt(ts.getSkillLevel());
 			writeInt((int) ts.getReuse() / 1000);
-			writeInt((int) Math.max(ts.getStamp() - currentTime, 0) / 1000);
+			writeInt((int) ts.getRemaining() / 1000);
 		}
 	}
 }
