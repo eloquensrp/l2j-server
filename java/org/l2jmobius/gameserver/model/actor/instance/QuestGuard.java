@@ -74,7 +74,7 @@ public class QuestGuard extends Guard
 	}
 	
 	@Override
-	public void addDamageHate(Creature attacker, int damage, int aggro)
+	public void addDamageHate(Creature attacker, long damage, long aggro)
 	{
 		if (!_isPassive && !attacker.isPlayer())
 		{

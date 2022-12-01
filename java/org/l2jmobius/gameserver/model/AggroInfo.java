@@ -24,8 +24,8 @@ import org.l2jmobius.gameserver.model.actor.Creature;
 public class AggroInfo
 {
 	private final Creature _attacker;
-	private int _hate = 0;
-	private int _damage = 0;
+	private long _hate = 0;
+	private long _damage = 0;
 	
 	public AggroInfo(Creature pAttacker)
 	{
@@ -37,12 +37,12 @@ public class AggroInfo
 		return _attacker;
 	}
 	
-	public int getHate()
+	public long getHate()
 	{
 		return _hate;
 	}
 	
-	public int checkHate(Creature owner)
+	public long checkHate(Creature owner)
 	{
 		if (_attacker.isAlikeDead() || !_attacker.isSpawned() || !owner.isInSurroundingRegion(_attacker))
 		{
@@ -51,9 +51,9 @@ public class AggroInfo
 		return _hate;
 	}
 	
-	public void addHate(int value)
+	public void addHate(long value)
 	{
-		_hate = (int) Math.min(_hate + (long) value, 999999999);
+		_hate = Math.min(_hate + value, Long.MAX_VALUE);
 	}
 	
 	public void stopHate()
@@ -61,14 +61,14 @@ public class AggroInfo
 		_hate = 0;
 	}
 	
-	public int getDamage()
+	public long getDamage()
 	{
 		return _damage;
 	}
 	
-	public void addDamage(int value)
+	public void addDamage(long value)
 	{
-		_damage = (int) Math.min(_damage + (long) value, 999999999);
+		_damage = Math.min(_damage + value, Long.MAX_VALUE);
 	}
 	
 	@Override

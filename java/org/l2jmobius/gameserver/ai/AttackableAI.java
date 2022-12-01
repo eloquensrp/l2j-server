@@ -477,7 +477,7 @@ public class AttackableAI extends CreatureAI
 								|| (Config.FAKE_PLAYER_AGGRO_MONSTERS && t.isMonster() && !t.isFakePlayer()) //
 								|| (Config.FAKE_PLAYER_AGGRO_PLAYERS && t.isPlayer()))
 							{
-								final int hating = npc.getHating(t);
+								final long hating = npc.getHating(t);
 								final double distance = npc.calculateDistance2D(t);
 								if ((hating == 0) && (closestDistance > distance))
 								{
@@ -547,7 +547,7 @@ public class AttackableAI extends CreatureAI
 					{
 						if (!npc.isFakePlayer() || (npc.isFakePlayer() && Config.FAKE_PLAYER_AGGRO_FPC))
 						{
-							final int hating = npc.getHating(target);
+							final long hating = npc.getHating(target);
 							if (hating == 0)
 							{
 								npc.addDamageHate(target, 0, 0);
@@ -578,7 +578,7 @@ public class AttackableAI extends CreatureAI
 			if ((hated != null) && !npc.isCoreAIDisabled())
 			{
 				// Get the hate level of the Attackable against this Creature target contained in _aggroList
-				final int aggro = npc.getHating(hated);
+				final long aggro = npc.getHating(hated);
 				if ((aggro + _globalAggro) > 0)
 				{
 					// Set the Creature movement type to run and send Server->Client packet ChangeMoveType to all others Player

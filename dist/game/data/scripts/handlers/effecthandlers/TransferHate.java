@@ -61,7 +61,7 @@ public class TransferHate extends AbstractEffect
 				return;
 			}
 			
-			final int hate = hater.getHating(info.getEffector());
+			final long hate = hater.getHating(info.getEffector());
 			if (hate <= 0)
 			{
 				return;

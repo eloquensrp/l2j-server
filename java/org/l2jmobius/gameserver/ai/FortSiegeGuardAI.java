@@ -284,7 +284,7 @@ public class FortSiegeGuardAI extends CreatureAI implements Runnable
 			if (hated != null)
 			{
 				// Get the hate level of the Attackable against this Creature target contained in _aggroList
-				final int aggro = npc.getHating(hated);
+				final long aggro = npc.getHating(hated);
 				if ((aggro + _globalAggro) > 0)
 				{
 					// Set the Creature movement type to run and send Server->Client packet ChangeMoveType to all others Player
