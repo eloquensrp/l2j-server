@@ -393,21 +393,12 @@ public class LoginServerThread extends Thread
 	 */
 	public void addWaitingClientAndSendRequest(String accountName, GameClient client, SessionKey key)
 	{
-		final WaitingClient wc = new WaitingClient(accountName, client, key);
 		synchronized (_waitingClients)
 		{
-			_waitingClients.add(wc);
+			_waitingClients.add(new WaitingClient(accountName, client, key));
 		}
 		
-		final PlayerAuthRequest par = new PlayerAuthRequest(accountName, key);
-		try
-		{
-			sendPacket(par);
-		}
-		catch (IOException e)
-		{
-			LOGGER.warning(getClass().getSimpleName() + ": Error while sending player auth request.");
-		}
+		sendPacket(new PlayerAuthRequest(accountName, key));
 	}
 	
 	/**
@@ -444,19 +435,9 @@ public class LoginServerThread extends Thread
 		{
 			return;
 		}
-		final PlayerLogout pl = new PlayerLogout(account);
-		try
-		{
-			sendPacket(pl);
-		}
-		catch (IOException e)
-		{
-			LOGGER.warning(getClass().getSimpleName() + ": Error while sending logout packet to login.");
-		}
-		finally
-		{
-			_accountsInGameServer.remove(account);
-		}
+		
+		_accountsInGameServer.remove(account);
+		sendPacket(new PlayerLogout(account));
 	}
 	
 	/**
@@ -477,15 +458,7 @@ public class LoginServerThread extends Thread
 	 */
 	public void sendAccessLevel(String account, int level)
 	{
-		final ChangeAccessLevel cal = new ChangeAccessLevel(account, level);
-		try
-		{
-			sendPacket(cal);
-		}
-		catch (IOException e)
-		{
-			// Ignore.
-		}
+		sendPacket(new ChangeAccessLevel(account, level));
 	}
 	
 	/**
@@ -495,15 +468,7 @@ public class LoginServerThread extends Thread
 	 */
 	public void sendClientTracert(String account, String[] address)
 	{
-		final PlayerTracert ptc = new PlayerTracert(account, address[0], address[1], address[2], address[3], address[4]);
-		try
-		{
-			sendPacket(ptc);
-		}
-		catch (IOException e)
-		{
-			// Ignore.
-		}
+		sendPacket(new PlayerTracert(account, address[0], address[1], address[2], address[3], address[4]));
 	}
 	
 	/**
@@ -514,15 +479,7 @@ public class LoginServerThread extends Thread
 	 */
 	public void sendMail(String account, String mailId, String... args)
 	{
-		final SendMail sem = new SendMail(account, mailId, args);
-		try
-		{
-			sendPacket(sem);
-		}
-		catch (IOException e)
-		{
-			// Ignore.
-		}
+		sendPacket(new SendMail(account, mailId, args));
 	}
 	
 	/**
@@ -533,15 +490,7 @@ public class LoginServerThread extends Thread
 	 */
 	public void sendTempBan(String account, String ip, long time)
 	{
-		final TempBan tbn = new TempBan(account, ip, time);
-		try
-		{
-			sendPacket(tbn);
-		}
-		catch (IOException e)
-		{
-			// Ignore.
-		}
+		sendPacket(new TempBan(account, ip, time));
 	}
 	
 	/**
@@ -610,53 +559,53 @@ public class LoginServerThread extends Thread
 			LOGGER.log(Level.WARNING, getClass().getSimpleName() + ": Exception: getCharsOnServer: " + e.getMessage(), e);
 		}
 		
-		final ReplyCharacters rec = new ReplyCharacters(account, chars, charToDel);
-		try
-		{
-			sendPacket(rec);
-		}
-		catch (IOException e)
-		{
-			// Ignore.
-		}
+		sendPacket(new ReplyCharacters(account, chars, charToDel));
 	}
 	
 	/**
 	 * Send packet.
 	 * @param packet the sendable packet
-	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void sendPacket(WritablePacket packet) throws IOException
+	private void sendPacket(WritablePacket packet)
 	{
 		if (_blowfish == null)
 		{
 			return;
 		}
 		
-		packet.write(); // write initial data
-		packet.writeInt(0); // reserved for checksum
-		int size = packet.getLength() - 2; // size without header
-		final int padding = size % 8; // padding of 8 bytes
-		if (padding != 0)
+		try
 		{
-			for (int i = padding; i < 8; i++)
+			packet.write(); // write initial data
+			packet.writeInt(0); // reserved for checksum
+			int size = packet.getLength() - 2; // size without header
+			final int padding = size % 8; // padding of 8 bytes
+			if (padding != 0)
 			{
-				packet.writeByte(0);
+				for (int i = padding; i < 8; i++)
+				{
+					packet.writeByte(0);
+				}
+			}
+			
+			// size header + encrypted[data + checksum (int) + padding]
+			final byte[] data = packet.getSendableBytes();
+			
+			// encrypt
+			size = data.length - 2; // data size without header
+			
+			synchronized (_out)
+			{
+				NewCrypt.appendChecksum(data, 2, size);
+				_blowfish.crypt(data, 2, size);
+				
+				_out.write(data);
+				_out.flush();
 			}
 		}
-		
-		// size header + encrypted[data + checksum (int) + padding]
-		final byte[] data = packet.getSendableBytes();
-		
-		// encrypt
-		size = data.length - 2; // data size without header
-		NewCrypt.appendChecksum(data, 2, size);
-		_blowfish.crypt(data, 2, size);
-		
-		synchronized (_out)
+		catch (Exception e)
 		{
-			_out.write(data);
-			_out.flush();
+			LOGGER.severe("LoginServerThread: IOException while sending packet " + packet.getClass().getSimpleName());
+			LOGGER.severe(CommonUtil.getStackTrace(e));
 		}
 	}
 	
@@ -686,16 +635,9 @@ public class LoginServerThread extends Thread
 	 */
 	public void sendServerStatus(int id, int value)
 	{
-		final ServerStatus ss = new ServerStatus();
-		ss.addAttribute(id, value);
-		try
-		{
-			sendPacket(ss);
-		}
-		catch (IOException e)
-		{
-			// Ignore.
-		}
+		final ServerStatus serverStatus = new ServerStatus();
+		serverStatus.addAttribute(id, value);
+		sendPacket(serverStatus);
 	}
 	
 	/**
@@ -703,16 +645,9 @@ public class LoginServerThread extends Thread
 	 */
 	public void sendServerType()
 	{
-		final ServerStatus ss = new ServerStatus();
-		ss.addAttribute(ServerStatus.SERVER_TYPE, Config.SERVER_LIST_TYPE);
-		try
-		{
-			sendPacket(ss);
-		}
-		catch (IOException e)
-		{
-			// Ignore.
-		}
+		final ServerStatus serverStatus = new ServerStatus();
+		serverStatus.addAttribute(ServerStatus.SERVER_TYPE, Config.SERVER_LIST_TYPE);
+		sendPacket(serverStatus);
 	}
 	
 	/**
@@ -724,15 +659,7 @@ public class LoginServerThread extends Thread
 	 */
 	public void sendChangePassword(String accountName, String charName, String oldpass, String newpass)
 	{
-		final ChangePassword cp = new ChangePassword(accountName, charName, oldpass, newpass);
-		try
-		{
-			sendPacket(cp);
-		}
-		catch (IOException e)
-		{
-			// Ignore.
-		}
+		sendPacket(new ChangePassword(accountName, charName, oldpass, newpass));
 	}
 	
 	public int getServerStatus()
