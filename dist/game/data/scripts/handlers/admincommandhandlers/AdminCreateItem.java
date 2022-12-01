@@ -216,7 +216,7 @@ public class AdminCreateItem implements IAdminCommandHandler
 			return;
 		}
 		
-		target.getInventory().addItem("Admin", id, num, activeChar, null);
+		target.getInventory().addItem("Admin", id, num, target, activeChar);
 		if (activeChar != target)
 		{
 			target.sendMessage("Admin spawned " + num + " " + template.getName() + " in your inventory.");
