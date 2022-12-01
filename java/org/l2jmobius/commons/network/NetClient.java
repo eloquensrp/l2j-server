@@ -72,7 +72,11 @@ public class NetClient
 			{
 			}
 		}
-		_pendingPacketData.clear();
+		
+		if (_pendingPacketData != null)
+		{
+			_pendingPacketData.clear();
+		}
 	}
 	
 	/**
