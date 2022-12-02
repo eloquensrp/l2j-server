@@ -42,27 +42,24 @@ public class Encryption implements EncryptionInterface
 			return;
 		}
 		
-		synchronized (_outKey)
+		int a = 0;
+		for (int i = 0; i < size; i++)
 		{
-			int a = 0;
-			for (int i = 0; i < size; i++)
-			{
-				final int b = data[offset + i] & 0xff;
-				a = b ^ _outKey[i & 15] ^ a;
-				data[offset + i] = (byte) a;
-			}
-			
-			// Shift key.
-			int old = _outKey[8] & 0xff;
-			old |= (_outKey[9] << 8) & 0xff00;
-			old |= (_outKey[10] << 16) & 0xff0000;
-			old |= (_outKey[11] << 24) & 0xff000000;
-			old += size;
-			_outKey[8] = (byte) (old & 0xff);
-			_outKey[9] = (byte) ((old >> 8) & 0xff);
-			_outKey[10] = (byte) ((old >> 16) & 0xff);
-			_outKey[11] = (byte) ((old >> 24) & 0xff);
+			final int b = data[offset + i] & 0xff;
+			a = b ^ _outKey[i & 15] ^ a;
+			data[offset + i] = (byte) a;
 		}
+		
+		// Shift key.
+		int old = _outKey[8] & 0xff;
+		old |= (_outKey[9] << 8) & 0xff00;
+		old |= (_outKey[10] << 16) & 0xff0000;
+		old |= (_outKey[11] << 24) & 0xff000000;
+		old += size;
+		_outKey[8] = (byte) (old & 0xff);
+		_outKey[9] = (byte) ((old >> 8) & 0xff);
+		_outKey[10] = (byte) ((old >> 16) & 0xff);
+		_outKey[11] = (byte) ((old >> 24) & 0xff);
 	}
 	
 	@Override
@@ -73,26 +70,23 @@ public class Encryption implements EncryptionInterface
 			return;
 		}
 		
-		synchronized (_inKey)
+		int a = 0;
+		for (int i = 0; i < size; i++)
 		{
-			int a = 0;
-			for (int i = 0; i < size; i++)
-			{
-				final int b = data[offset + i] & 0xff;
-				data[offset + i] = (byte) (b ^ _inKey[i & 15] ^ a);
-				a = b;
-			}
-			
-			// Shift key.
-			int old = _inKey[8] & 0xff;
-			old |= (_inKey[9] << 8) & 0xff00;
-			old |= (_inKey[10] << 16) & 0xff0000;
-			old |= (_inKey[11] << 24) & 0xff000000;
-			old += size;
-			_inKey[8] = (byte) (old & 0xff);
-			_inKey[9] = (byte) ((old >> 8) & 0xff);
-			_inKey[10] = (byte) ((old >> 16) & 0xff);
-			_inKey[11] = (byte) ((old >> 24) & 0xff);
+			final int b = data[offset + i] & 0xff;
+			data[offset + i] = (byte) (b ^ _inKey[i & 15] ^ a);
+			a = b;
 		}
+		
+		// Shift key.
+		int old = _inKey[8] & 0xff;
+		old |= (_inKey[9] << 8) & 0xff00;
+		old |= (_inKey[10] << 16) & 0xff0000;
+		old |= (_inKey[11] << 24) & 0xff000000;
+		old += size;
+		_inKey[8] = (byte) (old & 0xff);
+		_inKey[9] = (byte) ((old >> 8) & 0xff);
+		_inKey[10] = (byte) ((old >> 16) & 0xff);
+		_inKey[11] = (byte) ((old >> 24) & 0xff);
 	}
 }
