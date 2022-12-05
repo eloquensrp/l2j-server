@@ -73,7 +73,8 @@ public class Shutdown extends Thread
 		"aborting"
 	};
 	
-	private static Shutdown _counterInstance = null;
+	private static Shutdown _counterInstance;
+	private static boolean _countdownFinished;
 	
 	private int _secondsShut;
 	private int _shutdownMode;
@@ -119,123 +120,40 @@ public class Shutdown extends Thread
 	{
 		if (this == getInstance())
 		{
-			final TimeCounter tc = new TimeCounter();
-			final TimeCounter tc1 = new TimeCounter();
-			
-			try
-			{
-				if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && Config.RESTORE_OFFLINERS && !Config.STORE_OFFLINE_TRADE_IN_REALTIME)
-				{
-					OfflineTraderTable.getInstance().storeOffliners();
-					LOGGER.info("Offline Traders Table: Offline shops stored(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
-				}
-			}
-			catch (Throwable t)
-			{
-				LOGGER.log(Level.WARNING, "Error saving offline shops.", t);
-			}
-			
-			try
-			{
-				disconnectAllCharacters();
-				LOGGER.info("All players disconnected and saved(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
-			}
-			catch (Throwable t)
-			{
-				// ignore
-			}
-			
-			// ensure all services are stopped
-			
-			try
-			{
-				GameTimeTaskManager.getInstance().interrupt();
-				LOGGER.info("Game Time Task Manager: Thread interruped(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
-			}
-			catch (Throwable t)
-			{
-				// ignore
-			}
-			
-			// stop all thread pools
-			try
-			{
-				ThreadPool.shutdown();
-				LOGGER.info("Thread Pool Manager: Manager has been shut down(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
-			}
-			catch (Throwable t)
-			{
-				// ignore
-			}
-			
-			try
-			{
-				LoginServerThread.getInstance().interrupt();
-				LOGGER.info("Login Server Thread: Thread interruped(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
-			}
-			catch (Throwable t)
-			{
-				// ignore
-			}
-			
-			// last byebye, save all data and quit this server
-			saveData();
-			tc.restartCounter();
-			
-			// commit data, last chance
-			try
-			{
-				DatabaseFactory.close();
-				LOGGER.info("Database Factory: Database connection has been shut down(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
-			}
-			catch (Throwable t)
-			{
-				// ignore
-			}
-			
-			// Backup database.
-			if (Config.BACKUP_DATABASE)
-			{
-				DatabaseBackup.performBackup();
-			}
-			
-			// server will quit, when this function ends.
-			if (getInstance()._shutdownMode == GM_RESTART)
-			{
-				Runtime.getRuntime().halt(2);
-			}
-			else
-			{
-				Runtime.getRuntime().halt(0);
-			}
-			
-			LOGGER.info("The server has been successfully shut down in " + (tc1.getEstimatedTime() / 1000) + "seconds.");
+			return;
 		}
-		else
+		
+		if (_countdownFinished)
 		{
-			// GM shutdown: send warnings and then call exit to start shutdown sequence
-			countdown();
-			// last point where logging is operational :(
-			LOGGER.warning("GM shutdown countdown is over. " + MODE_TEXT[_shutdownMode] + " NOW!");
-			switch (_shutdownMode)
+			return;
+		}
+		
+		// Send warnings and then call exit to start shutdown sequence.
+		countdown();
+		
+		// Last point where logging is operational.
+		LOGGER.warning("GM shutdown countdown is over. " + MODE_TEXT[_shutdownMode] + " NOW!");
+		
+		switch (_shutdownMode)
+		{
+			case GM_SHUTDOWN:
 			{
-				case GM_SHUTDOWN:
-				{
-					getInstance().setMode(GM_SHUTDOWN);
-					System.exit(0);
-					break;
-				}
-				case GM_RESTART:
-				{
-					getInstance().setMode(GM_RESTART);
-					System.exit(2);
-					break;
-				}
-				case ABORT:
-				{
-					LoginServerThread.getInstance().setServerStatus(ServerStatus.STATUS_AUTO);
-					break;
-				}
+				getInstance().setMode(GM_SHUTDOWN);
+				startShutdownActions();
+				System.exit(0);
+				break;
+			}
+			case GM_RESTART:
+			{
+				getInstance().setMode(GM_RESTART);
+				startShutdownActions();
+				System.exit(2);
+				break;
+			}
+			case ABORT:
+			{
+				LoginServerThread.getInstance().setServerStatus(ServerStatus.STATUS_AUTO);
+				break;
 			}
 		}
 	}
@@ -310,6 +228,12 @@ public class Shutdown extends Thread
 	 */
 	public void abort(Player player)
 	{
+		if (_countdownFinished)
+		{
+			LOGGER.warning("GM: " + (player != null ? player.getName() + "(" + player.getObjectId() + ") " : "") + "shutdown ABORT failed because countdown has finished.");
+			return;
+		}
+		
 		LOGGER.warning("GM: " + (player != null ? player.getName() + "(" + player.getObjectId() + ") " : "") + "issued shutdown ABORT. " + MODE_TEXT[_shutdownMode] + " has been stopped!");
 		if (_counterInstance != null)
 		{
@@ -398,6 +322,100 @@ public class Shutdown extends Thread
 		{
 			// this will never happen
 		}
+	}
+	
+	/**
+	 * Actions performed when shutdown countdown completes.
+	 */
+	private void startShutdownActions()
+	{
+		if (_countdownFinished)
+		{
+			return;
+		}
+		_countdownFinished = true;
+		
+		final TimeCounter tc = new TimeCounter();
+		final TimeCounter tc1 = new TimeCounter();
+		
+		try
+		{
+			if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && Config.RESTORE_OFFLINERS && !Config.STORE_OFFLINE_TRADE_IN_REALTIME)
+			{
+				OfflineTraderTable.getInstance().storeOffliners();
+				LOGGER.info("Offline Traders Table: Offline shops stored(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
+			}
+		}
+		catch (Throwable t)
+		{
+			LOGGER.log(Level.WARNING, "Error saving offline shops.", t);
+		}
+		
+		try
+		{
+			disconnectAllCharacters();
+			LOGGER.info("All players disconnected and saved(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
+		}
+		catch (Throwable t)
+		{
+			// ignore
+		}
+		
+		// ensure all services are stopped
+		
+		try
+		{
+			GameTimeTaskManager.getInstance().interrupt();
+			LOGGER.info("Game Time Task Manager: Thread interruped(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
+		}
+		catch (Throwable t)
+		{
+			// ignore
+		}
+		
+		// stop all thread pools
+		try
+		{
+			ThreadPool.shutdown();
+			LOGGER.info("Thread Pool Manager: Manager has been shut down(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
+		}
+		catch (Throwable t)
+		{
+			// ignore
+		}
+		
+		try
+		{
+			LoginServerThread.getInstance().interrupt();
+			LOGGER.info("Login Server Thread: Thread interruped(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
+		}
+		catch (Throwable t)
+		{
+			// ignore
+		}
+		
+		// last byebye, save all data and quit this server
+		saveData();
+		tc.restartCounter();
+		
+		// commit data, last chance
+		try
+		{
+			DatabaseFactory.close();
+			LOGGER.info("Database Factory: Database connection has been shut down(" + tc.getEstimatedTimeAndRestartCounter() + "ms).");
+		}
+		catch (Throwable t)
+		{
+			// ignore
+		}
+		
+		// Backup database.
+		if (Config.BACKUP_DATABASE)
+		{
+			DatabaseBackup.performBackup();
+		}
+		
+		LOGGER.info("The server has been successfully shut down in " + (tc1.getEstimatedTime() / 1000) + "seconds.");
 	}
 	
 	/**
