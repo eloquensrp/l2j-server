@@ -64,7 +64,8 @@ public class ReadThread<E extends NetClient> implements Runnable
 							default:
 							{
 								// Allocate a new ByteBuffer based on packet size read.
-								final ByteBuffer packetByteBuffer = ByteBuffer.allocate(calculatePacketSize());
+								final int packetSize = calculatePacketSize();
+								final ByteBuffer packetByteBuffer = ByteBuffer.allocate(packetSize);
 								switch (channel.read(packetByteBuffer))
 								{
 									// Disconnected.
@@ -81,6 +82,20 @@ public class ReadThread<E extends NetClient> implements Runnable
 									// Send data read to the client packet queue.
 									default:
 									{
+										// Continue read if data length is less than expected.
+										if (packetByteBuffer.position() < packetSize)
+										{
+											int attempt = 0; // Keep it under 10 attempts.
+											while ((attempt++ < 10) && (packetByteBuffer.position() < packetSize))
+											{
+												final ByteBuffer additionalData = ByteBuffer.allocate(packetSize - packetByteBuffer.position());
+												channel.read(additionalData);
+												packetByteBuffer.put(packetByteBuffer.position(), additionalData, 0, additionalData.position());
+												packetByteBuffer.position(packetByteBuffer.position() + additionalData.position());
+											}
+										}
+										
+										// Add packet data to client.
 										client.addPacketData(packetByteBuffer.array());
 									}
 								}
