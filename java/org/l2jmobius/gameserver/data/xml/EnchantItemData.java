@@ -138,21 +138,29 @@ public class EnchantItemData implements IXmlReader
 	
 	/**
 	 * Gets the enchant scroll.
-	 * @param scroll the scroll
+	 * @param item the scroll item
 	 * @return enchant template for scroll
 	 */
-	public EnchantScroll getEnchantScroll(Item scroll)
+	public EnchantScroll getEnchantScroll(Item item)
 	{
-		return _scrolls.get(scroll.getId());
+		if (item == null)
+		{
+			return null;
+		}
+		return _scrolls.get(item.getId());
 	}
 	
 	/**
 	 * Gets the support item.
-	 * @param item the item
+	 * @param item the support item
 	 * @return enchant template for support item
 	 */
 	public EnchantSupportItem getSupportItem(Item item)
 	{
+		if (item == null)
+		{
+			return null;
+		}
 		return _supports.get(item.getId());
 	}
 	
