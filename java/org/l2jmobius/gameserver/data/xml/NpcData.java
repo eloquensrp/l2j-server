@@ -296,14 +296,16 @@ public class NpcData implements IXmlReader
 													{
 														case "walk":
 														{
-															set.set("baseWalkSpd", parseDouble(attrs, "ground"));
+															final double groundWalk = parseDouble(attrs, "ground");
+															set.set("baseWalkSpd", groundWalk <= 0d ? 0.1 : groundWalk);
 															set.set("baseSwimWalkSpd", parseDouble(attrs, "swim"));
 															set.set("baseFlyWalkSpd", parseDouble(attrs, "fly"));
 															break;
 														}
 														case "run":
 														{
-															set.set("baseRunSpd", parseDouble(attrs, "ground"));
+															final double runSpeed = parseDouble(attrs, "ground");
+															set.set("baseRunSpd", runSpeed <= 0d ? 0.1 : runSpeed);
 															set.set("baseSwimRunSpd", parseDouble(attrs, "swim"));
 															set.set("baseFlyRunSpd", parseDouble(attrs, "fly"));
 															break;

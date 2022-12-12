@@ -150,7 +150,7 @@ public class NpcTemplate extends CreatureTemplate implements IIdentifiable
 		_flying = set.getBoolean("flying", false);
 		_fakePlayer = set.getBoolean("fakePlayer", false);
 		_fakePlayerTalkable = set.getBoolean("fakePlayerTalkable", true);
-		_canMove = set.getBoolean("canMove", true);
+		_canMove = (set.getDouble("baseWalkSpd", 1d) <= 0.1) || set.getBoolean("canMove", true);
 		_noSleepMode = set.getBoolean("noSleepMode", false);
 		_passableDoor = set.getBoolean("passableDoor", false);
 		_hasSummoner = set.getBoolean("hasSummoner", false);
