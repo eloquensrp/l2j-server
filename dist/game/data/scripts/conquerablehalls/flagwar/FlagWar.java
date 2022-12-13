@@ -671,7 +671,7 @@ public abstract class FlagWar extends ClanHallSiegeEngine
 		saveMember(clanId, clan.getLeaderId());
 	}
 	
-	private final void doUnSpawns(ClanData data)
+	private void doUnSpawns(ClanData data)
 	{
 		if (data.flagInstance != null)
 		{
@@ -685,7 +685,7 @@ public abstract class FlagWar extends ClanHallSiegeEngine
 		}
 	}
 	
-	private final void removeParticipant(int clanId, boolean teleport)
+	private void removeParticipant(int clanId, boolean teleport)
 	{
 		final ClanData dat = _data.remove(clanId);
 		if (dat != null)
@@ -777,7 +777,7 @@ public abstract class FlagWar extends ClanHallSiegeEngine
 		}
 	}
 	
-	private final void loadAttackerMembers(int clanId)
+	private void loadAttackerMembers(int clanId)
 	{
 		try (Connection con = DatabaseFactory.getConnection())
 		{
@@ -805,7 +805,7 @@ public abstract class FlagWar extends ClanHallSiegeEngine
 		}
 	}
 	
-	private final void saveClan(int clanId, int flag)
+	private void saveClan(int clanId, int flag)
 	{
 		try (Connection con = DatabaseFactory.getConnection())
 		{
@@ -823,7 +823,7 @@ public abstract class FlagWar extends ClanHallSiegeEngine
 		}
 	}
 	
-	private final void saveNpc(int npc, int clanId)
+	private void saveNpc(int npc, int clanId)
 	{
 		try (Connection con = DatabaseFactory.getConnection())
 		{
@@ -839,7 +839,7 @@ public abstract class FlagWar extends ClanHallSiegeEngine
 		}
 	}
 	
-	private final void saveMember(int clanId, int objectId)
+	private void saveMember(int clanId, int objectId)
 	{
 		try (Connection con = DatabaseFactory.getConnection())
 		{

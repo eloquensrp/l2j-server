@@ -3349,7 +3349,7 @@ public class Config
 		return serverType;
 	}
 	
-	public static final class ClassMasterSettings
+	public static class ClassMasterSettings
 	{
 		private final Map<Integer, List<ItemHolder>> _claimItems = new HashMap<>(3);
 		private final Map<Integer, List<ItemHolder>> _rewardItems = new HashMap<>(3);

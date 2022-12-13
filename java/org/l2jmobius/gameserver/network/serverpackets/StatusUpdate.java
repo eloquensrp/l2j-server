@@ -56,7 +56,7 @@ public class StatusUpdate extends ServerPacket
 	private final int _objectId;
 	private final List<Attribute> _attributes = new ArrayList<>();
 	
-	static class Attribute
+	private static class Attribute
 	{
 		/**
 		 * id values 09 - current health 0a - max health 0b - current mana 0c - max mana

@@ -544,7 +544,7 @@ public class Shutdown extends Thread
 	 * A simple class used to track down the estimated time of method executions.<br>
 	 * Once this class is created, it saves the start time, and when you want to get the estimated time, use the getEstimatedTime() method.
 	 */
-	private static final class TimeCounter
+	private static class TimeCounter
 	{
 		private long _startTime;
 		

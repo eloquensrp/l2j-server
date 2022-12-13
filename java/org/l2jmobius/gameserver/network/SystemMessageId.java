@@ -10012,7 +10012,7 @@ public class SystemMessageId
 		return "SM[" + getId() + ":" + getName() + "]";
 	}
 	
-	public static final class SMLocalisation
+	public static class SMLocalisation
 	{
 		private final String _lang;
 		private final Builder _builder;

@@ -184,7 +184,7 @@ public class BabyPet extends Pet
 		}
 	}
 	
-	private final void startCastTask()
+	private void startCastTask()
 	{
 		if ((_majorHeal != null) || (_buffs != null) || ((_recharge != null) && (_castTask == null) && !isDead()))
 		{
@@ -207,7 +207,7 @@ public class BabyPet extends Pet
 		return _bufferMode;
 	}
 	
-	private final void stopCastTask()
+	private void stopCastTask()
 	{
 		if (_castTask != null)
 		{

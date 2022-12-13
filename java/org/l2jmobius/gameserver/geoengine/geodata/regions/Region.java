@@ -27,7 +27,7 @@ import org.l2jmobius.gameserver.geoengine.geodata.blocks.MultilayerBlock;
 /**
  * @author HorridoJoho
  */
-public final class Region implements IRegion
+public class Region implements IRegion
 {
 	private final IBlock[] _blocks = new IBlock[IRegion.REGION_BLOCKS];
 	

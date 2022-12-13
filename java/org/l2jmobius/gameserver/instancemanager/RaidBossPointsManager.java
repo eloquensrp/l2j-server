@@ -49,7 +49,7 @@ public class RaidBossPointsManager
 		init();
 	}
 	
-	private final void init()
+	private void init()
 	{
 		try (Connection con = DatabaseFactory.getConnection();
 			Statement s = con.createStatement();

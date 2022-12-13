@@ -616,12 +616,12 @@ public class Baium extends AbstractNpcAI
 		return super.unload(removeFromList);
 	}
 	
-	private final void refreshAiParams(Creature attacker, Npc npc, int damage)
+	private void refreshAiParams(Creature attacker, Npc npc, int damage)
 	{
 		refreshAiParams(attacker, npc, damage, damage);
 	}
 	
-	private final void refreshAiParams(Creature attacker, Npc npc, int damage, int aggro)
+	private void refreshAiParams(Creature attacker, Npc npc, int damage, int aggro)
 	{
 		final int newAggroVal = damage + getRandom(3000);
 		final int aggroVal = aggro + 1000;

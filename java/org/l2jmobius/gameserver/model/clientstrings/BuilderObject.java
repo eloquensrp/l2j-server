@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.model.clientstrings;
 /**
  * @author Forsaiken
  */
-final class BuilderObject extends Builder
+public class BuilderObject extends Builder
 {
 	private final int _index;
 	

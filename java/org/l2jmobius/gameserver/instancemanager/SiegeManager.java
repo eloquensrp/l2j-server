@@ -116,7 +116,7 @@ public class SiegeManager
 		}
 	}
 	
-	private final void load()
+	private void load()
 	{
 		final PropertiesParser siegeSettings = new PropertiesParser(Config.SIEGE_CONFIG_FILE);
 		
@@ -274,7 +274,7 @@ public class SiegeManager
 		return sieges;
 	}
 	
-	private final void loadTrapUpgrade(int castleId)
+	private void loadTrapUpgrade(int castleId)
 	{
 		try (Connection con = DatabaseFactory.getConnection();
 			PreparedStatement ps = con.prepareStatement("SELECT * FROM castle_trapupgrade WHERE castleId=?"))

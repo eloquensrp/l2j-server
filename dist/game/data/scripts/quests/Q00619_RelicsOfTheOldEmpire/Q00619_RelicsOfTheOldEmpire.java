@@ -31,7 +31,7 @@ import org.l2jmobius.gameserver.model.quest.QuestState;
  */
 public class Q00619_RelicsOfTheOldEmpire extends Quest
 {
-	private static final class DropInfo
+	private static class DropInfo
 	{
 		public double _dropChance;
 		public int _doubleItemChance;

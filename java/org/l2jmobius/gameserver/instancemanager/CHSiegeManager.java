@@ -52,7 +52,7 @@ public class CHSiegeManager
 		loadClanHalls();
 	}
 	
-	private final void loadClanHalls()
+	private void loadClanHalls()
 	{
 		try (Connection con = DatabaseFactory.getConnection();
 			Statement s = con.createStatement();
@@ -201,7 +201,7 @@ public class CHSiegeManager
 		return SingletonHolder.INSTANCE;
 	}
 	
-	private static final class SingletonHolder
+	private static class SingletonHolder
 	{
 		protected static final CHSiegeManager INSTANCE = new CHSiegeManager();
 	}

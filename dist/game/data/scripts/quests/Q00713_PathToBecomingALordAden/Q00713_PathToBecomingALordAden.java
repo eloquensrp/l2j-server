@@ -32,7 +32,7 @@ import org.l2jmobius.gameserver.network.serverpackets.NpcSay;
  * Path to Becoming a Lord - Aden (713)
  * @author Sacrifice
  */
-public final class Q00713_PathToBecomingALordAden extends Quest
+public class Q00713_PathToBecomingALordAden extends Quest
 {
 	private static final int LOGAN = 35274;
 	private static final int ORVEN = 30857;

@@ -21,7 +21,7 @@ import org.l2jmobius.gameserver.geoengine.geodata.IRegion;
 /**
  * @author HorridoJoho
  */
-public final class NullRegion implements IRegion
+public class NullRegion implements IRegion
 {
 	public static final NullRegion INSTANCE = new NullRegion();
 	

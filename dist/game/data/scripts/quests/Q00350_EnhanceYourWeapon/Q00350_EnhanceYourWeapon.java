@@ -59,7 +59,7 @@ public class Q00350_EnhanceYourWeapon extends Quest
 		PARTY_RANDOM
 	}
 	
-	private static final class LevelingInfo
+	private static class LevelingInfo
 	{
 		private final AbsorbCrystalType _absorbCrystalType;
 		private final boolean _isSkillNeeded;
@@ -88,7 +88,7 @@ public class Q00350_EnhanceYourWeapon extends Quest
 		}
 	}
 	
-	private static final class SoulCrystal
+	private static class SoulCrystal
 	{
 		private final int _level;
 		private final int _itemId;

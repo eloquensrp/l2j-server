@@ -23,7 +23,7 @@ import org.l2jmobius.gameserver.geoengine.geodata.IBlock;
 /**
  * @author HorridoJoho
  */
-public final class ComplexBlock implements IBlock
+public class ComplexBlock implements IBlock
 {
 	private final short[] _data;
 	

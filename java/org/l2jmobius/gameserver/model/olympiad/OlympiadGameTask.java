@@ -381,7 +381,7 @@ public class OlympiadGameTask implements Runnable
 	/**
 	 * Third stage: open doors.
 	 */
-	private final void openDoors()
+	private void openDoors()
 	{
 		try
 		{

@@ -113,7 +113,7 @@ public class FortSiegeManager
 		character.removeSkill(CommonSkill.BUILD_HEADQUARTERS.getSkill());
 	}
 	
-	private final void load()
+	private void load()
 	{
 		final Properties siegeSettings = new Properties();
 		final File file = new File(Config.FORTSIEGE_CONFIG_FILE);

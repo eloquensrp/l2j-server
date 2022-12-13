@@ -169,7 +169,7 @@ public class Q10279_MutatedKaneusOren extends Quest
 	 * @param npcId the ID of the killed monster
 	 * @param player
 	 */
-	private final void rewardItem(int npcId, Player player)
+	private void rewardItem(int npcId, Player player)
 	{
 		if ((npcId == KAIM_ABIGORE) && !hasQuestItems(player, TISSUE_KA))
 		{

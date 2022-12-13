@@ -258,7 +258,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame
 	}
 	
 	@Override
-	protected final void broadcastPacket(ServerPacket packet)
+	protected void broadcastPacket(ServerPacket packet)
 	{
 		Participant par;
 		for (int i = 0; i < _teamOneSize; i++)
@@ -316,7 +316,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame
 	}
 	
 	@Override
-	protected final void removals()
+	protected void removals()
 	{
 		for (int i = _teamOneSize; --i >= 0;)
 		{
@@ -365,7 +365,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame
 	}
 	
 	@Override
-	protected final void cleanEffects()
+	protected void cleanEffects()
 	{
 		Participant par;
 		for (int i = _teamOneSize; --i >= 0;)
@@ -388,7 +388,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame
 	}
 	
 	@Override
-	protected final void portPlayersBack()
+	protected void portPlayersBack()
 	{
 		Participant par;
 		for (int i = _teamOneSize; --i >= 0;)
@@ -411,7 +411,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame
 	}
 	
 	@Override
-	protected final void playersStatusBack()
+	protected void playersStatusBack()
 	{
 		Participant par;
 		for (int i = _teamOneSize; --i >= 0;)
@@ -434,7 +434,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame
 	}
 	
 	@Override
-	protected final void clearPlayers()
+	protected void clearPlayers()
 	{
 		for (int i = 0; i < MAX_TEAM_SIZE; i++)
 		{
@@ -462,7 +462,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame
 	}
 	
 	@Override
-	protected final void handleDisconnect(Player player)
+	protected void handleDisconnect(Player player)
 	{
 		Participant par;
 		for (int i = _teamOneSize; --i >= 0;)
@@ -962,7 +962,7 @@ public class OlympiadGameTeams extends AbstractOlympiadGame
 	 * UnAfraid: TODO: We should calculate the damage in array separately for each player so we can display it on ExOlympiadMatchResult correctly.
 	 */
 	@Override
-	protected final void addDamage(Player player, int damage)
+	protected void addDamage(Player player, int damage)
 	{
 		Participant par;
 		for (int i = _teamOneSize; --i >= 0;)

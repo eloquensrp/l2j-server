@@ -326,7 +326,7 @@ public class Attackable extends Npc
 		return true;
 	}
 	
-	static class PartyContainer
+	private static class PartyContainer
 	{
 		public Party party;
 		public long damage;

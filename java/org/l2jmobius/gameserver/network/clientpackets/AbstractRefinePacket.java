@@ -45,7 +45,7 @@ public abstract class AbstractRefinePacket implements ClientPacket
 	
 	private static final Map<Integer, LifeStone> _lifeStones = new HashMap<>();
 	
-	protected static final class LifeStone
+	protected static class LifeStone
 	{
 		// lifestone level to player level table
 		private static final int[] LEVELS =

@@ -171,7 +171,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable
 		}
 	}
 	
-	private final void spawnSiegeGuards()
+	private void spawnSiegeGuards()
 	{
 		for (Spawn guard : _guards)
 		{
@@ -183,7 +183,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable
 		}
 	}
 	
-	private final void unSpawnSiegeGuards()
+	private void unSpawnSiegeGuards()
 	{
 		if (_guards != null)
 		{

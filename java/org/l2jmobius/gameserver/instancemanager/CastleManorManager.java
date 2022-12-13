@@ -156,7 +156,7 @@ public class CastleManorManager implements IXmlReader, IStorable
 		}
 	}
 	
-	private final void loadDb()
+	private void loadDb()
 	{
 		try (Connection con = DatabaseFactory.getConnection();
 			PreparedStatement stProduction = con.prepareStatement("SELECT * FROM castle_manor_production WHERE castle_id=?");
@@ -242,7 +242,7 @@ public class CastleManorManager implements IXmlReader, IStorable
 	// -------------------------------------------------------
 	// Manor methods
 	// -------------------------------------------------------
-	private final void scheduleModeChange()
+	private void scheduleModeChange()
 	{
 		// Calculate next mode change
 		_nextModeChange = Calendar.getInstance();

@@ -34,7 +34,7 @@ import org.l2jmobius.gameserver.network.serverpackets.NpcSay;
  * Path to Becoming a Lord - Oren (712)
  * @author Sacrifice
  */
-public final class Q00712_PathToBecomingALordOren extends Quest
+public class Q00712_PathToBecomingALordOren extends Quest
 {
 	private static final int BRASSEUR = 35226;
 	private static final int CROOP = 30676;

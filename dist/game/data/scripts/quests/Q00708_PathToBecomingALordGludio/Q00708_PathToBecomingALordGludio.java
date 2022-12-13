@@ -34,7 +34,7 @@ import org.l2jmobius.gameserver.network.serverpackets.NpcSay;
  * Path to Becoming a Lord - Gludio (708)
  * @author Sacrifice
  */
-public final class Q00708_PathToBecomingALordGludio extends Quest
+public class Q00708_PathToBecomingALordGludio extends Quest
 {
 	private static final int SAYRES = 35100;
 	private static final int PINTER = 30298;

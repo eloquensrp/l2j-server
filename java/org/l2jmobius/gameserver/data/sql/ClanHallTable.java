@@ -61,7 +61,7 @@ public class ClanHallTable
 	}
 	
 	/** Load All Clan Hall */
-	private final void load()
+	private void load()
 	{
 		try (Connection con = DatabaseFactory.getConnection();
 			Statement s = con.createStatement();

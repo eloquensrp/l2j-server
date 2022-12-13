@@ -98,7 +98,7 @@ public class OlympiadManager
 		return _teamsBasedRegisters.size() >= Config.ALT_OLY_TEAMS;
 	}
 	
-	protected final void clearRegistered()
+	protected void clearRegistered()
 	{
 		_nonClassBasedRegisters.clear();
 		_classBasedRegisters.clear();
@@ -539,7 +539,7 @@ public class OlympiadManager
 		return true;
 	}
 	
-	private static final class AnnounceUnregToTeam implements Runnable
+	private static class AnnounceUnregToTeam implements Runnable
 	{
 		private final List<Integer> _team;
 		

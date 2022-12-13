@@ -224,7 +224,7 @@ public class MinionList
 		}
 	}
 	
-	private final void spawnMinion(int minionId)
+	private void spawnMinion(int minionId)
 	{
 		if (minionId == 0)
 		{
@@ -233,7 +233,7 @@ public class MinionList
 		spawnMinion(_master, minionId);
 	}
 	
-	private final class MinionRespawnTask implements Runnable
+	private class MinionRespawnTask implements Runnable
 	{
 		private final Monster _minion;
 		

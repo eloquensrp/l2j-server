@@ -169,7 +169,7 @@ public class Q10276_MutatedKaneusGludio extends Quest
 	 * @param npcId the ID of the killed monster
 	 * @param player
 	 */
-	private final void rewardItem(int npcId, Player player)
+	private void rewardItem(int npcId, Player player)
 	{
 		if ((npcId == TOMLAN_KAMOS) && !hasQuestItems(player, TISSUE_TK))
 		{

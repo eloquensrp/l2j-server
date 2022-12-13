@@ -163,7 +163,7 @@ public class VarkaKetra extends AbstractNpcAI
 		}
 	}
 	
-	private final void decreaseAlliance(Player player, int[] marks)
+	private void decreaseAlliance(Player player, int[] marks)
 	{
 		for (int i = 0; i < marks.length; i++)
 		{
@@ -179,7 +179,7 @@ public class VarkaKetra extends AbstractNpcAI
 		}
 	}
 	
-	private final void exitQuests(Player player, String[] quests)
+	private void exitQuests(Player player, String[] quests)
 	{
 		for (String quest : quests)
 		{

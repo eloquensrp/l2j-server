@@ -1517,7 +1517,7 @@ public class Npc extends Creature
 	}
 	
 	@Override
-	protected final void notifyQuestEventSkillFinished(Skill skill, WorldObject target)
+	protected void notifyQuestEventSkillFinished(Skill skill, WorldObject target)
 	{
 		if ((target != null) && target.isPlayable() && EventDispatcher.getInstance().hasListener(EventType.ON_NPC_SKILL_FINISHED, this))
 		{

@@ -31,7 +31,7 @@ import javax.tools.JavaFileObject;
 /**
  * @author HorridoJoho
  */
-final class ScriptingOutputFileObject implements JavaFileObject
+public class ScriptingOutputFileObject implements JavaFileObject
 {
 	private final Path _sourcePath;
 	private final String _javaName;

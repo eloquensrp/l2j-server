@@ -32,7 +32,7 @@ import javax.tools.StandardJavaFileManager;
 /**
  * @author HorridoJoho
  */
-final class ScriptingFileManager implements StandardJavaFileManager
+public class ScriptingFileManager implements StandardJavaFileManager
 {
 	private final StandardJavaFileManager _wrapped;
 	private final LinkedList<ScriptingOutputFileObject> _classOutputs = new LinkedList<>();

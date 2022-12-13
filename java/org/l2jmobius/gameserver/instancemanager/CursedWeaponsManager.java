@@ -86,7 +86,7 @@ public class CursedWeaponsManager
 		init();
 	}
 	
-	private final void load()
+	private void load()
 	{
 		try
 		{
@@ -162,7 +162,7 @@ public class CursedWeaponsManager
 		}
 	}
 	
-	private final void restore()
+	private void restore()
 	{
 		try (Connection con = DatabaseFactory.getConnection();
 			Statement s = con.createStatement();
@@ -187,7 +187,7 @@ public class CursedWeaponsManager
 		}
 	}
 	
-	private final void controlPlayers()
+	private void controlPlayers()
 	{
 		// TODO: See comments below...
 		// This entire for loop should NOT be necessary, since it is already handled by

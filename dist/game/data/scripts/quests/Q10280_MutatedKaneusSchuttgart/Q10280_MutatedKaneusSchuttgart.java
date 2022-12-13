@@ -169,7 +169,7 @@ public class Q10280_MutatedKaneusSchuttgart extends Quest
 	 * @param npcId the ID of the killed monster
 	 * @param player
 	 */
-	private final void rewardItem(int npcId, Player player)
+	private void rewardItem(int npcId, Player player)
 	{
 		if ((npcId == VENOMOUS_STORACE) && !hasQuestItems(player, TISSUE_VS))
 		{

@@ -33,7 +33,7 @@ import ai.AbstractNpcAI;
  */
 public class AltarsOfSacrifice extends AbstractNpcAI
 {
-	private final class Altar
+	private class Altar
 	{
 		private final ILocational _middlePoint;
 		private final int[] _bossNpcIds;

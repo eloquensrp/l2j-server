@@ -32,7 +32,7 @@ import org.l2jmobius.gameserver.network.serverpackets.NpcSay;
  * Path to Becoming a Lord - Goddard (715)
  * @author Sacrifice
  */
-public final class Q00715_PathToBecomingALordGoddard extends Quest
+public class Q00715_PathToBecomingALordGoddard extends Quest
 {
 	private static final int ALFRED = 35363;
 	

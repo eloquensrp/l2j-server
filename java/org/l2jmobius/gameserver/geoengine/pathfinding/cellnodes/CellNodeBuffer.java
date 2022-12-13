@@ -85,7 +85,7 @@ public class CellNodeBuffer
 		return null;
 	}
 	
-	public final void free()
+	public void free()
 	{
 		_current = null;
 		
@@ -136,7 +136,7 @@ public class CellNodeBuffer
 		return result;
 	}
 	
-	private final void getNeighbors()
+	private void getNeighbors()
 	{
 		if (_current.getLoc().canGoNone())
 		{

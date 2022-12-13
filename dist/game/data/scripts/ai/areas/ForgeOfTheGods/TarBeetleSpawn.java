@@ -142,7 +142,7 @@ public class TarBeetleSpawn implements IXmlReader
 		npc.deleteMe();
 	}
 	
-	private final class Zone extends Territory
+	private class Zone extends Territory
 	{
 		private List<Zone> _bannedZones;
 		
@@ -187,7 +187,7 @@ public class TarBeetleSpawn implements IXmlReader
 		}
 	}
 	
-	private final class SpawnZone
+	private class SpawnZone
 	{
 		private final List<Zone> _zones = new ArrayList<>();
 		private final Collection<Npc> _spawn = ConcurrentHashMap.newKeySet();

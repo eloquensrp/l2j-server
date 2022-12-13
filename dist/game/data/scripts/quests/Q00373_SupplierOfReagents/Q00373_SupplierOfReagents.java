@@ -452,7 +452,7 @@ public class Q00373_SupplierOfReagents extends Quest
 		return htmltext;
 	}
 	
-	private static final class Entry
+	private static class Entry
 	{
 		private final int item;
 		private final String html;

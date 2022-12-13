@@ -49,7 +49,7 @@ public class CoupleManager
 		load();
 	}
 	
-	private final void load()
+	private void load()
 	{
 		try (Connection con = DatabaseFactory.getConnection();
 			Statement ps = con.createStatement();

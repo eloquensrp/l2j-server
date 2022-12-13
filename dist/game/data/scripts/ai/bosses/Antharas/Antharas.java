@@ -769,7 +769,7 @@ public class Antharas extends AbstractNpcAI
 		GrandBossManager.getInstance().getStatSet(ANTHARAS).set("respawn_time", System.currentTimeMillis() + respawnTime);
 	}
 	
-	private final void refreshAiParams(Player attacker, int damage)
+	private void refreshAiParams(Player attacker, int damage)
 	{
 		if ((attacker_1 != null) && (attacker == attacker_1))
 		{

@@ -486,7 +486,7 @@ public class Q00421_LittleWingsBigAdventure extends Quest
 		return player.getInventory().getItemByItemId(fluteItemId);
 	}
 	
-	private static final class NpcData
+	private static class NpcData
 	{
 		public NpcStringId message;
 		public int memoStateMod;

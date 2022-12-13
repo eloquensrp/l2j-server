@@ -775,7 +775,7 @@ public class TerritoryWarManager implements Siegable
 		}
 	}
 	
-	private final void load()
+	private void load()
 	{
 		final PropertiesParser territoryWarSettings = new PropertiesParser(Config.TW_CONFIG_FILE);
 		

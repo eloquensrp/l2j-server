@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.cache;
 /**
  * @author Sahar
  */
-public final class RelationCache
+public class RelationCache
 {
 	private final int _relation;
 	private final boolean _isAutoAttackable;

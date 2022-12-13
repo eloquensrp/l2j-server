@@ -70,7 +70,7 @@ public class EffectHandler implements IHandler<Class<? extends AbstractEffect>, 
 		}
 	}
 	
-	private static final class SingletonHolder
+	private static class SingletonHolder
 	{
 		protected static final EffectHandler INSTANCE = new EffectHandler();
 	}

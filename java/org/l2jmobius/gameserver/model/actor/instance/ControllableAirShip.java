@@ -301,7 +301,7 @@ public class ControllableAirShip extends AirShip
 		}
 	}
 	
-	protected final class ConsumeFuelTask implements Runnable
+	protected class ConsumeFuelTask implements Runnable
 	{
 		@Override
 		public void run()
@@ -321,7 +321,7 @@ public class ControllableAirShip extends AirShip
 		}
 	}
 	
-	protected final class CheckTask implements Runnable
+	protected class CheckTask implements Runnable
 	{
 		@Override
 		public void run()
@@ -334,7 +334,7 @@ public class ControllableAirShip extends AirShip
 		}
 	}
 	
-	protected final class DecayTask implements Runnable
+	protected class DecayTask implements Runnable
 	{
 		@Override
 		public void run()

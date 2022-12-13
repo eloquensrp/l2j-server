@@ -142,7 +142,7 @@ public class MercTicketManager
 	/**
 	 * Load merc tickets into the world.
 	 */
-	private final void load()
+	private void load()
 	{
 		try (Connection con = DatabaseFactory.getConnection();
 			Statement s = con.createStatement();

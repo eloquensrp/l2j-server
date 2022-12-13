@@ -43,22 +43,22 @@ public class ItemAuctionBid
 		return _lastBid;
 	}
 	
-	final void setLastBid(long lastBid)
+	public void setLastBid(long lastBid)
 	{
 		_lastBid = lastBid;
 	}
 	
-	final void cancelBid()
+	public void cancelBid()
 	{
 		_lastBid = -1;
 	}
 	
-	final boolean isCanceled()
+	public boolean isCanceled()
 	{
 		return _lastBid <= 0;
 	}
 	
-	final Player getPlayer()
+	public Player getPlayer()
 	{
 		return World.getInstance().getPlayer(_playerObjId);
 	}

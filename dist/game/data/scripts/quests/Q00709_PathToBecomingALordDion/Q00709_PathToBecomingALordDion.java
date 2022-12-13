@@ -35,7 +35,7 @@ import org.l2jmobius.gameserver.network.serverpackets.NpcSay;
  * Path to Becoming a Lord - Dion (709)
  * @author Sacrifice
  */
-public final class Q00709_PathToBecomingALordDion extends Quest
+public class Q00709_PathToBecomingALordDion extends Quest
 {
 	private static final int CROSBY = 35142;
 	private static final int ROUKE = 31418;

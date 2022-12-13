@@ -39,7 +39,7 @@ import quests.Q00025_HidingBehindTheTruth.Q00025_HidingBehindTheTruth;
  * Path to Becoming a Lord - Rune (716)
  * @author Sacrifice
  */
-public final class Q00716_PathToBecomingALordRune extends Quest
+public class Q00716_PathToBecomingALordRune extends Quest
 {
 	private static final int FREDERICK = 35509;
 	private static final int AGRIPEL = 31348;

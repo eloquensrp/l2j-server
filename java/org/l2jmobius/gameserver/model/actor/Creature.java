@@ -2983,7 +2983,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 		return _isRunning;
 	}
 	
-	private final void setRunning(boolean value)
+	private void setRunning(boolean value)
 	{
 		if (_isRunning == value)
 		{
@@ -3153,7 +3153,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 	 * When a new instance of Creature is spawned, server just create a link between the instance and the template This link is stored in <b>_template</b>.
 	 * @param template
 	 */
-	protected final void setTemplate(CreatureTemplate template)
+	protected void setTemplate(CreatureTemplate template)
 	{
 		_template = template;
 	}

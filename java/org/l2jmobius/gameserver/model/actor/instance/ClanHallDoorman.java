@@ -167,7 +167,7 @@ public class ClanHallDoorman extends Doorman
 	}
 	
 	@Override
-	protected final void openDoors(Player player, String command)
+	protected void openDoors(Player player, String command)
 	{
 		getClanHall().openCloseDoors(true);
 		final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
@@ -177,7 +177,7 @@ public class ClanHallDoorman extends Doorman
 	}
 	
 	@Override
-	protected final void closeDoors(Player player, String command)
+	protected void closeDoors(Player player, String command)
 	{
 		getClanHall().openCloseDoors(false);
 		final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());

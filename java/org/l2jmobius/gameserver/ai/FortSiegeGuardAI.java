@@ -351,7 +351,7 @@ public class FortSiegeGuardAI extends CreatureAI implements Runnable
 		attackPrepare();
 	}
 	
-	private final void factionNotifyAndSupport()
+	private void factionNotifyAndSupport()
 	{
 		final Creature target = getAttackTarget();
 		// Call all WorldObject of its Faction inside the Faction Range

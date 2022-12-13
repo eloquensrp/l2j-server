@@ -48,7 +48,7 @@ public abstract class ZoneForm
 	
 	public abstract void visualizeZone(int z);
 	
-	protected final void dropDebugItem(int itemId, int num, int x, int y, int z)
+	protected void dropDebugItem(int itemId, int num, int x, int y, int z)
 	{
 		final Item item = new Item(IdManager.getInstance().getNextId(), itemId);
 		item.setCount(num);

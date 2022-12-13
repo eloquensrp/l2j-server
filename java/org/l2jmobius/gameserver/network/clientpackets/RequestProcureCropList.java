@@ -200,7 +200,7 @@ public class RequestProcureCropList implements ClientPacket
 		}
 	}
 	
-	private final class CropHolder extends UniqueItemHolder
+	private class CropHolder extends UniqueItemHolder
 	{
 		private final int _manorId;
 		private CropProcure _cp;

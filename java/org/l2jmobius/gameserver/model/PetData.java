@@ -243,7 +243,7 @@ public class PetData
 		return _skills;
 	}
 	
-	public static final class PetSkillLearn extends SkillHolder
+	public static class PetSkillLearn extends SkillHolder
 	{
 		private final int _minLevel;
 		

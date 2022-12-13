@@ -193,7 +193,7 @@ public class OlympiadStadiumZone extends ZoneRespawn
 	}
 	
 	@Override
-	protected final void onEnter(Creature creature)
+	protected void onEnter(Creature creature)
 	{
 		if ((getSettings().getOlympiadTask() != null) && getSettings().getOlympiadTask().isBattleStarted())
 		{
@@ -229,7 +229,7 @@ public class OlympiadStadiumZone extends ZoneRespawn
 	}
 	
 	@Override
-	protected final void onExit(Creature creature)
+	protected void onExit(Creature creature)
 	{
 		if ((getSettings().getOlympiadTask() != null) && getSettings().getOlympiadTask().isBattleStarted())
 		{
@@ -283,7 +283,7 @@ public class OlympiadStadiumZone extends ZoneRespawn
 		}
 	}
 	
-	private static final class KickPlayer implements Runnable
+	private static class KickPlayer implements Runnable
 	{
 		private Player _player;
 		

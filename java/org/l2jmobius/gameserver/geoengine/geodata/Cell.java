@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.geoengine.geodata;
 /**
  * @author HorridoJoho
  */
-public final class Cell
+public class Cell
 {
 	/** East NSWE flag */
 	public static final byte NSWE_EAST = 1 << 0;

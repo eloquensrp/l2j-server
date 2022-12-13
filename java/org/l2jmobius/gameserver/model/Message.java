@@ -374,7 +374,7 @@ public class Message
 		_attachments = null;
 	}
 	
-	static class AttachmentsUnloadTask implements Runnable
+	private static class AttachmentsUnloadTask implements Runnable
 	{
 		private Message _msg;
 		

@@ -44,7 +44,7 @@ import ai.AbstractNpcAI;
 
 public abstract class AirShipController extends AbstractNpcAI
 {
-	protected final class DecayTask implements Runnable
+	protected class DecayTask implements Runnable
 	{
 		@Override
 		public void run()
@@ -56,7 +56,7 @@ public abstract class AirShipController extends AbstractNpcAI
 		}
 	}
 	
-	protected final class DepartTask implements Runnable
+	protected class DepartTask implements Runnable
 	{
 		@Override
 		public void run()

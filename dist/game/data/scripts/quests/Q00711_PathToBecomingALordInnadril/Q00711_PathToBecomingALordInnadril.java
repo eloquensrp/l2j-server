@@ -34,7 +34,7 @@ import org.l2jmobius.gameserver.network.serverpackets.NpcSay;
  * Path to Becoming a Lord - Innadril (711)
  * @author Sacrifice
  */
-public final class Q00711_PathToBecomingALordInnadril extends Quest
+public class Q00711_PathToBecomingALordInnadril extends Quest
 {
 	private static final int NEURATH = 35316;
 	private static final int IASON_HEINE = 30969;

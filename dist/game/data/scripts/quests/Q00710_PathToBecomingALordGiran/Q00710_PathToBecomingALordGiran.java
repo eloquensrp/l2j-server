@@ -32,7 +32,7 @@ import org.l2jmobius.gameserver.network.serverpackets.NpcSay;
  * Path to Becoming a Lord - Giran (710)
  * @author Sacrifice
  */
-public final class Q00710_PathToBecomingALordGiran extends Quest
+public class Q00710_PathToBecomingALordGiran extends Quest
 {
 	private static final int SAUL = 35184;
 	private static final int GESTO = 30511;

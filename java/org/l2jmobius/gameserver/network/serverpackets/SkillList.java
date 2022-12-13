@@ -50,7 +50,7 @@ public class SkillList extends ServerPacket
 		}
 	}
 	
-	static class Skill
+	private static class Skill
 	{
 		public int id;
 		public int level;

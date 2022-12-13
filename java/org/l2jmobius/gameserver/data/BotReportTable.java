@@ -474,7 +474,7 @@ public class BotReportTable
 	/**
 	 * Represents the info about a reporter
 	 */
-	private final class ReporterCharData
+	private class ReporterCharData
 	{
 		private long _lastReport;
 		private byte _reportPoints;
@@ -510,7 +510,7 @@ public class BotReportTable
 	/**
 	 * Represents the info about a reported character
 	 */
-	private final class ReportedCharData
+	private class ReportedCharData
 	{
 		Map<Integer, Long> _reporters;
 		
@@ -556,7 +556,7 @@ public class BotReportTable
 	/**
 	 * SAX loader to parse /config/BotReportPunishments.xml file
 	 */
-	private final class PunishmentsLoader extends DefaultHandler
+	private class PunishmentsLoader extends DefaultHandler
 	{
 		PunishmentsLoader()
 		{
@@ -622,7 +622,7 @@ public class BotReportTable
 		}
 	}
 	
-	private static final class SingletonHolder
+	private static class SingletonHolder
 	{
 		static final BotReportTable INSTANCE = new BotReportTable();
 	}

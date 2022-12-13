@@ -162,7 +162,7 @@ public class Q10281_MutatedKaneusRune extends Quest
 		return htmltext;
 	}
 	
-	private final void rewardItem(Player player)
+	private void rewardItem(Player player)
 	{
 		giveItems(player, TISSUE_WA, 1);
 		playSound(player, QuestSound.ITEMSOUND_QUEST_ITEMGET);

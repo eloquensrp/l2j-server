@@ -19,7 +19,7 @@ package org.l2jmobius.gameserver.model.clientstrings;
 /**
  * @author Forsaiken
  */
-final class BuilderText extends Builder
+public class BuilderText extends Builder
 {
 	private final String _text;
 	

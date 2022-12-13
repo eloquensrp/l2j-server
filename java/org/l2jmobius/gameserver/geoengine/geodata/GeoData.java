@@ -29,7 +29,7 @@ import org.l2jmobius.gameserver.geoengine.geodata.regions.Region;
 /**
  * @author HorridoJoho
  */
-public final class GeoData
+public class GeoData
 {
 	// world dimensions: 1048576 * 1048576 = 1099511627776
 	private static final int WORLD_MIN_X = -655360;

@@ -200,7 +200,7 @@ public class Options
 		player.sendSkillList();
 	}
 	
-	private final void addSkill(Player player, Skill skill)
+	private void addSkill(Player player, Skill skill)
 	{
 		boolean updateTimeStamp = false;
 		player.addSkill(skill, false);

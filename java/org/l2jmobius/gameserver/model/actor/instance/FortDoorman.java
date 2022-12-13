@@ -60,7 +60,7 @@ public class FortDoorman extends Doorman
 	}
 	
 	@Override
-	protected final void openDoors(Player player, String command)
+	protected void openDoors(Player player, String command)
 	{
 		final StringTokenizer st = new StringTokenizer(command.substring(10), ", ");
 		st.nextToken();
@@ -72,7 +72,7 @@ public class FortDoorman extends Doorman
 	}
 	
 	@Override
-	protected final void closeDoors(Player player, String command)
+	protected void closeDoors(Player player, String command)
 	{
 		final StringTokenizer st = new StringTokenizer(command.substring(11), ", ");
 		st.nextToken();

@@ -217,12 +217,12 @@ public class ItemAuction
 		return lastBid;
 	}
 	
-	private final void updatePlayerBid(ItemAuctionBid bid, boolean delete)
+	private void updatePlayerBid(ItemAuctionBid bid, boolean delete)
 	{
 		updatePlayerBidInternal(bid, delete);
 	}
 	
-	final void updatePlayerBidInternal(ItemAuctionBid bid, boolean delete)
+	private void updatePlayerBidInternal(ItemAuctionBid bid, boolean delete)
 	{
 		final String query = delete ? DELETE_ITEM_AUCTION_BID : INSERT_ITEM_AUCTION_BID;
 		try (Connection con = DatabaseFactory.getConnection();
@@ -323,7 +323,7 @@ public class ItemAuction
 		}
 	}
 	
-	private final void onPlayerBid(Player player, ItemAuctionBid bid)
+	private void onPlayerBid(Player player, ItemAuctionBid bid)
 	{
 		if (_highestBid == null)
 		{
@@ -509,7 +509,7 @@ public class ItemAuction
 		return false;
 	}
 	
-	private final void increaseItemCount(Player player, long count)
+	private void increaseItemCount(Player player, long count)
 	{
 		player.addAdena("ItemAuction", count, player, true);
 	}

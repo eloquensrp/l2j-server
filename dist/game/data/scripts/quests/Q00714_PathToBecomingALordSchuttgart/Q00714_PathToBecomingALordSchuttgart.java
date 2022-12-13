@@ -36,7 +36,7 @@ import quests.Q00121_PavelTheGiant.Q00121_PavelTheGiant;
  * Path to Becoming a Lord - Schuttgart (714)
  * @author Sacrifice
  */
-public final class Q00714_PathToBecomingALordSchuttgart extends Quest
+public class Q00714_PathToBecomingALordSchuttgart extends Quest
 {
 	private static final int AUGUST = 35555;
 	private static final int NEWYEAR = 31961;

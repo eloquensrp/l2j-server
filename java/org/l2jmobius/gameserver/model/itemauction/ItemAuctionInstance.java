@@ -231,7 +231,7 @@ public class ItemAuctionInstance
 		return null;
 	}
 	
-	final void checkAndSetCurrentAndNextAuction()
+	private void checkAndSetCurrentAndNextAuction()
 	{
 		final ItemAuction[] auctions = _auctions.values().toArray(new ItemAuction[_auctions.size()]);
 		
@@ -369,7 +369,7 @@ public class ItemAuctionInstance
 		return auctions;
 	}
 	
-	private final class ScheduleAuctionTask implements Runnable
+	private class ScheduleAuctionTask implements Runnable
 	{
 		private final ItemAuction _auction;
 		
@@ -391,7 +391,7 @@ public class ItemAuctionInstance
 			}
 		}
 		
-		private final void runImpl() throws Exception
+		private void runImpl() throws Exception
 		{
 			final ItemAuctionState state = _auction.getAuctionState();
 			switch (state)
@@ -469,7 +469,7 @@ public class ItemAuctionInstance
 		}
 	}
 	
-	final void onAuctionFinished(ItemAuction auction)
+	private void onAuctionFinished(ItemAuction auction)
 	{
 		auction.broadcastToAllBiddersInternal(new SystemMessage(SystemMessageId.S1_S_AUCTION_HAS_ENDED).addInt(auction.getAuctionId()));
 		
@@ -504,7 +504,7 @@ public class ItemAuctionInstance
 		}
 	}
 	
-	final void setStateTask(ScheduledFuture<?> future)
+	private void setStateTask(ScheduledFuture<?> future)
 	{
 		final ScheduledFuture<?> stateTask = _stateTask;
 		if (stateTask != null)

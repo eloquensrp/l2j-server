@@ -17970,7 +17970,7 @@ public class NpcStringId
 		return _id;
 	}
 	
-	private final void setName(String name)
+	private void setName(String name)
 	{
 		_name = name;
 	}
@@ -18054,7 +18054,7 @@ public class NpcStringId
 		return "NS[" + getId() + ":" + getName() + "]";
 	}
 	
-	public static final class NSLocalisation
+	public static class NSLocalisation
 	{
 		private final String _lang;
 		private final Builder _builder;

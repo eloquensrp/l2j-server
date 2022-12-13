@@ -119,7 +119,7 @@ public class AirShipGludioGracia extends AbstractNpcAI implements Runnable
 		_ship.runEngine(60000);
 	}
 	
-	private final void broadcastInGludio(NpcStringId npcString)
+	private void broadcastInGludio(NpcStringId npcString)
 	{
 		if (!_foundAtcGludio)
 		{
@@ -132,7 +132,7 @@ public class AirShipGludioGracia extends AbstractNpcAI implements Runnable
 		}
 	}
 	
-	private final void broadcastInGracia(NpcStringId npcStringId)
+	private void broadcastInGracia(NpcStringId npcStringId)
 	{
 		if (!_foundAtcGracia)
 		{

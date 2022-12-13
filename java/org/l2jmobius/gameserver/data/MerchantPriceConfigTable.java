@@ -181,7 +181,7 @@ public class MerchantPriceConfigTable
 	/**
 	 * @author KenM
 	 */
-	public static final class MerchantPriceConfig
+	public static class MerchantPriceConfig
 	{
 		private final int _id;
 		private final String _name;
