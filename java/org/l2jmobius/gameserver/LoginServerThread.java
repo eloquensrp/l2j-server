@@ -599,7 +599,14 @@ public class LoginServerThread extends Thread
 				_blowfish.crypt(data, 2, size);
 				
 				_out.write(data);
-				_out.flush();
+				try
+				{
+					_out.flush();
+				}
+				catch (IOException e)
+				{
+					// LoginServer might have terminated.
+				}
 			}
 		}
 		catch (Exception e)

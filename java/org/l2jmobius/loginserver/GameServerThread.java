@@ -249,7 +249,14 @@ public class GameServerThread extends Thread
 				_blowfish.crypt(data, 2, size);
 				
 				_out.write(data);
-				_out.flush();
+				try
+				{
+					_out.flush();
+				}
+				catch (IOException e)
+				{
+					// GameServer might have terminated.
+				}
 			}
 		}
 		catch (IOException e)
