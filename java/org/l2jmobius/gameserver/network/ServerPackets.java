@@ -527,7 +527,7 @@ public enum ServerPackets
 	
 	public void writeId(ServerPacket packet)
 	{
-		if (Config.DEBUG_OUTGOING_PACKETS)
+		if (Config.DEBUG_SERVER_PACKETS)
 		{
 			final String name = packet.getClass().getSimpleName();
 			if (!Config.ALT_DEV_EXCLUDED_PACKETS.contains(name))
