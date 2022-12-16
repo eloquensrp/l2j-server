@@ -94,7 +94,7 @@ public class ReadablePacket
 	public int readShort()
 	{
 		return (_bytes[_position++] & 0xff) //
-			| ((_bytes[_position++] << 8) & 0xff00);
+			| ((_bytes[_position++] & 0xff) << 8);
 	}
 	
 	/**
@@ -105,9 +105,9 @@ public class ReadablePacket
 	public int readInt()
 	{
 		return (_bytes[_position++] & 0xff) //
-			| ((_bytes[_position++] << 8) & 0xff00) //
-			| ((_bytes[_position++] << 16) & 0xff0000) //
-			| ((_bytes[_position++] << 24) & 0xff000000);
+			| ((_bytes[_position++] & 0xff) << 8) //
+			| ((_bytes[_position++] & 0xff) << 16) //
+			| ((_bytes[_position++] & 0xff) << 24);
 	}
 	
 	/**
@@ -118,13 +118,13 @@ public class ReadablePacket
 	public long readLong()
 	{
 		return (_bytes[_position++] & 0xff) //
-			| ((_bytes[_position++] << 8) & 0xff00) //
-			| ((_bytes[_position++] << 16) & 0xff0000) //
-			| ((_bytes[_position++] << 24) & 0xff000000) //
-			| (((long) _bytes[_position++] << 32) & 0xff00000000L) //
-			| (((long) _bytes[_position++] << 40) & 0xff0000000000L) //
-			| (((long) _bytes[_position++] << 48) & 0xff000000000000L) //
-			| (((long) _bytes[_position++] << 56) & 0xff00000000000000L);
+			| ((_bytes[_position++] & 0xffL) << 8) //
+			| ((_bytes[_position++] & 0xffL) << 16) //
+			| ((_bytes[_position++] & 0xffL) << 24) //
+			| ((_bytes[_position++] & 0xffL) << 32) //
+			| ((_bytes[_position++] & 0xffL) << 40) //
+			| ((_bytes[_position++] & 0xffL) << 48) //
+			| ((_bytes[_position++] & 0xffL) << 56);
 	}
 	
 	/**
