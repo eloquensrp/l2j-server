@@ -8286,6 +8286,12 @@ public class Player extends Playable
 			return false;
 		}
 		
+		// Invisible GM players should not be attackable.
+		if (isInvisible() && isGM())
+		{
+			return false;
+		}
+		
 		// Check if the attacker isn't the Player Pet
 		if ((attacker == this) || (attacker == _summon))
 		{
