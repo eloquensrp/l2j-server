@@ -567,8 +567,6 @@ public class Config
 	public static String DEFAULT_TRADE_CHAT;
 	public static int MINIMUM_CHAT_LEVEL;
 	public static boolean ALLOW_WAREHOUSE;
-	public static boolean WAREHOUSE_CACHE;
-	public static int WAREHOUSE_CACHE_TIME;
 	public static boolean ALLOW_REFUND;
 	public static boolean ALLOW_MAIL;
 	public static boolean ALLOW_ATTACHMENTS;
@@ -2102,8 +2100,6 @@ public class Config
 			DEFAULT_TRADE_CHAT = generalConfig.getString("TradeChat", "ON");
 			MINIMUM_CHAT_LEVEL = generalConfig.getInt("MinimumChatLevel", 20);
 			ALLOW_WAREHOUSE = generalConfig.getBoolean("AllowWarehouse", true);
-			WAREHOUSE_CACHE = generalConfig.getBoolean("WarehouseCache", false);
-			WAREHOUSE_CACHE_TIME = generalConfig.getInt("WarehouseCacheTime", 15);
 			ALLOW_REFUND = generalConfig.getBoolean("AllowRefund", true);
 			ALLOW_MAIL = generalConfig.getBoolean("AllowMail", true);
 			ALLOW_ATTACHMENTS = generalConfig.getBoolean("AllowAttachments", true);
