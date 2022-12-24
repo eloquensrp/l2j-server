@@ -1,5 +1,6 @@
 package org.l2jmobius.commons.network;
 
+import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -17,6 +18,8 @@ public class NetClient
 	private SocketChannel _channel;
 	private NetConfig _netConfig;
 	private Queue<byte[]> _pendingPacketData;
+	private ByteBuffer _pendingByteBuffer;
+	private int _pendingPacketSize;
 	
 	/**
 	 * Initialize the client.
@@ -77,6 +80,11 @@ public class NetClient
 		{
 			_pendingPacketData.clear();
 		}
+		
+		if (_pendingByteBuffer != null)
+		{
+			_pendingByteBuffer = null;
+		}
 	}
 	
 	/**
@@ -122,6 +130,40 @@ public class NetClient
 	public Queue<byte[]> getPacketData()
 	{
 		return _pendingPacketData;
+	}
+	
+	/**
+	 * @return the pending read ByteBuffer.
+	 */
+	public ByteBuffer getPendingByteBuffer()
+	{
+		return _pendingByteBuffer;
+	}
+	
+	/**
+	 * Set the pending read ByteBuffer.
+	 * @param pendingByteBuffer the pending read ByteBuffer.
+	 */
+	public void setPendingByteBuffer(ByteBuffer pendingByteBuffer)
+	{
+		_pendingByteBuffer = pendingByteBuffer;
+	}
+	
+	/**
+	 * @return the expected pending packet size.
+	 */
+	public int getPendingPacketSize()
+	{
+		return _pendingPacketSize;
+	}
+	
+	/**
+	 * Set the expected pending packet size.
+	 * @param pendingPacketSize the expected packet size.
+	 */
+	public void setPendingPacketSize(int pendingPacketSize)
+	{
+		_pendingPacketSize = pendingPacketSize;
 	}
 	
 	/**
