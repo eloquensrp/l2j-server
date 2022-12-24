@@ -4034,7 +4034,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 	}
 	
 	/**
-	 * Abort the cast of the Creature and send Server->Client MagicSkillCanceld/ActionFailed packet.
+	 * Abort the cast of the Creature and send Server->Client MagicSkillCanceled/ActionFailed packet.
 	 */
 	public void abortCast()
 	{
@@ -5098,7 +5098,7 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 		// damage can only cancel magical & static skills
 		if (_isCastingNow && canAbortCast() && (_lastSkillCast != null) && (_lastSkillCast.isMagic() || _lastSkillCast.isStatic()))
 		{
-			// Abort the cast of the Creature and send Server->Client MagicSkillCanceld/ActionFailed packet.
+			// Abort the cast of the Creature and send Server->Client MagicSkillCanceled/ActionFailed packet.
 			abortCast();
 			
 			if (isPlayer())
