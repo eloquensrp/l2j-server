@@ -1662,86 +1662,117 @@
 		<set name="abnormalType" val="BIG_HEAD" />
 		<set name="abnormalVisualEffect" val="BIG_HEAD" />
 		<set name="blockedInOlympiad" val="true" />
+		<set name="castRange" val="600" />
+		<set name="effectRange" val="600" />
+		<set name="hitTime" val="500" />
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="-1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="SELF" />
 		<set name="trait" val="ETC" />
+		<for>
+			<effect name="MaxCp">
+				<param power="40" />
+				<param type="PER" />
+			</effect>
+			<effect name="MaxHp">
+				<param power="40" />
+				<param type="PER" />
+			</effect>
+			<effect name="MpConsumePerLevel">
+				<param power="40" />
+				<param type="PER" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="23092" levels="1" name="Jack O'Lantern Card">
 		<!-- Halloween Ghost Skill Presentation -->
 		<set name="blockedInOlympiad" val="true" />
 		<set name="coolTime" val="500" />
+		<set name="hitTime" val="2000" />
 		<set name="icon" val="BranchSys.icon.br_jack_ghost_i00" />
-		<set name="isMagic" val="2" /> <!-- Static Skill -->
+		<set name="isMagic" val="2" />
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A1" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="SELF" />
 	</skill>
 	<skill id="23093" levels="1" name="Rotten Jack O'Lantern Card">
 		<!-- Halloween Ghost Skill Presentation -->
 		<set name="blockedInOlympiad" val="true" />
 		<set name="coolTime" val="500" />
+		<set name="hitTime" val="2000" />
 		<set name="icon" val="BranchSys.icon.br_rotten_jack_ghost_i00" />
-		<set name="isMagic" val="2" /> <!-- Static Skill -->
+		<set name="isMagic" val="2" />
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A1" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="SELF" />
 	</skill>
 	<skill id="23094" levels="1" name="Jack O'Lantern Card - Confirm Skill">
 		<!-- Halloween Ghost Skill Presentation -->
 		<set name="blockedInOlympiad" val="true" />
+		<set name="castRange" val="500" />
 		<set name="effectPoint" val="-1" />
+		<set name="effectRange" val="500" />
 		<set name="icon" val="BranchSys.icon.br_jack_ghost_i00" />
-		<set name="isMagic" val="2" /> <!-- Static Skill -->
+		<set name="isMagic" val="2" />
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A1" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="23095" levels="1" name="Rotten Jack O'Lantern Card - Confirm Skill">
 		<!-- Halloween Ghost Skill Presentation -->
 		<set name="blockedInOlympiad" val="true" />
+		<set name="castRange" val="500" />
 		<set name="effectPoint" val="-1" />
+		<set name="effectRange" val="500" />
 		<set name="icon" val="BranchSys.icon.br_rotten_jack_ghost_i00" />
-		<set name="isMagic" val="2" /> <!-- Static Skill -->
+		<set name="isMagic" val="2" />
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A1" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="23096" levels="1" name="Halloween Defeat">
 		<!-- Halloween Defeat Effect -->
 		<set name="blockedInOlympiad" val="true" />
+		<set name="castRange" val="500" />
 		<set name="effectPoint" val="-1" />
-		<set name="isMagic" val="2" /> <!-- Static Skill -->
+		<set name="effectRange" val="500" />
+		<set name="isMagic" val="2" />
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A1" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="23097" levels="1" name="First Consecutive Win">
 		<!-- 1-time win at the Jack's Game. -->
 		<set name="blockedInOlympiad" val="true" />
+		<set name="castRange" val="500" />
 		<set name="effectPoint" val="-1" />
-		<set name="isMagic" val="2" /> <!-- Static Skill -->
+		<set name="effectRange" val="550" />
+		<set name="isMagic" val="2" />
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A1" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="23098" levels="1" name="2nd Consecutive Win">
 		<!-- 2-time win at the Jack's Game. -->
 		<set name="blockedInOlympiad" val="true" />
+		<set name="castRange" val="500" />
 		<set name="effectPoint" val="-1" />
-		<set name="isMagic" val="2" /> <!-- Static Skill -->
+		<set name="effectRange" val="550" />
+		<set name="isMagic" val="2" />
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A1" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="23099" levels="1" name="Third Consecutive Win">
 		<!-- 3-time win at the Jack's Game. -->
 		<set name="blockedInOlympiad" val="true" />
+		<set name="castRange" val="500" />
 		<set name="effectPoint" val="-1" />
-		<set name="isMagic" val="2" /> <!-- Static Skill -->
+		<set name="effectRange" val="550" />
+		<set name="isMagic" val="2" />
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A1" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 </list>

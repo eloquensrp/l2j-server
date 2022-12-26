@@ -1044,14 +1044,25 @@
 		<set name="abnormalTime" val="30" />
 		<set name="abnormalType" val="DAMAGE_AMPLIFY" />
 		<set name="basicProperty" val="CON" />
+		<set name="castRange" val="150" />
 		<set name="effectPoint" val="-1" />
+		<set name="effectRange" val="300" />
+		<set name="hitTime" val="1500" />
 		<set name="isDebuff" val="true" />
 		<set name="isMagic" val="1" /> <!-- Magic Skill -->
 		<set name="lvlBonusRate" val="1" />
 		<set name="magicLevel" val="85" />
 		<set name="operateType" val="A2" />
 		<set name="reuseDelay" val="2000" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Debuff">
+				<mul stat="mDef" val="0.1" />
+			</effect>
+			<effect name="Debuff">
+				<mul stat="pDef" val="0.1" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="6371" levels="1" name="Invincibility">
 		<!-- Invincible against standard targets, skills and buffs/debuffs. -->
@@ -1063,20 +1074,39 @@
 		<set name="magicLevel" val="85" />
 		<set name="operateType" val="A2" />
 		<set name="reuseDelay" val="6000" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="SELF" />
+		<for>
+			<effect name="Invincible" />
+			<effect name="Buff">
+				<set stat="debuffImmunity" val="1" />
+				<sub stat="cancelVuln" val="100" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="6372" levels="10" name="Power Up">
 		<!-- 2% of Atk. Spd. And 100% of Physical Skill Damage are increased. -->
-		<table name="#abnormalLevels">1 2 3 4 5 6 7 8 9 10</table>
-		<set name="abnormalLevel" val="#abnormalLevels" />
+		<!-- High Five Confirmed -->
+		<table name="#abnormalLvl">1 2 3 4 5 6 7 8 9 10</table>
+		<table name="#pAtkSpd">1.02 1.04 1.06 1.08 1.1 1.12 1.14 1.16 1.18 1.2</table>
+		<table name="#physicalSkillPower">2 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9</table>
+		<set name="abnormalLevel" val="#abnormalLvl" />
 		<set name="abnormalTime" val="60" />
 		<set name="abnormalType" val="SIGNAL_A" />
 		<set name="effectPoint" val="1" />
+		<set name="hitTime" val="1500" />
 		<set name="isMagic" val="1" /> <!-- Magic Skill -->
 		<set name="magicLevel" val="85" />
 		<set name="operateType" val="A2" />
 		<set name="reuseDelay" val="2000" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="SELF" />
+		<for>
+			<effect name="Buff">
+				<mul stat="pAtkSpd" val="#pAtkSpd" />
+			</effect>
+			<effect name="Buff">
+				<mul stat="physicalSkillPower" val="#physicalSkillPower" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="6373" levels="1" name="Thunderbolt">
 		<!-- Receive 8 times the normal damage. -->
@@ -1084,14 +1114,24 @@
 		<set name="abnormalTime" val="30" />
 		<set name="abnormalType" val="DAMAGE_AMPLIFY" />
 		<set name="basicProperty" val="CON" />
+		<set name="castRange" val="150" />
 		<set name="effectPoint" val="-1" />
+		<set name="effectRange" val="300" />
 		<set name="isDebuff" val="true" />
 		<set name="isMagic" val="1" /> <!-- Magic Skill -->
 		<set name="lvlBonusRate" val="1" />
 		<set name="magicLevel" val="85" />
 		<set name="operateType" val="A2" />
 		<set name="reuseDelay" val="2000" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Debuff">
+				<mul stat="mDef" val="0.1" />
+			</effect>
+			<effect name="Debuff">
+				<mul stat="pDef" val="0.1" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="6374" levels="1" name="Notification">
 		<set name="effectPoint" val="1" />

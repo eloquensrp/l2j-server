@@ -1295,6 +1295,7 @@
 		<set name="itemConsumeCount" val="1" />
 		<set name="itemConsumeId" val="17169" /> <!-- Olympiad Treasure Chest -->
 		<set name="operateType" val="A1" />
+		<set name="reuseDelay" val="2000" />
 		<set name="targetType" val="SELF" />
 		<cond msgId="129">
 			<and>

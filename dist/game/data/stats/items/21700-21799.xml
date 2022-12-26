@@ -863,7 +863,12 @@
 		<!-- Box containing the precious treasure of Elmore's renowned scholar Pablo. When used, you can obtain a hat with a certain rate of chance. -->
 		<set name="icon" val="icon.etc_treasure_box_i01" />
 		<set name="material" val="CRYSTAL" />
+		<set name="default_action" val="CAPSULE" />
+		<set name="is_tradable" val="false" />
+		<set name="is_dropable" val="false" />
 		<set name="is_stackable" val="true" />
+		<set name="handler" val="ItemSkills" />
+		<set name="item_skill" val="22277-1" />
 	</item>
 	<item id="21754" type="Weapon" name="Server Ziggi's Magic Pencil">
 		<!-- Magic pencil with a sharp tip. Item that can be used only on the server Ziggi. Cannot be exchanged or dropped. Can be stored in a private warehouse. -->

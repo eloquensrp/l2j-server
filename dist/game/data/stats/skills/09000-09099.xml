@@ -1446,27 +1446,43 @@
 	</skill>
 	<skill id="9088" levels="1" name="Cupid's Arrow">
 		<!-- Shoots a heart-arrow. -->
+		<set name="castRange" val="500" />
 		<set name="effectPoint" val="-1000" />
+		<set name="effectRange" val="700" />
+		<set name="hitTime" val="1000" />
 		<set name="icon" val="icon.skill3260" />
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="itemConsumeCount" val="1" />
 		<set name="itemConsumeId" val="17067" /> <!-- Event - Cupid's Fatigue Relief Potion -->
 		<set name="magicLevel" val="1" />
+		<set name="mpConsume" val="1" />
 		<set name="operateType" val="A1" />
+		<set name="power" val="100" />
 		<set name="reuseDelay" val="1000" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<cond msgId="109">
+			<target npcId="13196,13286,13287,13288,13289,13290,13291" />
+		</cond>
 	</skill>
 	<skill id="9089" levels="1" name="Cupid's Major Cure">
 		<!-- Shoots a big heart-arrow. -->
+		<set name="castRange" val="500" />
 		<set name="effectPoint" val="-1000" />
+		<set name="effectRange" val="700" />
+		<set name="hitTime" val="1000" />
 		<set name="icon" val="icon.skill3260" />
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="itemConsumeCount" val="1" />
 		<set name="itemConsumeId" val="17068" /> <!-- Event - Cupid's Powerful Fatigue Relief Potion -->
 		<set name="magicLevel" val="1" />
+		<set name="mpConsume" val="1" />
 		<set name="operateType" val="A1" />
+		<set name="power" val="200" />
 		<set name="reuseDelay" val="4000" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<cond msgId="109">
+			<target npcId="13196,13286,13287,13288,13289,13290,13291" />
+		</cond>
 	</skill>
 	<skill id="9090" levels="1" name="Fighter's Will">
 		<set name="hitTime" val="1500" />

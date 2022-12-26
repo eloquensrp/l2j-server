@@ -29,32 +29,94 @@
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A1" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="DispelBySlot">
+				<param dispel="EVENT_WIN,0" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="6105" levels="1" name="Turkey's Mistake">
 		<!-- The stupid turkey's mistake. For 1 hour, increases Max HP by 10%, Max MP by 10%, Max CP by 10%, Speed by 15%, P. Atk. by 10%, M. Atk. by 15%, Critical Rate by 5, Critical Damage by 15%, and the chance of prominent damage occurring through magic damage by 2. -->
 		<set name="abnormalLevel" val="2" />
 		<set name="abnormalTime" val="3600" />
 		<set name="abnormalType" val="EVENT_SANTA_REWARD" />
+		<set name="affectRange" val="400" />
 		<set name="effectPoint" val="1" />
 		<set name="hitTime" val="4000" />
 		<set name="icon" val="icon.turkey_buff_i00" />
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="AURA" />
+		<for>
+			<effect name="Buff">
+				<mul stat="critDmg" val="1.15" />
+			</effect>
+			<effect name="Buff">
+				<add stat="critRate" val="5" />
+			</effect>
+			<effect name="Buff">
+				<add stat="mCritRate" val="2" />
+			</effect>
+			<effect name="Buff">
+				<mul stat="mAtk" val="1.15" />
+			</effect>
+			<effect name="MaxCp">
+				<param power="10" />
+				<param type="PER" />
+			</effect>
+			<effect name="MaxHp">
+				<param power="10" />
+				<param type="PER" />
+			</effect>
+			<effect name="ManaHealByLevel">
+				<param power="10" />
+				<param type="PER" />
+			</effect>
+			<effect name="Buff">
+				<mul stat="pAtk" val="1.1" />
+			</effect>
+			<effect name="Buff">
+				<add stat="runSpd" val="15" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="6106" levels="1" name="Winter Holiday Festival">
 		<!-- Christmas festival. For 1 hour, increases Max HP by 5%, Max MP by 5%, Max CP by 5%, Speed by 10, P. Atk. by 8%, and M. Atk. by 10%. -->
 		<set name="abnormalLevel" val="1" />
 		<set name="abnormalTime" val="3600" />
 		<set name="abnormalType" val="EVENT_SANTA_REWARD" />
+		<set name="affectRange" val="400" />
 		<set name="effectPoint" val="1" />
 		<set name="icon" val="icon.xmas_miracle_i00" />
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="AURA" />
+		<for>
+			<effect name="Buff">
+				<mul stat="mAtk" val="1.1" />
+			</effect>
+			<effect name="MaxCp">
+				<param power="5" />
+				<param type="PER" />
+			</effect>
+			<effect name="MaxHp">
+				<param power="5" />
+				<param type="PER" />
+			</effect>
+			<effect name="ManaHealByLevel">
+				<param power="5" />
+				<param type="PER" />
+			</effect>
+			<effect name="Buff">
+				<mul stat="pAtk" val="1.08" />
+			</effect>
+			<effect name="Buff">
+				<add stat="runSpd" val="10" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="6107" levels="1" name="Winter Holiday Blessing - Gludio">
 		<!-- Christmas Blessing - Registered in Gludio territory. If the corresponding territory Santa is rescued, you get the chance to receive a gift from Santa. -->
@@ -66,7 +128,7 @@
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="6108" levels="1" name="Winter Holiday Blessing - Dion">
 		<!-- Christmas Blessing - Registered in Dion territory. If the corresponding territory Santa is rescued, you get the chance to receive a gift from Santa. -->
@@ -78,7 +140,7 @@
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="6109" levels="1" name="Winter Holiday Blessing - Giran">
 		<!-- Christmas Blessing - Registered in Giran territory. If the corresponding territory Santa is rescued, you get the chance to receive a gift from Santa. -->
@@ -90,7 +152,7 @@
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="6110" levels="1" name="Winter Holiday Blessing - Oren">
 		<!-- Christmas Blessing - Registered in Oren territory. If the corresponding territory Santa is rescued, you get the chance to receive a gift from Santa. -->
@@ -102,7 +164,7 @@
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="6111" levels="1" name="Winter Holiday Blessing - Aden">
 		<!-- Christmas Blessing - Registered in Aden territory. If the corresponding territory Santa is rescued, you get the chance to receive a gift from Santa. -->
@@ -114,7 +176,7 @@
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="6112" levels="1" name="Winter Holiday Blessing - Innadril">
 		<!-- Christmas Blessing - Registered in Innadril territory. If the corresponding territory Santa is rescued, you get the chance to receive a gift from Santa. -->
@@ -126,7 +188,7 @@
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="6113" levels="1" name="Winter Holiday Blessing - Goddard">
 		<!-- Christmas Blessing - Registered in Goddard territory. If the corresponding territory Santa is rescued, you get the chance to receive a gift from Santa. -->
@@ -138,7 +200,7 @@
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="6114" levels="1" name="Winter Holiday Blessing - Rune">
 		<!-- Christmas Blessing - Registered in Rune territory. If the corresponding territory Santa is rescued, you get the chance to receive a gift from Santa. -->
@@ -150,7 +212,7 @@
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="6115" levels="1" name="Winter Holiday Blessing - Schuttgart">
 		<!-- Christmas Blessing - Registered in Schuttgart territory. If the corresponding territory Santa is rescued, you get the chance to receive a gift from Santa. -->
@@ -162,7 +224,7 @@
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="6116" levels="1" name="Attack Turkey">
 		<!-- Attacks the Turkey -->
@@ -185,7 +247,10 @@
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Root" />
+		</for>
 	</skill>
 	<skill id="6120" levels="1" name="Santa Claus' Reward">
 		<!-- Santa Claus' reward. For 1 hour, increases Max HP by 10%, Max MP by 10%, Max CP by 10%, Speed by 15%, P. Atk. by 10%, M. Atk. by 15%, Critical Rate by 5, Critical Damage by 15%, and the chance of prominent damage occurring through magic damage by 2. -->

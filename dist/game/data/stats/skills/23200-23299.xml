@@ -1587,8 +1587,16 @@
 	</skill>
 	<skill id="23297" levels="1" name="Santa Claus's Blessing">
 		<!-- Rudolph's Blessing. For 20 minutes, increases Atk. Spd. by 10%, Casting Spd. by 10%, and Speed by 10. Rudolph consumes 2 fresh herbs. -->
-		<set name="operateType" val="P" />
-		<set name="targetType" val="NONE" />
+		<set name="isMagic" val="1" /> <!-- Magic Skill -->
+		<set name="operateType" val="A2" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Buff">
+				<mul stat="pAtkSpd" val="1.1" />
+				<mul stat="mAtkSpd" val="1.1" />
+				<add stat="runSpd" val="10" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="23298" levels="1" name="Flame Hawk">
 		<!-- Envelops in flames to inflict 300 fire damage every second for 10 seconds. -->

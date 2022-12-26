@@ -337,6 +337,7 @@
 		<set name="effectPoint" val="1" />
 		<set name="isMagic" val="1" /> <!-- Magic Skill -->
 		<set name="effectRange" val="1100" />
+		<set name="isMagic" val="1" />
 		<set name="magicLevel" val="85" />
 		<set name="operateType" val="A1" />
 		<set name="targetType" val="NONE" />

@@ -1059,7 +1059,10 @@
 		<set name="isDebuff" val="true" />
 		<set name="magicLevel" val="-1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Transformation" />
+		</for>
 	</skill>
 	<skill id="5482" levels="1" name="Transform Penalty">
 		<!-- You cannot be transformed while under this effect. -->
@@ -1071,7 +1074,10 @@
 		<set name="isDebuff" val="true" />
 		<set name="magicLevel" val="-1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Transformation" />
+		</for>
 	</skill>
 	<skill id="5483" levels="1" name="Counter Aggression">
 		<set name="effectPoint" val="-662" />

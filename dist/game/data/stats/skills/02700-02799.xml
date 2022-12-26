@@ -2756,7 +2756,8 @@
 		</for>
 	</skill>
 	<skill id="2792" levels="2" name="Stone of Stamina">
-		<table name="#amount">700 20000</table> <!-- FIXME: wrong values! -->
+		<!-- High Five Confirmed -->
+		<table name="#hpHeal">15 25</table>
 		<set name="effectPoint" val="100" />
 		<set name="hitTime" val="100" />
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
@@ -2765,13 +2766,14 @@
 		<set name="reuseDelay" val="2000" />
 		<set name="targetType" val="SELF" />
 		<for>
-			<effect name="Heal">
-				<param power="#amount" />
+			<effect name="HealPercent">
+				<param power="#hpHeal" />
 			</effect>
 		</for>
 	</skill>
 	<skill id="2793" levels="2" name="Stone of Mana">
-		<table name="#amount">500 20000</table> <!-- FIXME: wrong values! -->
+		<!-- High Five Confirmed -->
+		<table name="#mpHeal">11 18</table>
 		<set name="effectPoint" val="100" />
 		<set name="hitTime" val="100" />
 		<set name="isMagic" val="2" /> <!-- Static Skill -->
@@ -2780,12 +2782,13 @@
 		<set name="reuseDelay" val="2000" />
 		<set name="targetType" val="SELF" />
 		<for>
-			<effect name="ManaHeal">
-				<param power="#amount" />
+			<effect name="ManaHealPercent">
+				<param power="#mpHeal" />
 			</effect>
 		</for>
 	</skill>
 	<skill id="2794" levels="2" name="Stone of Recovery">
+		<!-- High Five Confirmed -->
 		<table name="#hpHeal">15 25</table>
 		<table name="#mpHeal">11 18</table>
 		<set name="effectPoint" val="100" />
@@ -2886,7 +2889,7 @@
 		<set name="targetType" val="SELF" />
 		<for>
 			<effect name="Buff">
-				<mul stat="critDmg" val="1.3" />
+				<mul stat="critRate" val="1.25" />
 			</effect>
 		</for>
 	</skill>

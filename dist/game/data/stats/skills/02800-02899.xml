@@ -42,7 +42,15 @@
 		<set name="magicLevel" val="80" />
 		<set name="operateType" val="A1" />
 		<set name="reuseDelay" val="2000" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="SELF" />
+		<for>
+			<effect name="HealPercent">
+				<param power="100" />
+			</effect>
+			<effect name="ManaHealPercent">
+				<param power="100" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="2803" levels="1" name="Seed of Revenge">
 		<set name="hitTime" val="1500" />

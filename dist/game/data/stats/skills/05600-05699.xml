@@ -282,14 +282,24 @@
 		<set name="abnormalLevel" val="4" />
 		<set name="abnormalTime" val="20" />
 		<set name="abnormalType" val="PD_DOWN" />
+		<set name="castRange" val="200" />
 		<set name="effectPoint" val="-100" />
+		<set name="effectRange" val="400" />
 		<set name="hitTime" val="1200" />
 		<set name="icon" val="icon.skill0122" />
 		<set name="isDebuff" val="true" />
 		<set name="isMagic" val="1" /> <!-- Magic Skill -->
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Debuff">
+				<mul stat="mDef" val="0.25" />
+			</effect>
+			<effect name="Debuff">
+				<mul stat="pDef" val="0.25" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="5624" levels="1" name="Soul Confinement">
 		<!-- The soul is confined, making it impossible to move, but in addition, damage is not incurred. Effect 1. -->
@@ -297,14 +307,24 @@
 		<set name="abnormalTime" val="3" />
 		<set name="abnormalType" val="INVINCIBILITY" />
 		<set name="abnormalVisualEffect" val="INVINCIBILITY" />
+		<set name="castRange" val="400" />
 		<set name="effectPoint" val="-707" />
+		<set name="effectRange" val="900" />
 		<set name="hitTime" val="2000" />
 		<set name="icon" val="icon.skill1201" />
 		<set name="isDebuff" val="true" />
 		<set name="isMagic" val="1" /> <!-- Magic Skill -->
 		<set name="magicLevel" val="51" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Stun" />
+			<effect name="Invincible" />
+			<effect name="Buff">
+				<set stat="debuffImmunity" val="1" />
+				<sub stat="cancelVuln" val="100" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="5625" levels="1" name="Soul Confinement">
 		<!-- The soul is confined, making it impossible to move, but in addition, damage is not incurred. Effect 1. -->
@@ -312,14 +332,24 @@
 		<set name="abnormalTime" val="10" />
 		<set name="abnormalType" val="INVINCIBILITY" />
 		<set name="abnormalVisualEffect" val="INVINCIBILITY" />
+		<set name="castRange" val="400" />
 		<set name="effectPoint" val="-707" />
+		<set name="effectRange" val="900" />
 		<set name="hitTime" val="2000" />
 		<set name="icon" val="icon.skill1201" />
 		<set name="isDebuff" val="true" />
 		<set name="isMagic" val="1" /> <!-- Magic Skill -->
 		<set name="magicLevel" val="95" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Stun" />
+			<effect name="Invincible" />
+			<effect name="Buff">
+				<set stat="debuffImmunity" val="1" />
+				<sub stat="cancelVuln" val="100" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="5626" levels="1" name="Raid Boss">
 		<!-- Mutants that suddenly appeared in Aden world. They often possess great strength and special abilities, but their activity is limited, so they seem unable to directly walk around on Aden's ground. -->
@@ -623,7 +653,12 @@
 		<set name="isMagic" val="1" /> <!-- Magic Skill -->
 		<set name="magicLevel" val="44" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Buff">
+				<mul stat="pDef" val="1.15" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="5642" levels="4" name="not_used">
 		<table name="#abnormalLevels">3 4 5 6</table>
@@ -667,13 +702,20 @@
 		<set name="abnormalLevel" val="2" />
 		<set name="abnormalTime" val="1200" />
 		<set name="abnormalType" val="SPEED_UP" />
+		<set name="castRange" val="400" />
 		<set name="effectPoint" val="285" />
+		<set name="effectRange" val="900" />
 		<set name="hitTime" val="4000" />
 		<set name="icon" val="icon.skill1204" />
 		<set name="isMagic" val="1" /> <!-- Magic Skill -->
 		<set name="magicLevel" val="30" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Buff">
+				<add stat="runSpd" val="33" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="5645" levels="3" name="not_used">
 		<table name="#abnormalLevels">2 3 4</table>
@@ -827,13 +869,20 @@
 		<set name="abnormalLevel" val="3" />
 		<set name="abnormalTime" val="1200" />
 		<set name="abnormalType" val="PA_UP" />
+		<set name="castRange" val="400" />
 		<set name="effectPoint" val="379" />
+		<set name="effectRange" val="900" />
 		<set name="hitTime" val="4000" />
 		<set name="icon" val="icon.skill1068" />
 		<set name="isMagic" val="1" /> <!-- Magic Skill -->
 		<set name="magicLevel" val="40" />
 		<set name="operateType" val="A2" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="Buff">
+				<mul stat="pAtk" val="1.15" />
+			</effect>
+		</for>
 	</skill>
 	<skill id="5652" levels="3" name="Nightshade - Death Whisper">
 		<!-- Temporarily increases critical attack power. Effect 1. -->
@@ -1112,12 +1161,15 @@
 		<set name="targetType" val="NONE" />
 	</skill>
 	<skill id="5662" levels="1" name="Presentation - Resurrection Possible">
+		<!-- High Five Confirmed -->
+		<set name="castRange" val="600" />
 		<set name="effectPoint" val="100" />
+		<set name="effectRange" val="1100" />
 		<set name="hitTime" val="1000" />
 		<set name="icon" val="icon.skill5662" />
 		<set name="magicLevel" val="1" />
 		<set name="operateType" val="A1" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="ONE" />
 	</skill>
 	<skill id="5663" levels="5" name="Resistance to Ancient Sword">
 		<!-- Strong against ancient sword attacks. -->

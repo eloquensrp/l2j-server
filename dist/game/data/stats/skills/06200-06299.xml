@@ -771,10 +771,17 @@
 		<set name="isDebuff" val="true" />
 		<set name="lvlBonusRate" val="1" />
 		<set name="magicLevel" val="77" />
+		<set name="mpConsume" val="78" />
 		<set name="operateType" val="A2" />
 		<set name="reuseDelay" val="30000" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="AURA" />
 		<set name="trait" val="SHOCK" />
+		<for>
+			<effect name="PhysicalAttack">
+				<param power="2959" />
+			</effect>
+			<effect name="Stun" />
+		</for>
 	</skill>
 	<skill id="6264" levels="1" name="Golem Boom">
 		<set name="coolTime" val="500" />
@@ -782,7 +789,8 @@
 		<set name="magicLevel" val="75" />
 		<set name="operateType" val="A1" />
 		<set name="reuseDelay" val="3000" />
-		<set name="targetType" val="NONE" />
+		<set name="targetType" val="AURA" />
+		<set name="affectRange" val="50" />
 	</skill>
 	<skill id="6265" levels="1" name="Smoke">
 		<set name="coolTime" val="500" />
@@ -1162,8 +1170,8 @@
 		<set name="targetType" val="AURA" />
 		<for>
 			<effect name="Buff">
-				<mul stat="pAtk" val="4" />
-				<mul stat="mAtk" val="4" />
+				<mul stat="pAtk" val="3" />
+				<mul stat="mAtk" val="3" />
 				<mul stat="pAtkSpd" val="1.25" />
 				<mul stat="mAtkSpd" val="1.25" />
 			</effect>
