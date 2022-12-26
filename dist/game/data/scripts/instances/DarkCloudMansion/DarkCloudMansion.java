@@ -19,6 +19,7 @@ package instances.DarkCloudMansion;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.l2jmobius.gameserver.ai.CtrlIntention;
 import org.l2jmobius.gameserver.enums.ChatType;
 import org.l2jmobius.gameserver.instancemanager.InstanceManager;
 import org.l2jmobius.gameserver.model.Location;
@@ -615,6 +616,7 @@ public class DarkCloudMansion extends AbstractInstance
 			{
 				thisNpc = new DMCNpc();
 				thisNpc.npc = addSpawn(SC, x, y, -6115, 16215, false, 0, false, world.getInstanceId());
+				thisNpc.npc.disableCoreAI(true);
 				thisNpc.status = templist[yy][xx];
 				thisNpc.order = yy;
 				forthRoom.npcList.add(thisNpc);
@@ -656,6 +658,7 @@ public class DarkCloudMansion extends AbstractInstance
 			thisNpc = new DMCNpc();
 			thisNpc.npc = addSpawn(BS[idx], x, 182145, -6117, 48810, false, 0, false, world.getInstanceId());
 			thisNpc.npc.setRandomWalking(false);
+			thisNpc.npc.disableCoreAI(true);
 			thisNpc.order = idx;
 			thisNpc.status = temp[idx];
 			thisNpc.count = 0;
@@ -759,6 +762,8 @@ public class DarkCloudMansion extends AbstractInstance
 					else
 					{
 						fifthRoom.reset = 1;
+						mob.npc.disableCoreAI(false);
+						mob.npc.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, player);
 						mob.npc.broadcastPacket(new NpcSay(mob.npc.getObjectId(), ChatType.NPC_GENERAL, mob.npc.getId(), _faildChat[getRandom(_faildChat.length)]));
 						startQuestTimer("decayChatBelethSamples", 4000, npc, player);
 						startQuestTimer("decayBelethSamples", 4500, npc, player);
@@ -1018,9 +1023,17 @@ public class DarkCloudMansion extends AbstractInstance
 				final DMCRoom forthRoom = world.getParameters().getObject("ForthRoom", DMCRoom.class);
 				for (DMCNpc mob : forthRoom.npcList)
 				{
-					if ((mob.npc == npc) && mob.npc.isInvul() && (getRandom(100) < 12))
+					if (mob.npc == npc)
 					{
-						addSpawn(BM[getRandom(BM.length)], attacker.getX(), attacker.getY(), attacker.getZ(), 0, false, 0, false, world.getInstanceId());
+						if (mob.npc.isCoreAIDisabled())
+						{
+							mob.npc.disableCoreAI(false);
+							mob.npc.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+						}
+						if (mob.npc.isInvul() && (getRandom(100) < 12))
+						{
+							addSpawn(BM[getRandom(BM.length)], attacker.getX(), attacker.getY(), attacker.getZ(), 0, false, 0, false, world.getInstanceId());
+						}
 					}
 				}
 			}

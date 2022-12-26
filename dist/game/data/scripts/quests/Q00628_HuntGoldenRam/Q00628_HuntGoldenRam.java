@@ -138,10 +138,10 @@ public class Q00628_HuntGoldenRam extends Quest
 	public String onKill(Npc npc, Player killer, boolean isSummon)
 	{
 		final QuestState qs = getRandomPartyMemberState(killer, -1, 1, npc);
-		if (qs != null)
+		if ((qs != null) && !qs.isCond(3))
 		{
 			final ItemChanceHolder item = MOBS_DROP_CHANCES.get(npc.getId());
-			if ((item.getCount() <= qs.getCond()) && !qs.isCond(3))
+			if (item.getCount() <= qs.getCond())
 			{
 				giveItemRandomly(qs.getPlayer(), npc, item.getId(), 1, REQUIRED_ITEM_COUNT, item.getChance(), true);
 			}

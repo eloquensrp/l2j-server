@@ -43,7 +43,6 @@ public class Q10292_SevenSignsGirlOfDoubt extends Quest
 	private static final int MIN_LEVEL = 81;
 	// Variables
 	private static final String I_QUEST1 = "I_QUEST1";
-	private static final String KILLCOUNT_VAR = "killCount";
 	// Monster
 	private static final int CREATURE_OF_THE_DUSK1 = 27422;
 	private static final int CREATURE_OF_THE_DUSK2 = 27424;
@@ -142,6 +141,7 @@ public class Q10292_SevenSignsGirlOfDoubt extends Quest
 			{
 				if (!npc.getVariables().getBoolean(I_QUEST1, false))
 				{
+					qs.set("killCount", 0);
 					npc.getVariables().set(I_QUEST1, true);
 					addSpawn(CREATURE_OF_THE_DUSK1, 89440, -238016, -9632, getRandom(360), false, 0, false, player.getInstanceId());
 					addSpawn(CREATURE_OF_THE_DUSK2, 89524, -238131, -9632, getRandom(360), false, 0, false, player.getInstanceId());
@@ -208,15 +208,12 @@ public class Q10292_SevenSignsGirlOfDoubt extends Quest
 			}
 			else
 			{
-				if (qs.getInt(KILLCOUNT_VAR) == 1)
+				final int killCount = qs.getInt("killCount") + 1;
+				qs.set("killCount", killCount);
+				if (killCount == 2)
 				{
-					qs.unset(KILLCOUNT_VAR);
 					qs.setMemoState(6);
 					qs.setCond(6);
-				}
-				else
-				{
-					qs.set(KILLCOUNT_VAR, 1);
 				}
 			}
 		}

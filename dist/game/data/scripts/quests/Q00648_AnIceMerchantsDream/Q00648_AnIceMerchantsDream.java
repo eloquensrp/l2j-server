@@ -348,7 +348,7 @@ public class Q00648_AnIceMerchantsDream extends Quest
 					if (hasQuestItems(player, SILVER_ICE_CRYSTAL))
 					{
 						final int val = qs.getInt("ex") % 10;
-						if (val == 0)
+						if (!qs.isSet("ex") || (val == 0))
 						{
 							htmltext = "32023-03.html";
 							qs.set("ex", 0);

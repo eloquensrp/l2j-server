@@ -606,7 +606,7 @@ public class Q00334_TheWishingPotion extends Quest
 									case 1:
 									{
 										addSpawn(FAIRY_RUPINA, npc, true, 0, false);
-										qs.set("Exchange", 0);
+										qs.set(EXCHANGE, 0);
 										break;
 									}
 									case 2:
@@ -614,19 +614,19 @@ public class Q00334_TheWishingPotion extends Quest
 										addSpawn(GRIMA, npc, true, 0, false);
 										addSpawn(GRIMA, npc, true, 0, false);
 										addSpawn(GRIMA, npc, true, 0, false);
-										qs.set("Exchange", 0);
+										qs.set(EXCHANGE, 0);
 										break;
 									}
 									case 3:
 									{
 										giveItems(player, Q_CERTIFICATE_OF_ROYALTY, 1);
-										qs.set("Exchange", 0);
+										qs.set(EXCHANGE, 0);
 										break;
 									}
 									case 4:
 									{
 										addSpawn(WISDOM_CHEST, npc, true, 0, false);
-										qs.set("Exchange", 0);
+										qs.set(EXCHANGE, 0);
 										break;
 									}
 								}
@@ -642,25 +642,25 @@ public class Q00334_TheWishingPotion extends Quest
 										addSpawn(SUCCUBUS_OF_SEDUCTION, npc, true, 0, false);
 										addSpawn(SUCCUBUS_OF_SEDUCTION, npc, true, 0, false);
 										addSpawn(SUCCUBUS_OF_SEDUCTION, npc, true, 0, false);
-										qs.set("Exchange", 0);
+										qs.set(EXCHANGE, 0);
 										break;
 									}
 									case 2:
 									{
 										giveAdena(player, 10000, true);
-										qs.set("Exchange", 0);
+										qs.set(EXCHANGE, 0);
 										break;
 									}
 									case 3:
 									{
 										addSpawn(DLORD_ALEXANDROSANCHES, npc, true, 0, false);
-										qs.set("Exchange", 0);
+										qs.set(EXCHANGE, 0);
 										break;
 									}
 									case 4:
 									{
 										addSpawn(WISDOM_CHEST, npc, true, 0, false);
-										qs.set("Exchange", 0);
+										qs.set(EXCHANGE, 0);
 										break;
 									}
 								}
@@ -673,19 +673,19 @@ public class Q00334_TheWishingPotion extends Quest
 									case 2:
 									{
 										giveAdena(player, 10000, true);
-										qs.set("Exchange", 0);
+										qs.set(EXCHANGE, 0);
 										break;
 									}
 									case 3:
 									{
 										giveItems(player, Q_ANCIENT_CROWN, 1);
-										qs.set("Exchange", 0);
+										qs.set(EXCHANGE, 0);
 										break;
 									}
 									case 4:
 									{
 										addSpawn(WISDOM_CHEST, npc, true, 0, false);
-										qs.set("Exchange", 0);
+										qs.set(EXCHANGE, 0);
 										break;
 									}
 								}
