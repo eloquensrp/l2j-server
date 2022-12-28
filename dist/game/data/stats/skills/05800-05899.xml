@@ -753,25 +753,31 @@
 	</skill>
 	<skill id="5852" levels="1" name="Flip Block">
 		<!-- Flips blocks. -->
+		<set name="icon" val="icon.skill_transform_s_attack" />
 		<set name="castRange" val="40" />
 		<set name="effectRange" val="400" />
 		<set name="hitTime" val="1000" />
-		<set name="icon" val="icon.skill_transform_s_attack" />
 		<set name="magicLevel" val="80" />
 		<set name="operateType" val="A1" />
 		<set name="reuseDelay" val="2000" />
 		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="FlipBlock" />
+		</for>
 	</skill>
 	<skill id="5853" levels="1" name="Flip Block">
 		<!-- Flips blocks. -->
+		<set name="icon" val="icon.skill_transform_s_attack" />
 		<set name="castRange" val="40" />
 		<set name="effectRange" val="400" />
 		<set name="hitTime" val="1000" />
-		<set name="icon" val="icon.skill_transform_s_attack" />
 		<set name="magicLevel" val="80" />
 		<set name="operateType" val="A1" />
 		<set name="reuseDelay" val="2000" />
 		<set name="targetType" val="ONE" />
+		<for>
+			<effect name="FlipBlock" />
+		</for>
 	</skill>
 	<skill id="5854" levels="1" name="Decrease Speed">
 		<!-- Speed is decreased. -->

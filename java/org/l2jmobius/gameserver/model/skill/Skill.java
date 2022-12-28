@@ -38,15 +38,12 @@ import org.l2jmobius.gameserver.enums.SkillFinishType;
 import org.l2jmobius.gameserver.geoengine.GeoEngine;
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
 import org.l2jmobius.gameserver.handler.TargetHandler;
-import org.l2jmobius.gameserver.instancemanager.HandysBlockCheckerManager;
-import org.l2jmobius.gameserver.model.ArenaParticipantsHolder;
 import org.l2jmobius.gameserver.model.ExtractableProductItem;
 import org.l2jmobius.gameserver.model.ExtractableSkill;
 import org.l2jmobius.gameserver.model.StatSet;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
 import org.l2jmobius.gameserver.model.actor.Player;
-import org.l2jmobius.gameserver.model.actor.instance.Block;
 import org.l2jmobius.gameserver.model.actor.instance.Cubic;
 import org.l2jmobius.gameserver.model.conditions.Condition;
 import org.l2jmobius.gameserver.model.effects.AbstractEffect;
@@ -1407,65 +1404,24 @@ public class Skill implements IIdentifiable
 	 */
 	private void activateSkill(Creature caster, Cubic cubic, WorldObject... targets)
 	{
-		switch (_id)
+		for (WorldObject obj : targets)
 		{
-			// TODO: replace with AI
-			case 5852:
-			case 5853:
+			final Creature target = (Creature) obj;
+			if (Formulas.calcBuffDebuffReflection(target, this))
 			{
-				final Block block = targets[0] instanceof Block ? (Block) targets[0] : null;
-				final Player player = caster.isPlayer() ? (Player) caster : null;
-				if ((block == null) || (player == null))
-				{
-					return;
-				}
+				// If skill is reflected instant effects should be casted on target and continuous effects on caster.
+				applyEffects(target, caster, false, 0);
 				
-				final int arena = player.getBlockCheckerArena();
-				if (arena != -1)
-				{
-					final ArenaParticipantsHolder holder = HandysBlockCheckerManager.getInstance().getHolder(arena);
-					if (holder == null)
-					{
-						return;
-					}
-					
-					final int team = holder.getPlayerTeam(player);
-					final int color = block.getColorEffect();
-					if ((team == 0) && (color == 0x00))
-					{
-						block.changeColor(player, holder, team);
-					}
-					else if ((team == 1) && (color == 0x53))
-					{
-						block.changeColor(player, holder, team);
-					}
-				}
-				break;
+				final BuffInfo info = new BuffInfo(caster, target, this);
+				applyEffectScope(EffectScope.GENERAL, info, true, false);
+				
+				final EffectScope pvpOrPveEffectScope = caster.isPlayable() && target.isAttackable() ? EffectScope.PVE : caster.isPlayable() && target.isPlayable() ? EffectScope.PVP : null;
+				applyEffectScope(pvpOrPveEffectScope, info, true, false);
+				applyEffectScope(EffectScope.CHANNELING, info, true, false);
 			}
-			default:
+			else
 			{
-				for (WorldObject obj : targets)
-				{
-					final Creature target = (Creature) obj;
-					if (Formulas.calcBuffDebuffReflection(target, this))
-					{
-						// if skill is reflected instant effects should be casted on target
-						// and continuous effects on caster
-						applyEffects(target, caster, false, 0);
-						
-						final BuffInfo info = new BuffInfo(caster, target, this);
-						applyEffectScope(EffectScope.GENERAL, info, true, false);
-						
-						final EffectScope pvpOrPveEffectScope = caster.isPlayable() && target.isAttackable() ? EffectScope.PVE : caster.isPlayable() && target.isPlayable() ? EffectScope.PVP : null;
-						applyEffectScope(pvpOrPveEffectScope, info, true, false);
-						applyEffectScope(EffectScope.CHANNELING, info, true, false);
-					}
-					else
-					{
-						applyEffects(caster, target);
-					}
-				}
-				break;
+				applyEffects(caster, target);
 			}
 		}
 		

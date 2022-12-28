@@ -88,6 +88,7 @@ public class EffectMasterHandler
 		Fear.class,
 		Fishing.class,
 		Flag.class,
+		FlipBlock.class,
 		FocusEnergy.class,
 		FocusMaxEnergy.class,
 		FocusSouls.class,

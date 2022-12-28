@@ -553,6 +553,7 @@
 					<xs:enumeration value="Fear" />
 					<xs:enumeration value="Fishing" />
 					<xs:enumeration value="Flag" />
+					<xs:enumeration value="FlipBlock" />
 					<xs:enumeration value="FocusEnergy" />
 					<xs:enumeration value="FocusMaxEnergy" />
 					<xs:enumeration value="FocusSouls" />
