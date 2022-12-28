@@ -719,6 +719,8 @@ public class BlockChecker
 				player.setTeam(Team.NONE);
 				// Set default arena
 				player.setBlockCheckerArena(DEFAULT_ARENA);
+				// Untransform.
+				player.untransform();
 				// Remove the event items
 				final PlayerInventory inv = player.getInventory();
 				if (inv.getItemByItemId(13787) != null)
