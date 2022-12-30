@@ -16,6 +16,8 @@
  */
 package quests.Q10274_CollectingInTheAir;
 
+import java.util.List;
+
 import org.l2jmobius.gameserver.enums.QuestSound;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Npc;
@@ -82,7 +84,7 @@ public class Q10274_CollectingInTheAir extends Quest
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		final QuestState qs = getQuestState(caster, false);
 		if ((qs == null) || !qs.isStarted())

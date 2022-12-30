@@ -16,6 +16,7 @@
  */
 package org.l2jmobius.gameserver.model.actor.tasks.cubics;
 
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -139,39 +140,34 @@ public class CubicAction implements Runnable
 				{
 					_cubic.getOwner().broadcastPacket(new MagicSkillUse(_cubic.getOwner(), target, skill.getId(), skill.getLevel(), 0, 0));
 					
-					final Creature[] targets =
-					{
-						target
-					};
-					
 					if (skill.isContinuous())
 					{
-						_cubic.useCubicContinuous(skill, targets);
+						_cubic.useCubicContinuous(skill, Collections.singletonList(target));
 					}
 					else
 					{
-						skill.activateSkill(_cubic, targets);
+						skill.activateSkill(_cubic, Collections.singletonList(target));
 					}
 					
 					if (skill.hasEffectType(EffectType.MAGICAL_ATTACK))
 					{
-						_cubic.useCubicMdam(skill, targets);
+						_cubic.useCubicMdam(skill, Collections.singletonList(target));
 					}
 					else if (skill.hasEffectType(EffectType.HP_DRAIN))
 					{
-						_cubic.useCubicDrain(skill, targets);
+						_cubic.useCubicDrain(skill, Collections.singletonList(target));
 					}
 					else if (skill.hasEffectType(EffectType.STUN, EffectType.ROOT, EffectType.PARALYZE))
 					{
-						_cubic.useCubicDisabler(skill, targets);
+						_cubic.useCubicDisabler(skill, Collections.singletonList(target));
 					}
 					else if (skill.hasEffectType(EffectType.DMG_OVER_TIME, EffectType.DMG_OVER_TIME_PERCENT))
 					{
-						_cubic.useCubicContinuous(skill, targets);
+						_cubic.useCubicContinuous(skill, Collections.singletonList(target));
 					}
 					else if (skill.hasEffectType(EffectType.AGGRESSION))
 					{
-						_cubic.useCubicDisabler(skill, targets);
+						_cubic.useCubicDisabler(skill, Collections.singletonList(target));
 					}
 					
 					// The cubic has done an action, increase the current count

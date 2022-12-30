@@ -16,8 +16,8 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.geoengine.GeoEngine;
@@ -38,31 +38,28 @@ import org.l2jmobius.gameserver.network.SystemMessageId;
 public class AreaFriendly implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
+		final List<WorldObject> targetList = new LinkedList<>();
 		final Player player = creature.getActingPlayer();
 		if (!checkTarget(player, target) && (skill.getCastRange() >= 0))
 		{
 			player.sendPacket(SystemMessageId.THAT_IS_AN_INCORRECT_TARGET);
-			return EMPTY_TARGET_LIST;
+			return targetList;
 		}
 		
 		if (onlyFirst)
 		{
-			return new Creature[]
-			{
-				target
-			};
+			targetList.add(target);
+			return targetList;
 		}
 		
 		if (player.getActingPlayer().isInOlympiadMode())
 		{
-			return new Creature[]
-			{
-				player
-			};
+			targetList.add(player);
+			return targetList;
 		}
+		
 		targetList.add(target); // Add target to target list
 		if (target != null)
 		{
@@ -83,11 +80,7 @@ public class AreaFriendly implements ITargetTypeHandler
 			});
 		}
 		
-		if (targetList.isEmpty())
-		{
-			return EMPTY_TARGET_LIST;
-		}
-		return targetList.toArray(new Creature[targetList.size()]);
+		return targetList;
 	}
 	
 	private boolean checkTarget(Player player, Creature target)

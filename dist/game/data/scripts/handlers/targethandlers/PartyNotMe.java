@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.Config;
@@ -34,9 +34,9 @@ import org.l2jmobius.gameserver.util.Util;
 public class PartyNotMe implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
+		final List<WorldObject> targetList = new LinkedList<>();
 		if (creature.getParty() != null)
 		{
 			final List<Player> partyList = creature.getParty().getMembers();
@@ -52,7 +52,7 @@ public class PartyNotMe implements ITargetTypeHandler
 				}
 			}
 		}
-		return targetList.toArray(new Creature[targetList.size()]);
+		return targetList;
 	}
 	
 	@Override

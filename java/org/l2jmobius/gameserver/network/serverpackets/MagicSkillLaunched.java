@@ -16,9 +16,8 @@
  */
 package org.l2jmobius.gameserver.network.serverpackets;
 
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
@@ -33,9 +32,9 @@ public class MagicSkillLaunched extends ServerPacket
 	private final int _objectId;
 	private final int _skillId;
 	private final int _skillLevel;
-	private final List<WorldObject> _targets;
+	private final Collection<WorldObject> _targets;
 	
-	public MagicSkillLaunched(Creature creature, int skillId, int skillLevel, WorldObject... targets)
+	public MagicSkillLaunched(Creature creature, int skillId, int skillLevel, Collection<WorldObject> targets)
 	{
 		_objectId = creature.getObjectId();
 		_skillId = skillId;
@@ -45,12 +44,17 @@ public class MagicSkillLaunched extends ServerPacket
 			_targets = Collections.singletonList(creature);
 			return;
 		}
-		_targets = Arrays.asList(targets);
+		_targets = targets;
+	}
+	
+	public MagicSkillLaunched(Creature creature, int skillId, int skillLevel, WorldObject target)
+	{
+		this(creature, skillId, skillLevel, Collections.singletonList(target == null ? creature : target));
 	}
 	
 	public MagicSkillLaunched(Creature creature, int skillId, int skillLevel)
 	{
-		this(creature, skillId, skillLevel, creature);
+		this(creature, skillId, skillLevel, Collections.singletonList(creature));
 	}
 	
 	@Override

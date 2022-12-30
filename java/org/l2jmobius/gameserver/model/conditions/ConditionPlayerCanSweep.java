@@ -16,6 +16,8 @@
  */
 package org.l2jmobius.gameserver.model.conditions;
 
+import java.util.List;
+
 import org.l2jmobius.Config;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Attackable;
@@ -55,7 +57,7 @@ public class ConditionPlayerCanSweep extends Condition
 			final Player sweeper = effector.getActingPlayer();
 			if (skill != null)
 			{
-				final WorldObject[] targets = skill.getTargetList(sweeper);
+				final List<WorldObject> targets = skill.getTargetList(sweeper);
 				if (targets != null)
 				{
 					Attackable target;

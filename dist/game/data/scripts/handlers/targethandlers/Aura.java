@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
@@ -35,9 +35,9 @@ import org.l2jmobius.gameserver.model.zone.ZoneId;
 public class Aura implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
+		final List<WorldObject> targetList = new LinkedList<>();
 		final boolean srcInArena = (creature.isInsideZone(ZoneId.PVP) && !creature.isInsideZone(ZoneId.SIEGE));
 		for (Creature obj : World.getInstance().getVisibleObjectsInRange(creature, Creature.class, skill.getAffectRange()))
 		{
@@ -63,18 +63,16 @@ public class Aura implements ITargetTypeHandler
 					continue;
 				}
 				
+				targetList.add(obj);
+				
 				if (onlyFirst)
 				{
-					return new Creature[]
-					{
-						obj
-					};
+					return targetList;
 				}
-				
-				targetList.add(obj);
 			}
 		}
-		return targetList.toArray(new Creature[targetList.size()]);
+		
+		return targetList;
 	}
 	
 	@Override

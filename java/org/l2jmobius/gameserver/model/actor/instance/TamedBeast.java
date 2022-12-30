@@ -19,6 +19,7 @@ package org.l2jmobius.gameserver.model.actor.instance;
 import static org.l2jmobius.gameserver.ai.CtrlIntention.AI_INTENTION_IDLE;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
@@ -456,14 +457,10 @@ public class TamedBeast extends FeedableBeast
 				{
 					final WorldObject oldTarget = owner.getTarget();
 					owner.setTarget(_tamedBeast);
-					final WorldObject[] targets =
-					{
-						_tamedBeast
-					};
 					
 					// emulate a call to the owner using food, but bypass all checks for range, etc
 					// this also causes a call to the AI tasks handling feeding, which may call onReceiveFood as required.
-					owner.callSkill(SkillData.getInstance().getSkill(foodTypeSkillId, 1), targets);
+					owner.callSkill(SkillData.getInstance().getSkill(foodTypeSkillId, 1), Collections.singletonList(_tamedBeast));
 					owner.setTarget(oldTarget);
 				}
 				else

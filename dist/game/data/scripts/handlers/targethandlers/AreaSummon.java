@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
@@ -33,21 +33,19 @@ import org.l2jmobius.gameserver.model.zone.ZoneId;
 public class AreaSummon implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
+		final List<WorldObject> targetList = new LinkedList<>();
 		final Creature targetCreature = creature.getSummon();
 		if ((targetCreature == null) || !targetCreature.isServitor() || targetCreature.isDead())
 		{
-			return EMPTY_TARGET_LIST;
+			return targetList;
 		}
 		
 		if (onlyFirst)
 		{
-			return new Creature[]
-			{
-				targetCreature
-			};
+			targetList.add(targetCreature);
+			return targetList;
 		}
 		
 		final boolean srcInArena = (creature.isInsideZone(ZoneId.PVP) && !creature.isInsideZone(ZoneId.SIEGE));
@@ -77,12 +75,7 @@ public class AreaSummon implements ITargetTypeHandler
 			targetList.add(obj);
 		});
 		
-		if (targetList.isEmpty())
-		{
-			return EMPTY_TARGET_LIST;
-		}
-		
-		return targetList.toArray(new Creature[targetList.size()]);
+		return targetList;
 	}
 	
 	@Override

@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
@@ -35,24 +35,21 @@ import org.l2jmobius.gameserver.util.Util;
 public class AreaCorpseMob implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
+		final List<WorldObject> targetList = new LinkedList<>();
 		if ((target == null) || !target.isAttackable() || !target.isDead())
 		{
 			creature.sendPacket(SystemMessageId.THAT_IS_AN_INCORRECT_TARGET);
-			return EMPTY_TARGET_LIST;
+			return targetList;
 		}
+		
+		targetList.add(target);
 		
 		if (onlyFirst)
 		{
-			return new Creature[]
-			{
-				target
-			};
+			return targetList;
 		}
-		
-		final List<Creature> targetList = new ArrayList<>();
-		targetList.add(target);
 		
 		final boolean srcInArena = creature.isInsideZone(ZoneId.PVP) && !creature.isInsideZone(ZoneId.SIEGE);
 		World.getInstance().forEachVisibleObject(creature, Creature.class, obj ->
@@ -70,11 +67,7 @@ public class AreaCorpseMob implements ITargetTypeHandler
 			targetList.add(obj);
 		});
 		
-		if (targetList.isEmpty())
-		{
-			return EMPTY_TARGET_LIST;
-		}
-		return targetList.toArray(new Creature[targetList.size()]);
+		return targetList;
 	}
 	
 	@Override

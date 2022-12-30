@@ -16,6 +16,9 @@
  */
 package handlers.targethandlers;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
@@ -29,7 +32,7 @@ import org.l2jmobius.gameserver.network.SystemMessageId;
 public class PartyOther implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
 		if ((target != null) && (target != creature) && creature.isInParty() && target.isInParty() && (creature.getParty().getLeaderObjectId() == target.getParty().getLeaderObjectId()))
 		{
@@ -44,35 +47,27 @@ public class PartyOther implements ITargetTypeHandler
 						{
 							if (!target.getActingPlayer().isMageClass())
 							{
-								return new Creature[]
-								{
-									target
-								};
+								return Collections.singletonList(target);
 							}
-							return EMPTY_TARGET_LIST;
+							return Collections.emptyList();
 						}
 						case 427:
 						{
 							if (target.getActingPlayer().isMageClass())
 							{
-								return new Creature[]
-								{
-									target
-								};
+								return Collections.singletonList(target);
 							}
-							return EMPTY_TARGET_LIST;
+							return Collections.emptyList();
 						}
 					}
 				}
-				return new Creature[]
-				{
-					target
-				};
+				return Collections.singletonList(target);
 			}
-			return EMPTY_TARGET_LIST;
+			return Collections.emptyList();
 		}
+		
 		creature.sendPacket(SystemMessageId.THAT_IS_AN_INCORRECT_TARGET);
-		return EMPTY_TARGET_LIST;
+		return Collections.emptyList();
 	}
 	
 	@Override

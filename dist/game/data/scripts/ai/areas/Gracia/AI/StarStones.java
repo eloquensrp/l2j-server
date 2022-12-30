@@ -16,6 +16,8 @@
  */
 package ai.areas.Gracia.AI;
 
+import java.util.List;
+
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Npc;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -45,7 +47,7 @@ public class StarStones extends AbstractNpcAI
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		if (skill.getId() == 932)
 		{

@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
@@ -35,9 +35,9 @@ import org.l2jmobius.gameserver.model.zone.ZoneId;
 public class Ground implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
+		final List<WorldObject> targetList = new LinkedList<>();
 		final Player player = (Player) creature;
 		final int maxTargets = skill.getAffectLimit();
 		final boolean srcInArena = (creature.isInsideZone(ZoneId.PVP) && !creature.isInsideZone(ZoneId.SIEGE));
@@ -55,11 +55,12 @@ public class Ground implements ITargetTypeHandler
 					return;
 				}
 				
+				targetList.add(character);
+				
 				if ((maxTargets > 0) && (targetList.size() >= maxTargets))
 				{
 					return;
 				}
-				targetList.add(character);
 			}
 		});
 		
@@ -67,7 +68,8 @@ public class Ground implements ITargetTypeHandler
 		{
 			targetList.add(creature);
 		}
-		return targetList.isEmpty() ? EMPTY_TARGET_LIST : targetList.toArray(new Creature[targetList.size()]);
+		
+		return targetList;
 	}
 	
 	@Override

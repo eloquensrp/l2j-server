@@ -708,7 +708,7 @@ public class Quest extends AbstractScript implements IIdentifiable
 	 * @param targets
 	 * @param isSummon
 	 */
-	public void notifySkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public void notifySkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		String res = null;
 		try
@@ -1162,7 +1162,7 @@ public class Quest extends AbstractScript implements IIdentifiable
 	 * @param isSummon if {@code true}, the skill was actually cast by the player's summon, not the player himself
 	 * @return
 	 */
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		return null;
 	}

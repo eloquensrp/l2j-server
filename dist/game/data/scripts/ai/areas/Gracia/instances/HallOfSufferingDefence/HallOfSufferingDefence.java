@@ -18,6 +18,7 @@ package ai.areas.Gracia.instances.HallOfSufferingDefence;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.l2jmobius.gameserver.ai.CtrlEvent;
@@ -353,7 +354,7 @@ public class HallOfSufferingDefence extends AbstractNpcAI
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		if (skill.hasEffectType(EffectType.REBALANCE_HP, EffectType.HEAL))
 		{

@@ -25,7 +25,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.l2jmobius.Config;
 import org.l2jmobius.commons.threads.ThreadPool;
-import org.l2jmobius.commons.util.CommonUtil;
 import org.l2jmobius.gameserver.ai.CtrlIntention;
 import org.l2jmobius.gameserver.data.xml.DoorData;
 import org.l2jmobius.gameserver.data.xml.NpcData;
@@ -310,9 +309,9 @@ public class EnergySeeds extends AbstractNpcAI
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
-		if (!CommonUtil.contains(targets, npc) || (skill.getId() != 5780))
+		if (!targets.contains(npc) || (skill.getId() != 5780))
 		{
 			return super.onSkillSee(npc, caster, skill, targets, isSummon);
 		}

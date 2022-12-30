@@ -16,6 +16,9 @@
  */
 package handlers.targethandlers;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
@@ -30,20 +33,18 @@ import org.l2jmobius.gameserver.model.skill.targets.TargetType;
 public class OwnerPet implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
 		if (creature.isSummon())
 		{
 			final Player owner = ((Summon) creature).getOwner();
 			if ((owner != null) && !owner.isDead())
 			{
-				return new Creature[]
-				{
-					owner
-				};
+				return Collections.singletonList(owner);
 			}
 		}
-		return EMPTY_TARGET_LIST;
+		
+		return Collections.emptyList();
 	}
 	
 	@Override

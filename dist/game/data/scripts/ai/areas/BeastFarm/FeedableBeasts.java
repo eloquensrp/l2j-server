@@ -17,6 +17,7 @@
 package ai.areas.BeastFarm;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -515,11 +516,11 @@ public class FeedableBeasts extends AbstractNpcAI
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		// this behavior is only run when the target of skill is the passed npc (chest)
 		// i.e. when the player is attempting to open the chest using a skill
-		if (!CommonUtil.contains(targets, npc))
+		if (!targets.contains(npc))
 		{
 			return super.onSkillSee(npc, caster, skill, targets, isSummon);
 		}

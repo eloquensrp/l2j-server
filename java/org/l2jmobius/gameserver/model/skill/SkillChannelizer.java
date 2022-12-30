@@ -16,7 +16,7 @@
  */
 package org.l2jmobius.gameserver.model.skill;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Level;
@@ -162,8 +162,7 @@ public class SkillChannelizer implements Runnable
 					return;
 				}
 				
-				final List<Creature> targetList = new ArrayList<>();
-				
+				final List<Creature> targetList = new LinkedList<>();
 				for (WorldObject chars : skill.getTargetList(_channelizer))
 				{
 					if (chars.isCreature())

@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
@@ -33,13 +33,13 @@ import org.l2jmobius.gameserver.model.skill.targets.TargetType;
 public class CommandChannel implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
+		final List<WorldObject> targetList = new LinkedList<>();
 		final Player player = creature.getActingPlayer();
 		if (player == null)
 		{
-			return EMPTY_TARGET_LIST;
+			return targetList;
 		}
 		
 		targetList.add(player);
@@ -55,7 +55,7 @@ public class CommandChannel implements ITargetTypeHandler
 		// if player in not in party
 		if (party == null)
 		{
-			return targetList.toArray(new Creature[targetList.size()]);
+			return targetList;
 		}
 		
 		// Get all visible objects in a spherical area near the Creature
@@ -78,7 +78,7 @@ public class CommandChannel implements ITargetTypeHandler
 			}
 		}
 		
-		return targetList.toArray(new Creature[targetList.size()]);
+		return targetList;
 	}
 	
 	@Override

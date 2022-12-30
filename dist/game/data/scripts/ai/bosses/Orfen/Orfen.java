@@ -17,6 +17,7 @@
 package ai.bosses.Orfen;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.l2jmobius.Config;
@@ -235,7 +236,7 @@ public class Orfen extends AbstractNpcAI
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		if (npc.getId() == ORFEN)
 		{

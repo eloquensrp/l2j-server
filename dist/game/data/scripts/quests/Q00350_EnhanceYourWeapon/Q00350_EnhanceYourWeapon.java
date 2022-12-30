@@ -185,7 +185,7 @@ public class Q00350_EnhanceYourWeapon extends Quest
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		super.onSkillSee(npc, caster, skill, targets, isSummon);
 		

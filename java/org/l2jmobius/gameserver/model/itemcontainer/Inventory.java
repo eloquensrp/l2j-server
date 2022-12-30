@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -360,7 +361,7 @@ public abstract class Inventory extends ItemContainer
 			final Skill unequipSkill = it.getUnequipSkill();
 			if (unequipSkill != null)
 			{
-				unequipSkill.activateSkill(player, player);
+				unequipSkill.activateSkill(player, Collections.singletonList(player));
 			}
 			
 			if (update)

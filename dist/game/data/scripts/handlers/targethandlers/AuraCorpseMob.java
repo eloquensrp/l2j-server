@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
@@ -33,32 +33,29 @@ import org.l2jmobius.gameserver.model.skill.targets.TargetType;
 public class AuraCorpseMob implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
+		final List<WorldObject> targetList = new LinkedList<>();
 		// Go through the Creature _knownList
 		final int maxTargets = skill.getAffectLimit();
 		for (Attackable obj : World.getInstance().getVisibleObjectsInRange(creature, Attackable.class, skill.getAffectRange()))
 		{
 			if (obj.isDead())
 			{
+				targetList.add(obj);
+				
 				if (onlyFirst)
 				{
-					return new Creature[]
-					{
-						obj
-					};
+					return targetList;
 				}
 				
 				if ((maxTargets > 0) && (targetList.size() >= maxTargets))
 				{
 					break;
 				}
-				
-				targetList.add(obj);
 			}
 		}
-		return targetList.toArray(new Creature[targetList.size()]);
+		return targetList;
 	}
 	
 	@Override

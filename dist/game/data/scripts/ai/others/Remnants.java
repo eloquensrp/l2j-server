@@ -16,6 +16,8 @@
  */
 package ai.others;
 
+import java.util.List;
+
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Npc;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -55,9 +57,9 @@ public class Remnants extends AbstractNpcAI
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
-		if ((skill.getId() == SKILL_HOLY_WATER) && !npc.isDead() && (targets.length > 0) && (targets[0] == npc) && (npc.getCurrentHp() < (npc.getMaxHp() * 0.02)))
+		if ((skill.getId() == SKILL_HOLY_WATER) && !npc.isDead() && !targets.isEmpty() && (targets.get(0) == npc) && (npc.getCurrentHp() < (npc.getMaxHp() * 0.02)))
 		{
 			npc.doDie(caster);
 			//@formatter:off

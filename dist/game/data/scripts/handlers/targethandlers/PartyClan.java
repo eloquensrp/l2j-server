@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
@@ -33,24 +33,21 @@ import org.l2jmobius.gameserver.model.skill.targets.TargetType;
 public class PartyClan implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
-		if (onlyFirst)
-		{
-			return new Creature[]
-			{
-				creature
-			};
-		}
-		
+		final List<WorldObject> targetList = new LinkedList<>();
 		final Player player = creature.getActingPlayer();
 		if (player == null)
 		{
-			return EMPTY_TARGET_LIST;
+			return targetList;
 		}
 		
 		targetList.add(player);
+		
+		if (onlyFirst)
+		{
+			return targetList;
+		}
 		
 		final int radius = skill.getAffectRange();
 		final boolean hasClan = player.getClan() != null;
@@ -63,7 +60,7 @@ public class PartyClan implements ITargetTypeHandler
 		// if player in clan and not in party
 		if (!(hasClan || hasParty))
 		{
-			return targetList.toArray(new Creature[targetList.size()]);
+			return targetList;
 		}
 		
 		// Get all visible objects in a spherical area near the Creature
@@ -132,22 +129,20 @@ public class PartyClan implements ITargetTypeHandler
 				continue;
 			}
 			
+			targetList.add(obj);
+			
 			if (onlyFirst)
 			{
-				return new Creature[]
-				{
-					obj
-				};
+				return targetList;
 			}
 			
 			if ((maxTargets > 0) && (targetList.size() >= maxTargets))
 			{
 				break;
 			}
-			
-			targetList.add(obj);
 		}
-		return targetList.toArray(new Creature[targetList.size()]);
+		
+		return targetList;
 	}
 	
 	@Override

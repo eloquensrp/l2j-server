@@ -16,6 +16,9 @@
  */
 package handlers.targethandlers;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
@@ -29,16 +32,14 @@ import org.l2jmobius.gameserver.model.skill.targets.TargetType;
 public class Unlockable implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
 		if ((target == null) || (!target.isDoor() && !(target instanceof Chest)))
 		{
-			return EMPTY_TARGET_LIST;
+			return Collections.emptyList();
 		}
-		return new Creature[]
-		{
-			target
-		};
+		
+		return Collections.singletonList(target);
 	}
 	
 	@Override

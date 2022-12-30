@@ -762,7 +762,7 @@ public abstract class AbstractSagaQuest extends Quest
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player player, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player player, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		if (SPAWN_LIST.containsKey(npc) && (SPAWN_LIST.get(npc) != player.getObjectId()))
 		{

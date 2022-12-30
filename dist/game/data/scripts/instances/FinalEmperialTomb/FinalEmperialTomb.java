@@ -817,7 +817,7 @@ public class FinalEmperialTomb extends AbstractInstance implements IXmlReader
 					final Npc activeScarlet = _world.getParameters().getObject("activeScarlet", Npc.class);
 					if ((frintezza != null) && !frintezza.isDead() && (activeScarlet != null) && !activeScarlet.isDead())
 					{
-						final List<Creature> targetList = new ArrayList<>();
+						final List<WorldObject> targetList = new ArrayList<>();
 						if (skill.hasEffectType(EffectType.STUN) || skill.isDebuff())
 						{
 							for (Player player : _world.getAllowed())
@@ -841,7 +841,7 @@ public class FinalEmperialTomb extends AbstractInstance implements IXmlReader
 						}
 						if (!targetList.isEmpty())
 						{
-							frintezza.doCast(skill, targetList.get(0), targetList.toArray(new Creature[targetList.size()]));
+							frintezza.doCast(skill, (Creature) targetList.get(0), targetList);
 						}
 					}
 					break;
@@ -1441,7 +1441,7 @@ public class FinalEmperialTomb extends AbstractInstance implements IXmlReader
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		final InstanceWorld world = InstanceManager.getInstance().getWorld(npc);
 		if ((world != null) && (skill != null))

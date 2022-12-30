@@ -16,6 +16,9 @@
  */
 package handlers.targethandlers;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
@@ -29,21 +32,20 @@ import org.l2jmobius.gameserver.network.SystemMessageId;
 public class PartyMember implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
 		if (target == null)
 		{
 			creature.sendPacket(SystemMessageId.THAT_IS_AN_INCORRECT_TARGET);
-			return EMPTY_TARGET_LIST;
+			return Collections.emptyList();
 		}
+		
 		if (!target.isDead() && ((target == creature) || (creature.isInParty() && target.isInParty() && (creature.getParty().getLeaderObjectId() == target.getParty().getLeaderObjectId())) || (creature.isPlayer() && target.isSummon() && (creature.getSummon() == target)) || (creature.isSummon() && target.isPlayer() && (creature == target.getSummon()))))
 		{
-			return new Creature[]
-			{
-				target
-			};
+			return Collections.singletonList(target);
 		}
-		return EMPTY_TARGET_LIST;
+		
+		return Collections.emptyList();
 	}
 	
 	@Override

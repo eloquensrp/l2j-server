@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
@@ -33,15 +33,15 @@ import org.l2jmobius.gameserver.network.SystemMessageId;
 public class TargetParty implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
+		final List<WorldObject> targetList = new LinkedList<>();
 		
 		// Check for null target or any other invalid target
 		if ((target == null) || target.isDead() || (target == creature))
 		{
 			creature.sendPacket(SystemMessageId.THAT_IS_AN_INCORRECT_TARGET);
-			return EMPTY_TARGET_LIST;
+			return targetList;
 		}
 		
 		final int radius = skill.getAffectRange();
@@ -70,7 +70,8 @@ public class TargetParty implements ITargetTypeHandler
 		{
 			targetList.add(target);
 		}
-		return targetList.toArray(new Creature[targetList.size()]);
+		
+		return targetList;
 	}
 	
 	@Override

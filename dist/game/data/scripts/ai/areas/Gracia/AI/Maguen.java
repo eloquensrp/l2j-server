@@ -16,6 +16,8 @@
  */
 package ai.areas.Gracia.AI;
 
+import java.util.List;
+
 import org.l2jmobius.gameserver.ai.CtrlIntention;
 import org.l2jmobius.gameserver.enums.SkillFinishType;
 import org.l2jmobius.gameserver.instancemanager.QuestManager;
@@ -258,7 +260,7 @@ public class Maguen extends AbstractNpcAI
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		if (((skill == MACHINE.getSkill()) && (caster == npc.getVariables().getObject("SUMMON_PLAYER", Player.class))) //
 			&& ((npc.getVariables().getInt("NPC_EFFECT") != 0) && (npc.getVariables().getInt("BLOCKED_SKILLSEE") == 0)))

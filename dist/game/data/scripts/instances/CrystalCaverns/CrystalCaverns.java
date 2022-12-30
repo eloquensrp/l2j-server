@@ -908,7 +908,7 @@ public class CrystalCaverns extends AbstractInstance
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		boolean doReturn = true;
 		for (WorldObject obj : targets)

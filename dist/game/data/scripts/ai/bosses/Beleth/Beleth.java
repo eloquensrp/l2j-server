@@ -559,7 +559,7 @@ public class Beleth extends AbstractNpcAI
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player player, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player player, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		if (!npc.isDead() && (npc.getId() == REAL_BELETH) && !npc.isCastingNow() && skill.hasEffectType(EffectType.HEAL) && (getRandom(100) < 80))
 		{

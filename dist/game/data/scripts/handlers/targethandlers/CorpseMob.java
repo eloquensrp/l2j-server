@@ -16,6 +16,9 @@
  */
 package handlers.targethandlers;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.l2jmobius.Config;
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
 import org.l2jmobius.gameserver.model.WorldObject;
@@ -33,28 +36,25 @@ import org.l2jmobius.gameserver.network.SystemMessageId;
 public class CorpseMob implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
 		if ((target == null) || !target.isAttackable() || !target.isDead())
 		{
 			creature.sendPacket(SystemMessageId.THAT_IS_AN_INCORRECT_TARGET);
-			return EMPTY_TARGET_LIST;
+			return Collections.emptyList();
 		}
 		
 		if (skill.hasEffectType(EffectType.SUMMON) && target.isServitor() && (target.getActingPlayer() != null) && (target.getActingPlayer().getObjectId() == creature.getObjectId()))
 		{
-			return EMPTY_TARGET_LIST;
+			return Collections.emptyList();
 		}
 		
 		if (skill.hasEffectType(EffectType.HP_DRAIN) && ((Attackable) target).isOldCorpse(creature.getActingPlayer(), Config.CORPSE_CONSUME_SKILL_ALLOWED_TIME_BEFORE_DECAY, true))
 		{
-			return EMPTY_TARGET_LIST;
+			return Collections.emptyList();
 		}
 		
-		return new Creature[]
-		{
-			target
-		};
+		return Collections.singletonList(target);
 	}
 	
 	@Override

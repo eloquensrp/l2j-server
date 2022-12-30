@@ -468,9 +468,9 @@ public class Cubic implements IIdentifiable
 		}
 	}
 	
-	public void useCubicContinuous(Skill skill, WorldObject[] targets)
+	public void useCubicContinuous(Skill skill, List<Creature> targets)
 	{
-		for (Creature target : (Creature[]) targets)
+		for (Creature target : targets)
 		{
 			if ((target == null) || target.isDead())
 			{
@@ -503,9 +503,9 @@ public class Cubic implements IIdentifiable
 	 * @param skill
 	 * @param targets
 	 */
-	public void useCubicMdam(Skill skill, WorldObject[] targets)
+	public void useCubicMdam(Skill skill, List<Creature> targets)
 	{
-		for (Creature target : (Creature[]) targets)
+		for (Creature target : targets)
 		{
 			if (target == null)
 			{
@@ -550,9 +550,9 @@ public class Cubic implements IIdentifiable
 		}
 	}
 	
-	public void useCubicDrain(Skill skill, WorldObject[] targets)
+	public void useCubicDrain(Skill skill, List<Creature> targets)
 	{
-		for (Creature target : (Creature[]) targets)
+		for (Creature target : targets)
 		{
 			if (target.isAlikeDead())
 			{
@@ -585,9 +585,9 @@ public class Cubic implements IIdentifiable
 		}
 	}
 	
-	public void useCubicDisabler(Skill skill, WorldObject[] targets)
+	public void useCubicDisabler(Skill skill, List<Creature> targets)
 	{
-		for (Creature target : (Creature[]) targets)
+		for (Creature target : targets)
 		{
 			if ((target == null) || target.isDead())
 			{

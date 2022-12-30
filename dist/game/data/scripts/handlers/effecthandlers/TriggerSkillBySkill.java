@@ -85,8 +85,7 @@ public class TriggerSkillBySkill extends AbstractEffect
 		}
 		
 		final Skill triggerSkill = _skill.getSkill();
-		final WorldObject[] targets = targetHandler.getTargetList(triggerSkill, event.getCaster(), false, event.getTarget());
-		for (WorldObject triggerTarget : targets)
+		for (WorldObject triggerTarget : targetHandler.getTargetList(triggerSkill, event.getCaster(), false, event.getTarget()))
 		{
 			if ((triggerTarget == null) || !triggerTarget.isCreature())
 			{

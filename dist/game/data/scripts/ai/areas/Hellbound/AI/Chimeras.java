@@ -16,6 +16,8 @@
  */
 package ai.areas.Hellbound.AI;
 
+import java.util.List;
+
 import org.l2jmobius.Config;
 import org.l2jmobius.commons.threads.ThreadPool;
 import org.l2jmobius.gameserver.model.Location;
@@ -82,10 +84,10 @@ public class Chimeras extends AbstractNpcAI
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		if (((skill.getId() == BOTTLE) && !npc.isDead()) //
-			&& ((targets.length > 0) && (targets[0] == npc)) //
+			&& ((!targets.isEmpty()) && (targets.get(0) == npc)) //
 			&& (npc.getCurrentHp() < (npc.getMaxHp() * 0.1)))
 		{
 			if (HellboundEngine.getInstance().getLevel() == 7)

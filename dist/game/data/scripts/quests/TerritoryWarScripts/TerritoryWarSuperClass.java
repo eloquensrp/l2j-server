@@ -17,6 +17,7 @@
 package quests.TerritoryWarScripts;
 
 import java.util.Calendar;
+import java.util.List;
 
 import org.l2jmobius.commons.util.CommonUtil;
 import org.l2jmobius.gameserver.instancemanager.TerritoryWarManager;
@@ -275,9 +276,9 @@ public class TerritoryWarSuperClass extends Quest
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
-		if (CommonUtil.contains(targets, npc))
+		if (targets.contains(npc))
 		{
 			if (skill.getId() == 845)
 			{

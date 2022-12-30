@@ -16,6 +16,9 @@
  */
 package handlers.targethandlers;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
@@ -29,20 +32,17 @@ import org.l2jmobius.gameserver.network.SystemMessageId;
 public class One implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
 		// Check for null target or any other invalid target
 		if ((target == null) || target.isDead() || ((target == creature) && skill.isBad()))
 		{
 			creature.sendPacket(SystemMessageId.THAT_IS_AN_INCORRECT_TARGET);
-			return EMPTY_TARGET_LIST;
+			return Collections.emptyList();
 		}
 		
 		// If a target is found, return it in a table else send a system message TARGET_IS_INCORRECT
-		return new Creature[]
-		{
-			target
-		};
+		return Collections.singletonList(target);
 	}
 	
 	@Override

@@ -16,6 +16,8 @@
  */
 package org.l2jmobius.gameserver.model.events.impl.creature;
 
+import java.util.Collection;
+
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
 import org.l2jmobius.gameserver.model.events.EventType;
@@ -32,7 +34,7 @@ public class OnCreatureSkillUse implements IBaseEvent
 	private Skill _skill;
 	private boolean _simultaneously;
 	private Creature _target;
-	private WorldObject[] _targets;
+	private Collection<WorldObject> _targets;
 	
 	public OnCreatureSkillUse()
 	{
@@ -78,12 +80,12 @@ public class OnCreatureSkillUse implements IBaseEvent
 		_target = target;
 	}
 	
-	public WorldObject[] getTargets()
+	public Collection<WorldObject> getTargets()
 	{
 		return _targets;
 	}
 	
-	public synchronized void setTargets(WorldObject[] targets)
+	public synchronized void setTargets(Collection<WorldObject> targets)
 	{
 		_targets = targets;
 	}

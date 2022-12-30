@@ -22,7 +22,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.l2jmobius.Config;
-import org.l2jmobius.commons.util.CommonUtil;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Npc;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -197,11 +196,11 @@ public class Rabbits extends Event
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		if (skill.getId() == RABBIT_TORNADO.getSkillId())
 		{
-			if (!npc.isInvisible() && CommonUtil.contains(targets, npc))
+			if (!npc.isInvisible() && targets.contains(npc))
 			{
 				dropItem(npc, caster, DROPLIST);
 				npc.deleteMe();

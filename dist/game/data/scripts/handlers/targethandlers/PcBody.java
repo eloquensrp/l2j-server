@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
@@ -36,9 +36,9 @@ import org.l2jmobius.gameserver.network.SystemMessageId;
 public class PcBody implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
+		final List<WorldObject> targetList = new LinkedList<>();
 		if ((target != null) && target.isDead())
 		{
 			final Player player;
@@ -92,20 +92,14 @@ public class PcBody implements ITargetTypeHandler
 				
 				if (condGood)
 				{
-					if (!onlyFirst)
-					{
-						targetList.add(target);
-						return targetList.toArray(new WorldObject[targetList.size()]);
-					}
-					return new Creature[]
-					{
-						target
-					};
+					targetList.add(target);
+					return targetList;
 				}
 			}
 		}
+		
 		creature.sendPacket(SystemMessageId.THAT_IS_AN_INCORRECT_TARGET);
-		return EMPTY_TARGET_LIST;
+		return targetList;
 	}
 	
 	@Override

@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
@@ -35,13 +35,13 @@ import org.l2jmobius.gameserver.util.Util;
 public class Area implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
+		final List<WorldObject> targetList = new LinkedList<>();
 		if ((target == null) || (((target == creature) || target.isAlikeDead()) && (skill.getCastRange() >= 0)) || (!(target.isAttackable() || target.isPlayable())))
 		{
 			creature.sendPacket(SystemMessageId.THAT_IS_AN_INCORRECT_TARGET);
-			return EMPTY_TARGET_LIST;
+			return targetList;
 		}
 		
 		final Creature origin;
@@ -50,15 +50,13 @@ public class Area implements ITargetTypeHandler
 		{
 			if (!Skill.checkForAreaOffensiveSkills(creature, target, skill, srcInArena))
 			{
-				return EMPTY_TARGET_LIST;
+				return targetList;
 			}
 			
 			if (onlyFirst)
 			{
-				return new Creature[]
-				{
-					target
-				};
+				targetList.add(target);
+				return targetList;
 			}
 			
 			origin = target;
@@ -93,12 +91,7 @@ public class Area implements ITargetTypeHandler
 			}
 		});
 		
-		if (targetList.isEmpty())
-		{
-			return EMPTY_TARGET_LIST;
-		}
-		
-		return targetList.toArray(new Creature[targetList.size()]);
+		return targetList;
 	}
 	
 	@Override

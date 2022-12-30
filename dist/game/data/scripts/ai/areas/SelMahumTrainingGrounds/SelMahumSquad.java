@@ -16,6 +16,8 @@
  */
 package ai.areas.SelMahumTrainingGrounds;
 
+import java.util.List;
+
 import org.l2jmobius.commons.util.CommonUtil;
 import org.l2jmobius.gameserver.ai.CtrlIntention;
 import org.l2jmobius.gameserver.data.xml.SkillData;
@@ -326,9 +328,9 @@ public class SelMahumSquad extends AbstractNpcAI
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
-		if ((npc.getId() == STOVE) && (skill.getId() == 9075) && CommonUtil.contains(targets, npc))
+		if ((npc.getId() == STOVE) && (skill.getId() == 9075) && targets.contains(npc))
 		{
 			npc.doCast(SkillData.getInstance().getSkill(6688, 1));
 			npc.broadcastEvent("SCE_SOUP_FAILURE", 600, caster);

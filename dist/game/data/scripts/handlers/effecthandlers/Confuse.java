@@ -16,7 +16,6 @@
  */
 package handlers.effecthandlers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.l2jmobius.commons.util.Rnd;
@@ -78,11 +77,10 @@ public class Confuse extends AbstractEffect
 	{
 		info.getEffected().getAI().notifyEvent(CtrlEvent.EVT_CONFUSED);
 		
-		final List<Creature> targetList = new ArrayList<>();
 		// Getting the possible targets
-		World.getInstance().forEachVisibleObject(info.getEffected(), Creature.class, targetList::add);
+		final List<Creature> targetList = World.getInstance().getVisibleObjects(info.getEffected(), Creature.class);
 		
-		// if there is no target, exit function
+		// If there is no target, exit function
 		if (!targetList.isEmpty())
 		{
 			// Choosing randomly a new target

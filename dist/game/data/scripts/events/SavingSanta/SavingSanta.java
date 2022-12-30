@@ -170,7 +170,7 @@ public class SavingSanta extends LongTimeEvent
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		if (_isWaitingForPlayerSkill && (skill.getId() > 21013) && (skill.getId() < 21017))
 		{

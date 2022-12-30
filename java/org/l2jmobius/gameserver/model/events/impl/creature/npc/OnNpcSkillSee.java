@@ -16,6 +16,8 @@
  */
 package org.l2jmobius.gameserver.model.events.impl.creature.npc;
 
+import java.util.List;
+
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Npc;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -31,10 +33,10 @@ public class OnNpcSkillSee implements IBaseEvent
 	private final Npc _npc;
 	private final Player _caster;
 	private final Skill _skill;
-	private final WorldObject[] _targets;
+	private final List<WorldObject> _targets;
 	private final boolean _isSummon;
 	
-	public OnNpcSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public OnNpcSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		_npc = npc;
 		_caster = caster;
@@ -58,7 +60,7 @@ public class OnNpcSkillSee implements IBaseEvent
 		return _skill;
 	}
 	
-	public WorldObject[] getTargets()
+	public List<WorldObject> getTargets()
 	{
 		return _targets;
 	}

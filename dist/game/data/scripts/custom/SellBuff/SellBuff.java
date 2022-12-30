@@ -16,6 +16,7 @@
  */
 package custom.SellBuff;
 
+import java.util.Collections;
 import java.util.StringTokenizer;
 
 import org.l2jmobius.Config;
@@ -407,7 +408,7 @@ public class SellBuff implements IVoicedCommandHandler, IBypassHandler
 							AbstractScript.takeItems(player, Config.SELLBUFF_PAYMENT_ID, holder.getPrice());
 							AbstractScript.giveItems(seller, Config.SELLBUFF_PAYMENT_ID, holder.getPrice());
 							seller.reduceCurrentMp(skillToBuy.getMpConsume() * Config.SELLBUFF_MP_MULTIPLER);
-							skillToBuy.activateSkill(seller, player);
+							skillToBuy.activateSkill(seller, Collections.singletonList(player));
 						}
 						else
 						{

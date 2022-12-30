@@ -16,6 +16,8 @@
  */
 package org.l2jmobius.gameserver.model.actor.instance;
 
+import java.util.List;
+
 import org.l2jmobius.Config;
 import org.l2jmobius.gameserver.enums.InstanceType;
 import org.l2jmobius.gameserver.model.WorldObject;
@@ -194,7 +196,7 @@ public class Monster extends Attackable
 	}
 	
 	@Override
-	public void doCast(Skill skill, Creature target, WorldObject[] targets)
+	public void doCast(Skill skill, Creature target, List<WorldObject> targets)
 	{
 		// Might need some exceptions here, but it will prevent the monster buffing player bug.
 		if (!skill.isBad() && (getTarget() != null) && getTarget().isPlayer())
@@ -203,6 +205,7 @@ public class Monster extends Attackable
 			setCastingSimultaneouslyNow(false);
 			return;
 		}
+		
 		super.doCast(skill, target, targets);
 	}
 }

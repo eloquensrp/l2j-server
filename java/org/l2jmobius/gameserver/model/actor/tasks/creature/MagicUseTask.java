@@ -16,6 +16,8 @@
  */
 package org.l2jmobius.gameserver.model.actor.tasks.creature;
 
+import java.util.List;
+
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Creature;
 import org.l2jmobius.gameserver.model.skill.Skill;
@@ -27,17 +29,17 @@ import org.l2jmobius.gameserver.model.skill.Skill;
 public class MagicUseTask implements Runnable
 {
 	private final Creature _creature;
-	private WorldObject[] _targets;
+	private List<WorldObject> _targets;
 	private final Skill _skill;
 	private int _count;
 	private int _skillTime;
 	private int _phase;
 	private final boolean _simultaneously;
 	
-	public MagicUseTask(Creature creature, WorldObject[] tgts, Skill s, int hit, boolean simultaneous)
+	public MagicUseTask(Creature creature, List<WorldObject> targets, Skill s, int hit, boolean simultaneous)
 	{
 		_creature = creature;
-		_targets = tgts;
+		_targets = targets;
 		_skill = s;
 		_count = 0;
 		_phase = 1;
@@ -92,7 +94,7 @@ public class MagicUseTask implements Runnable
 		return _skillTime;
 	}
 	
-	public WorldObject[] getTargets()
+	public List<WorldObject> getTargets()
 	{
 		return _targets;
 	}
@@ -117,7 +119,7 @@ public class MagicUseTask implements Runnable
 		_skillTime = skillTime;
 	}
 	
-	public void setTargets(WorldObject[] targets)
+	public void setTargets(List<WorldObject> targets)
 	{
 		_targets = targets;
 	}

@@ -16,6 +16,8 @@
  */
 package quests.Q00120_PavelsLastResearch;
 
+import java.util.List;
+
 import org.l2jmobius.gameserver.enums.QuestSound;
 import org.l2jmobius.gameserver.model.WorldObject;
 import org.l2jmobius.gameserver.model.actor.Npc;
@@ -1105,7 +1107,7 @@ public class Q00120_PavelsLastResearch extends Quest
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player player, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player player, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
 		final QuestState qs = getQuestState(player, false);
 		if ((qs != null) && qs.isStarted())

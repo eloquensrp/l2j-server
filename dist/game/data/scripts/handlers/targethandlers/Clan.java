@@ -16,7 +16,7 @@
  */
 package handlers.targethandlers;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.l2jmobius.gameserver.handler.ITargetTypeHandler;
@@ -35,31 +35,27 @@ import org.l2jmobius.gameserver.model.skill.targets.TargetType;
 public class Clan implements ITargetTypeHandler
 {
 	@Override
-	public WorldObject[] getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
+	public List<WorldObject> getTargetList(Skill skill, Creature creature, boolean onlyFirst, Creature target)
 	{
-		final List<Creature> targetList = new ArrayList<>();
+		final List<WorldObject> targetList = new LinkedList<>();
 		if (creature.isPlayable())
 		{
 			final Player player = creature.getActingPlayer();
 			if (player == null)
 			{
-				return EMPTY_TARGET_LIST;
+				return targetList;
 			}
 			
 			if (player.isInOlympiadMode())
 			{
-				return new Creature[]
-				{
-					player
-				};
+				targetList.add(player);
+				return targetList;
 			}
 			
 			if (onlyFirst)
 			{
-				return new Creature[]
-				{
-					player
-				};
+				targetList.add(player);
+				return targetList;
 			}
 			
 			targetList.add(player);
@@ -115,31 +111,24 @@ public class Clan implements ITargetTypeHandler
 						continue;
 					}
 					
+					targetList.add(obj);
+					
 					if (onlyFirst)
 					{
-						return new Creature[]
-						{
-							obj
-						};
+						return targetList;
 					}
-					
-					targetList.add(obj);
 				}
 			}
 		}
 		else if (creature.isNpc())
 		{
 			// for buff purposes, returns friendly mobs nearby and mob itself
+			targetList.add(creature);
 			final Npc npc = (Npc) creature;
 			if ((npc.getTemplate().getClans() == null) || npc.getTemplate().getClans().isEmpty())
 			{
-				return new Creature[]
-				{
-					creature
-				};
+				return targetList;
 			}
-			
-			targetList.add(creature);
 			
 			for (Npc newTarget : World.getInstance().getVisibleObjectsInRange(creature, Npc.class, skill.getCastRange()))
 			{
@@ -156,7 +145,7 @@ public class Clan implements ITargetTypeHandler
 			}
 		}
 		
-		return targetList.toArray(new Creature[targetList.size()]);
+		return targetList;
 	}
 	
 	@Override

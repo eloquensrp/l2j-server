@@ -184,9 +184,9 @@ public class StakatoNest extends AbstractNpcAI
 	}
 	
 	@Override
-	public String onSkillSee(Npc npc, Player caster, Skill skill, WorldObject[] targets, boolean isSummon)
+	public String onSkillSee(Npc npc, Player caster, Skill skill, List<WorldObject> targets, boolean isSummon)
 	{
-		if (CommonUtil.contains(COCOONS, npc.getId()) && CommonUtil.contains(targets, npc) && (skill.getId() == GROWTH_ACCELERATOR))
+		if (CommonUtil.contains(COCOONS, npc.getId()) && targets.contains(npc) && (skill.getId() == GROWTH_ACCELERATOR))
 		{
 			npc.doDie(caster);
 			final Npc spawned = addSpawn(STAKATO_CHIEF, npc.getX(), npc.getY(), npc.getZ(), Util.calculateHeadingFrom(npc, caster), false, 0, true);
