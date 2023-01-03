@@ -58,7 +58,7 @@ public class DatabaseFactory
 			}
 			catch (Exception e)
 			{
-				LOGGER.severe("DatabaseFactory: Cound not get a connection. " + e);
+				LOGGER.severe("DatabaseFactory: Could not get a connection. " + e);
 			}
 		}
 		return con;
