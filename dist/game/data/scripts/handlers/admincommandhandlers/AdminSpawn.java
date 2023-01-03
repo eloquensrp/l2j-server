@@ -23,8 +23,6 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.l2jmobius.Config;
 import org.l2jmobius.gameserver.data.SpawnTable;
@@ -307,7 +305,8 @@ public class AdminSpawn implements IAdminCommandHandler
 				spawnMonster(activeChar, id, respawnTime, mobCount, !cmd.equalsIgnoreCase("admin_spawn_once"));
 			}
 			catch (Exception e)
-			{ // Case of wrong or missing monster data
+			{
+				// Case of wrong or missing monster data.
 				AdminHtml.showAdminHtml(activeChar, "spawns.htm");
 			}
 		}
@@ -315,29 +314,53 @@ public class AdminSpawn implements IAdminCommandHandler
 		{
 			int npcId = 0;
 			int teleportIndex = -1;
+			
 			try
-			{ // admin_list_spawns x[xxxx] x[xx]
+			{
+				// Split the command into an array of words.
 				final String[] params = command.split(" ");
-				final Pattern pattern = Pattern.compile("[0-9]*");
-				final Matcher regexp = pattern.matcher(params[1]);
-				if (regexp.matches())
+				final StringBuilder searchParam = new StringBuilder();
+				int pos = -1;
+				
+				// Concatenate all words in the command except the first and last word.
+				for (String param : params)
 				{
-					npcId = Integer.parseInt(params[1]);
+					pos++;
+					if ((pos > 0) && (pos < (params.length - 1)))
+					{
+						searchParam.append(param);
+						searchParam.append(" ");
+					}
+				}
+				
+				final String searchString = searchParam.toString().trim();
+				// If the search string is a number, use it as the NPC ID.
+				if (Util.isDigit(searchString))
+				{
+					npcId = Integer.parseInt(searchString);
 				}
 				else
 				{
-					params[1] = params[1].replace('_', ' ');
-					npcId = NpcData.getInstance().getTemplateByName(params[1]).getId();
+					// Otherwise, use it as the NPC name and look up the NPC ID.
+					npcId = NpcData.getInstance().getTemplateByName(searchString).getId();
 				}
+				
+				// If there are more than two words in the command, try to parse the last word as the teleport index.
 				if (params.length > 2)
 				{
-					teleportIndex = Integer.parseInt(params[2]);
+					final String lastParam = params[params.length - 1];
+					if (Util.isDigit(lastParam))
+					{
+						teleportIndex = Integer.parseInt(lastParam);
+					}
 				}
 			}
 			catch (Exception e)
 			{
 				BuilderUtil.sendSysMessage(activeChar, "Command format is //list_spawns <npcId|npc_name> [tele_index]");
 			}
+			
+			// Call the findNpcs method with the parsed NPC ID and teleport index.
 			findNpcs(activeChar, npcId, teleportIndex, command.startsWith("admin_list_positions"));
 		}
 		else if (command.startsWith("admin_topspawncount") || command.startsWith("admin_top_spawn_count"))
