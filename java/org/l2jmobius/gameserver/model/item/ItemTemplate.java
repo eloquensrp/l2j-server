@@ -149,7 +149,7 @@ public abstract class ItemTemplate extends ListenersContainer implements IIdenti
 	private SkillHolder _unequipSkill = null;
 	
 	private int _useSkillDisTime;
-	private int _reuseDelay;
+	protected int _reuseDelay;
 	private int _sharedReuseGroup;
 	
 	/**
