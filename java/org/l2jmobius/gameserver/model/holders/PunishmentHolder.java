@@ -48,16 +48,15 @@ public class PunishmentHolder
 	public void stopPunishment(PunishmentTask task)
 	{
 		final String key = String.valueOf(task.getKey());
-		if (!_holder.containsKey(key))
+		if (_holder.containsKey(key))
 		{
-			return;
-		}
-		task.stopPunishment();
-		final Map<PunishmentType, PunishmentTask> punishments = _holder.get(key);
-		punishments.remove(task.getType());
-		if (punishments.isEmpty())
-		{
-			_holder.remove(key);
+			task.stopPunishment();
+			final Map<PunishmentType, PunishmentTask> punishments = _holder.get(key);
+			punishments.remove(task.getType());
+			if (punishments.isEmpty())
+			{
+				_holder.remove(key);
+			}
 		}
 	}
 	
@@ -78,6 +77,10 @@ public class PunishmentHolder
 	 */
 	public PunishmentTask getPunishment(String key, PunishmentType type)
 	{
-		return _holder.containsKey(key) ? _holder.get(key).get(type) : null;
+		if (_holder.containsKey(key))
+		{
+			return _holder.get(key).get(type);
+		}
+		return null;
 	}
 }
