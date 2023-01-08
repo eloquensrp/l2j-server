@@ -25,7 +25,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -183,13 +182,22 @@ public class CommonUtil
 		final LocalDateTime dateNow = LocalDateTime.now();
 		final LocalDateTime dateNowWithDifferentTime = dateNow.withHour(hour).withMinute(min).withSecond(0);
 		
-		// @formatter:off
-		return daysOfWeek.stream()
-			.map(d -> dateNowWithDifferentTime.with(TemporalAdjusters.nextOrSame(d)))
-			.filter(d -> d.isAfter(dateNow))
-			.min(Comparator.naturalOrder())
-			.orElse(dateNowWithDifferentTime.with(TemporalAdjusters.next(daysOfWeek.get(0))));
-		// @formatter:on
+		LocalDateTime minDateTime = null;
+		for (DayOfWeek dayOfWeek : daysOfWeek)
+		{
+			final LocalDateTime dateTime = dateNowWithDifferentTime.with(TemporalAdjusters.nextOrSame(dayOfWeek));
+			if ((minDateTime == null) || (dateTime.isAfter(dateNow) && dateTime.isBefore(minDateTime)))
+			{
+				minDateTime = dateTime;
+			}
+		}
+		
+		if (minDateTime == null)
+		{
+			minDateTime = dateNowWithDifferentTime.with(TemporalAdjusters.next(daysOfWeek.get(0)));
+		}
+		
+		return minDateTime;
 	}
 	
 	/**
