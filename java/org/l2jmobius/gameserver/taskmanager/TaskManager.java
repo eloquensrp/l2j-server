@@ -381,7 +381,7 @@ public class TaskManager
 		}
 		catch (SQLException e)
 		{
-			LOGGER.log(Level.WARNING, TaskManager.class.getSimpleName() + ": Cannot add the task:  " + e.getMessage(), e);
+			LOGGER.log(Level.WARNING, TaskManager.class.getSimpleName() + ": Cannot add the task: " + e.getMessage(), e);
 		}
 		return false;
 	}

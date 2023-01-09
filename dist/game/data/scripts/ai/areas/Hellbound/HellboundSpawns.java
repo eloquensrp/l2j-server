@@ -80,7 +80,7 @@ public class HellboundSpawns implements IXmlReader
 			final Node id = npc.getAttributes().getNamedItem("id");
 			if (id == null)
 			{
-				LOGGER.severe(getClass().getSimpleName() + ":  Missing NPC ID, skipping record!");
+				LOGGER.severe(getClass().getSimpleName() + ": Missing NPC ID, skipping record!");
 				return;
 			}
 			
