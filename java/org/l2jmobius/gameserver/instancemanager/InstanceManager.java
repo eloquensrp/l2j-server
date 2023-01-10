@@ -47,7 +47,7 @@ public class InstanceManager implements IXmlReader
 	private static final Map<Integer, String> _instanceIdNames = new HashMap<>();
 	// Instance templates
 	private final Map<Integer, String> _instanceTemplates = new ConcurrentHashMap<>();
-	private final Map<Integer, Map<Integer, Long>> _PlayerTimes = new ConcurrentHashMap<>();
+	private final Map<Integer, Map<Integer, Long>> _playerTimes = new ConcurrentHashMap<>();
 	// SQL Queries
 	private static final String ADD_INSTANCE_TIME = "INSERT INTO character_instance_time (charId,instanceId,time) values (?,?,?) ON DUPLICATE KEY UPDATE time=?";
 	private static final String RESTORE_INSTANCE_TIMES = "SELECT instanceId,time FROM character_instance_time WHERE charId=?";
@@ -83,13 +83,13 @@ public class InstanceManager implements IXmlReader
 	 */
 	public long getInstanceTime(int playerObjId, int id)
 	{
-		if (!_PlayerTimes.containsKey(playerObjId))
+		if (!_playerTimes.containsKey(playerObjId))
 		{
 			restoreInstanceTimes(playerObjId);
 		}
-		if (_PlayerTimes.get(playerObjId).containsKey(id))
+		if (_playerTimes.get(playerObjId).containsKey(id))
 		{
-			return _PlayerTimes.get(playerObjId).get(id);
+			return _playerTimes.get(playerObjId).get(id);
 		}
 		return -1;
 	}
@@ -100,11 +100,11 @@ public class InstanceManager implements IXmlReader
 	 */
 	public Map<Integer, Long> getAllInstanceTimes(int playerObjId)
 	{
-		if (!_PlayerTimes.containsKey(playerObjId))
+		if (!_playerTimes.containsKey(playerObjId))
 		{
 			restoreInstanceTimes(playerObjId);
 		}
-		return _PlayerTimes.get(playerObjId);
+		return _playerTimes.get(playerObjId);
 	}
 	
 	/**
@@ -114,7 +114,7 @@ public class InstanceManager implements IXmlReader
 	 */
 	public void setInstanceTime(int playerObjId, int id, long time)
 	{
-		if (!_PlayerTimes.containsKey(playerObjId))
+		if (!_playerTimes.containsKey(playerObjId))
 		{
 			restoreInstanceTimes(playerObjId);
 		}
@@ -127,7 +127,7 @@ public class InstanceManager implements IXmlReader
 			ps.setLong(3, time);
 			ps.setLong(4, time);
 			ps.execute();
-			_PlayerTimes.get(playerObjId).put(id, time);
+			_playerTimes.get(playerObjId).put(id, time);
 		}
 		catch (Exception e)
 		{
@@ -147,7 +147,7 @@ public class InstanceManager implements IXmlReader
 			ps.setInt(1, playerObjId);
 			ps.setInt(2, id);
 			ps.execute();
-			_PlayerTimes.get(playerObjId).remove(id);
+			_playerTimes.get(playerObjId).remove(id);
 		}
 		catch (Exception e)
 		{
@@ -160,11 +160,11 @@ public class InstanceManager implements IXmlReader
 	 */
 	public void restoreInstanceTimes(int playerObjId)
 	{
-		if (_PlayerTimes.containsKey(playerObjId))
+		if (_playerTimes.containsKey(playerObjId))
 		{
 			return; // already restored
 		}
-		_PlayerTimes.put(playerObjId, new ConcurrentHashMap<>());
+		_playerTimes.put(playerObjId, new ConcurrentHashMap<>());
 		try (Connection con = DatabaseFactory.getConnection();
 			PreparedStatement ps = con.prepareStatement(RESTORE_INSTANCE_TIMES))
 		{
@@ -181,7 +181,7 @@ public class InstanceManager implements IXmlReader
 					}
 					else
 					{
-						_PlayerTimes.get(playerObjId).put(id, time);
+						_playerTimes.get(playerObjId).put(id, time);
 					}
 				}
 			}
