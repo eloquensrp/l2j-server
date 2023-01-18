@@ -17,6 +17,7 @@
 package org.l2jmobius.tools.dbinstaller;
 
 import java.awt.HeadlessException;
+import java.io.File;
 
 import javax.swing.UIManager;
 
@@ -31,8 +32,9 @@ public class LauncherLS extends AbstractDBLauncher
 {
 	public static void main(String[] args) throws Exception
 	{
+		final File file = new File(LauncherLS.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+		final String dir = file.getParent() + "/" + "sql/login/";
 		final String defDatabase = "l2jmobiush5";
-		final String dir = "sql/login/";
 		
 		if ((args != null) && (args.length > 0))
 		{

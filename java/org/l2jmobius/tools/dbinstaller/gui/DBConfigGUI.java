@@ -154,7 +154,7 @@ public class DBConfigGUI extends JFrame
 				final DBInstallerGUI dbi = new DBInstallerGUI(connector.getConnection());
 				setVisible(false);
 				
-				if (_dir.equals("sql/login/"))
+				if (_dir.contains("sql/login/"))
 				{
 					final Object[] options =
 					{
