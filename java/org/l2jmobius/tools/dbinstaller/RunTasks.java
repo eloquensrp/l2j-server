@@ -43,7 +43,7 @@ public class RunTasks extends Thread
 	@Override
 	public void run()
 	{
-		new DBDumper(_frame, _db);
+		new DBDumper(_frame, _db, _sqlDir);
 		final ScriptExecutor exec = new ScriptExecutor(_frame);
 		_frame.appendToProgressArea("Installing Database Content...");
 		exec.execSqlBatch(new File(_sqlDir));
