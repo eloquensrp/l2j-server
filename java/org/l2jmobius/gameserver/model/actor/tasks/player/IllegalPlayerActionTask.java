@@ -19,6 +19,7 @@ package org.l2jmobius.gameserver.model.actor.tasks.player;
 import java.util.logging.Logger;
 
 import org.l2jmobius.Config;
+import org.l2jmobius.gameserver.data.xml.AdminData;
 import org.l2jmobius.gameserver.enums.IllegalActionPunishmentType;
 import org.l2jmobius.gameserver.instancemanager.PunishmentManager;
 import org.l2jmobius.gameserver.model.actor.Player;
@@ -33,7 +34,7 @@ import org.l2jmobius.gameserver.network.serverpackets.LeaveWorld;
  */
 public class IllegalPlayerActionTask implements Runnable
 {
-	private static final Logger LOGGER = Logger.getLogger("audit");
+	private static final Logger AUDIT_LOGGER = Logger.getLogger("audit");
 	
 	private final String _message;
 	private final IllegalActionPunishmentType _punishment;
@@ -74,16 +75,22 @@ public class IllegalPlayerActionTask implements Runnable
 	@Override
 	public void run()
 	{
-		LOGGER.info("AUDIT, " + _message + ", " + _actor + ", " + _punishment);
+		final StringBuilder sb = new StringBuilder();
+		sb.append("AUDIT, ");
+		sb.append(_message);
+		sb.append(", ");
+		sb.append(_actor);
+		sb.append(", ");
+		sb.append(_punishment);
+		AUDIT_LOGGER.info(sb.toString());
 		
-		// Enable line bellow to get spammed by bot users.
-		// AdminData.getInstance().broadcastMessageToGMs(_message);
 		if (!_actor.isGM())
 		{
 			switch (_punishment)
 			{
 				case BROADCAST:
 				{
+					AdminData.getInstance().broadcastMessageToGMs(_message);
 					return;
 				}
 				case KICK:

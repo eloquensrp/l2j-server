@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import org.l2jmobius.Config;
 import org.l2jmobius.commons.network.ReadablePacket;
 import org.l2jmobius.gameserver.data.sql.CharNameTable;
+import org.l2jmobius.gameserver.data.xml.AdminData;
 import org.l2jmobius.gameserver.data.xml.SecondaryAuthData;
 import org.l2jmobius.gameserver.instancemanager.AntiFeedManager;
 import org.l2jmobius.gameserver.instancemanager.PunishmentManager;
@@ -164,6 +165,12 @@ public class CharacterSelect implements ClientPacket
 					}
 					
 					CharNameTable.getInstance().addName(cha);
+					
+					// Prevent instant disappear of invisible GMs on login.
+					if (cha.isGM() && Config.GM_STARTUP_INVISIBLE && AdminData.getInstance().hasAccess("admin_invisible", cha.getAccessLevel()))
+					{
+						cha.setInvisible(true);
+					}
 					
 					cha.setClient(client);
 					client.setPlayer(cha);

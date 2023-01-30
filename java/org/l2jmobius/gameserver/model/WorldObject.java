@@ -872,12 +872,13 @@ public abstract class WorldObject extends ListenersContainer implements IIdentif
 	
 	/**
 	 * Sets this object as invisible or not
-	 * @param invis
+	 * @param invisible
 	 */
-	public void setInvisible(boolean invis)
+	public void setInvisible(boolean invisible)
 	{
-		_isInvisible = invis;
-		if (invis)
+		_isInvisible = invisible;
+		
+		if (invisible)
 		{
 			final DeleteObject deletePacket = new DeleteObject(this);
 			World.getInstance().forEachVisibleObject(this, Player.class, player ->

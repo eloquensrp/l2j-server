@@ -683,7 +683,7 @@ public class SpawnTable implements IXmlReader
 	 */
 	public synchronized void deleteSpawn(Spawn spawn, boolean update)
 	{
-		if (!removeSpawn(spawn))
+		if (!removeSpawn(spawn) && !update)
 		{
 			return;
 		}

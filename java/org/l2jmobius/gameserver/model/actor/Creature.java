@@ -49,6 +49,8 @@ import org.l2jmobius.gameserver.ai.CtrlIntention;
 import org.l2jmobius.gameserver.cache.RelationCache;
 import org.l2jmobius.gameserver.data.ItemTable;
 import org.l2jmobius.gameserver.data.xml.CategoryData;
+import org.l2jmobius.gameserver.data.xml.DoorData;
+import org.l2jmobius.gameserver.data.xml.FenceData;
 import org.l2jmobius.gameserver.data.xml.NpcData;
 import org.l2jmobius.gameserver.data.xml.SendMessageLocalisationData;
 import org.l2jmobius.gameserver.enums.CategoryType;
@@ -109,6 +111,7 @@ import org.l2jmobius.gameserver.model.events.impl.creature.OnCreatureSee;
 import org.l2jmobius.gameserver.model.events.impl.creature.OnCreatureSkillUse;
 import org.l2jmobius.gameserver.model.events.impl.creature.OnCreatureTeleported;
 import org.l2jmobius.gameserver.model.events.impl.creature.npc.OnNpcSkillSee;
+import org.l2jmobius.gameserver.model.events.impl.creature.npc.attackable.OnAttackableFactionCall;
 import org.l2jmobius.gameserver.model.events.listeners.AbstractEventListener;
 import org.l2jmobius.gameserver.model.events.returns.TerminateReturn;
 import org.l2jmobius.gameserver.model.holders.InvulSkillHolder;
@@ -2531,6 +2534,42 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 			{
 				_effectList.stopAllEffectsWithoutExclusions(true, true);
 			}
+			
+			// Clan help range aggro on kill.
+			if ((killer != null) && killer.isPlayable() && !killer.getActingPlayer().isGM())
+			{
+				final NpcTemplate template = ((Attackable) this).getTemplate();
+				final Set<Integer> clans = template.getClans();
+				if ((clans != null) && !clans.isEmpty())
+				{
+					World.getInstance().forEachVisibleObjectInRange(this, Attackable.class, template.getClanHelpRange(), called ->
+					{
+						// Don't call dead npcs, npcs without ai or npcs which are too far away.
+						if (called.isDead() || !called.hasAI() || (Math.abs(killer.getZ() - called.getZ()) > 600))
+						{
+							return;
+						}
+						// Don't call npcs who are already doing some action (e.g. attacking, casting).
+						if ((called.getAI().getIntention() != CtrlIntention.AI_INTENTION_IDLE) && (called.getAI().getIntention() != CtrlIntention.AI_INTENTION_ACTIVE))
+						{
+							return;
+						}
+						// Don't call npcs who aren't in the same clan.
+						if (!template.isClan(called.getTemplate().getClans()))
+						{
+							return;
+						}
+						
+						// By default, when a faction member calls for help, attack the caller's attacker.
+						called.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, killer, 1);
+						
+						if (EventDispatcher.getInstance().hasListener(EventType.ON_ATTACKABLE_FACTION_CALL, called))
+						{
+							EventDispatcher.getInstance().notifyEventAsync(new OnAttackableFactionCall(called, (Attackable) this, killer.getActingPlayer(), killer.isSummon()), called);
+						}
+					});
+				}
+			}
 		}
 		else
 		{
@@ -2586,6 +2625,12 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 	{
 		if (hasAI())
 		{
+			if (isAttackable())
+			{
+				getAttackByList().clear();
+				((Attackable) this).clearAggroList();
+				getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
+			}
 			getAI().stopAITask();
 		}
 		
@@ -4133,10 +4178,8 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 		double dz = m._zDestination - zPrev; // Z coordinate will follow client values
 		if (isPlayer() && !_isFlying)
 		{
-			final double distance = Math.hypot(dx, dy);
-			if (_cursorKeyMovement // In case of cursor movement, avoid moving through obstacles.
-				|| (distance > 3000) // Stop movement when player has clicked far away and intersected with an obstacle.
-				|| ((getWorldRegion() != null) && !getWorldRegion().getDoors().isEmpty())) // Check for nearby doors.
+			// In case of cursor movement, avoid moving through obstacles.
+			if (_cursorKeyMovement)
 			{
 				final double angle = Util.convertHeadingToDegree(getHeading());
 				final double radian = Math.toRadians(angle);
@@ -4153,12 +4196,74 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 					return false;
 				}
 			}
-			// Prevent player moving on ledges.
-			if ((dz > 180) && (distance < 300))
+			else // Mouse click movement.
 			{
-				_move.onGeodataPathIndex = -1;
-				stopMove(getActingPlayer().getLastServerPosition());
-				return false;
+				// Stop movement when player has clicked far away and intersected with an obstacle.
+				final double distance = Math.hypot(dx, dy);
+				if (distance > 3000)
+				{
+					final double angle = Util.convertHeadingToDegree(getHeading());
+					final double radian = Math.toRadians(angle);
+					final double course = Math.toRadians(180);
+					final double frontDistance = 10 * (_stat.getMoveSpeed() / 100);
+					final int x1 = (int) (Math.cos(Math.PI + radian + course) * frontDistance);
+					final int y1 = (int) (Math.sin(Math.PI + radian + course) * frontDistance);
+					final int x = xPrev + x1;
+					final int y = yPrev + y1;
+					if (!GeoEngine.getInstance().canMoveToTarget(xPrev, yPrev, zPrev, x, y, zPrev, getInstanceId()))
+					{
+						_move.onGeodataPathIndex = -1;
+						if (hasAI() && getAI().isFollowing())
+						{
+							getAI().stopFollow();
+						}
+						stopMove(getActingPlayer().getLastServerPosition());
+						return false;
+					}
+				}
+				else // Check for nearby doors or fences.
+				{
+					final WorldRegion region = getWorldRegion();
+					if (region != null)
+					{
+						final boolean hasDoors = !region.getDoors().isEmpty();
+						final boolean hasFences = !region.getFences().isEmpty();
+						if (hasDoors || hasFences)
+						{
+							final double angle = Util.convertHeadingToDegree(getHeading());
+							final double radian = Math.toRadians(angle);
+							final double course = Math.toRadians(180);
+							final double frontDistance = 10 * (_stat.getMoveSpeed() / 100);
+							final int x1 = (int) (Math.cos(Math.PI + radian + course) * frontDistance);
+							final int y1 = (int) (Math.sin(Math.PI + radian + course) * frontDistance);
+							final int x = xPrev + x1;
+							final int y = yPrev + y1;
+							if ((hasDoors && DoorData.getInstance().checkIfDoorsBetween(xPrev, yPrev, zPrev, x, y, zPrev, getInstanceId(), false)) //
+								|| (hasFences && FenceData.getInstance().checkIfFenceBetween(xPrev, yPrev, zPrev, x, y, zPrev, getInstanceId())))
+							{
+								_move.onGeodataPathIndex = -1;
+								if (hasAI() && getAI().isFollowing())
+								{
+									getAI().stopFollow();
+								}
+								stopMove(null);
+								return false;
+							}
+						}
+					}
+				}
+				
+				// Prevent player moving on ledges.
+				if ((dz > 180) && (distance < 300))
+				{
+					_move.onGeodataPathIndex = -1;
+					if (hasAI() && getAI().isFollowing())
+					{
+						getAI().stopFollow();
+					}
+					stopMove(null);
+					return false;
+				}
 			}
 		}
 		
@@ -4181,7 +4286,6 @@ public abstract class Creature extends WorldObject implements ISkillsHolder, IDe
 			distFraction = distPassed / delta;
 		}
 		
-		// if (Config.DEVELOPER) LOGGER.warning("Move Ticks:" + (gameTicks - m._moveTimestamp) + ", distPassed:" + distPassed + ", distFraction:" + distFraction);
 		if (distFraction > 1)
 		{
 			// Set the position of the Creature to the destination

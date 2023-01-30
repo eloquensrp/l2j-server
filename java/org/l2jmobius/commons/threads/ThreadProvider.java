@@ -17,23 +17,25 @@
 package org.l2jmobius.commons.threads;
 
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Mobius
  */
 public class ThreadProvider implements ThreadFactory
 {
-	private final String _name;
+	private final AtomicInteger _id = new AtomicInteger();
+	private final String _prefix;
 	
-	public ThreadProvider(String name)
+	public ThreadProvider(String prefix)
 	{
-		_name = name;
+		_prefix = prefix + " ";
 	}
 	
 	@Override
 	public Thread newThread(Runnable runnable)
 	{
-		final Thread thread = new Thread(runnable, _name);
+		final Thread thread = new Thread(runnable, _prefix + _id.incrementAndGet());
 		thread.setPriority(Thread.NORM_PRIORITY);
 		thread.setDaemon(false);
 		return thread;

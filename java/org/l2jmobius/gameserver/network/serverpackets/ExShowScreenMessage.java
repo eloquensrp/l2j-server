@@ -311,6 +311,5 @@ public class ExShowScreenMessage extends ServerPacket
 				writeString(s);
 			}
 		}
-		return;
 	}
 }

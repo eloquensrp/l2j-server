@@ -25,6 +25,19 @@
 		<node X="118194" Y="15790" />
 		<node X="114825" Y="19589" />
 	</zone>
+	<zone name="valakas_ground_zone" id="13010" type="NoRestartZone" shape="NPoly" minZ="-1624" maxZ="-472">
+		<node X="213943" Y="-118713" />
+		<node X="211024" Y="-117979" />
+		<node X="209362" Y="-116022" />
+		<node X="209003" Y="-113919" />
+		<node X="209874" Y="-111817" />
+		<node X="211646" Y="-111035" />
+		<node X="214068" Y="-110524" />
+		<node X="216217" Y="-112373" />
+		<node X="216696" Y="-114439" />
+		<node X="216571" Y="-115909" />
+		<node X="216348" Y="-117642" />
+	</zone>
 	<zone name="anakimNlilith" type="NoRestartZone" shape="NPoly" minZ="-5504" maxZ="-5104"> <!-- 25_17 -->
 		<stat name="restartTime" val="1800" />
 		<stat name="restartAllowedTime" val="600" />

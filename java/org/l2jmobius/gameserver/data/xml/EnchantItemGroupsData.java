@@ -25,6 +25,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import org.l2jmobius.Config;
 import org.l2jmobius.commons.util.IXmlReader;
 import org.l2jmobius.gameserver.data.ItemTable;
 import org.l2jmobius.gameserver.model.holders.RangeChanceHolder;
@@ -41,6 +42,9 @@ public class EnchantItemGroupsData implements IXmlReader
 {
 	private final Map<String, EnchantItemGroup> _itemGroups = new HashMap<>();
 	private final Map<Integer, EnchantScrollGroup> _scrollGroups = new HashMap<>();
+	private int _maxWeaponEnchant = 0;
+	private int _maxArmorEnchant = 0;
+	private int _maxAccessoryEnchant = 0;
 	
 	protected EnchantItemGroupsData()
 	{
@@ -55,6 +59,13 @@ public class EnchantItemGroupsData implements IXmlReader
 		parseDatapackFile("data/EnchantItemGroups.xml");
 		LOGGER.log(Level.INFO, getClass().getSimpleName() + ": Loaded " + _itemGroups.size() + " item group templates.");
 		LOGGER.log(Level.INFO, getClass().getSimpleName() + ": Loaded " + _scrollGroups.size() + " scroll group templates.");
+		
+		if (Config.OVER_ENCHANT_PROTECTION)
+		{
+			LOGGER.info(getClass().getSimpleName() + ": Maximum weapon enchant is set to " + _maxWeaponEnchant + ".");
+			LOGGER.info(getClass().getSimpleName() + ": Maximum armor enchant is set to " + _maxArmorEnchant + ".");
+			LOGGER.info(getClass().getSimpleName() + ": Maximum accessory enchant is set to " + _maxAccessoryEnchant + ".");
+		}
 	}
 	
 	@Override
@@ -96,6 +107,32 @@ public class EnchantItemGroupsData implements IXmlReader
 								{
 									group.addChance(new RangeChanceHolder(min, max, chance));
 								}
+								
+								// Try to get a generic max value.
+								if (chance > 0)
+								{
+									if (name.endsWith("WEAPON_GROUP"))
+									{
+										if (_maxWeaponEnchant < max)
+										{
+											_maxWeaponEnchant = max;
+										}
+									}
+									else if (name.endsWith("ARMOR_GROUP"))
+									{
+										if (_maxArmorEnchant < max)
+										{
+											_maxArmorEnchant = max;
+										}
+									}
+									else if (name.contains("ACCESSORIES"))
+									{
+										if (_maxAccessoryEnchant < max)
+										{
+											_maxAccessoryEnchant = max;
+										}
+									}
+								}
 							}
 						}
 						_itemGroups.put(name, group);
@@ -136,6 +173,12 @@ public class EnchantItemGroupsData implements IXmlReader
 				}
 			}
 		}
+		
+		// In case there is no accessories group set.
+		if (_maxAccessoryEnchant == 0)
+		{
+			_maxAccessoryEnchant = _maxArmorEnchant;
+		}
 	}
 	
 	public EnchantItemGroup getItemGroup(ItemTemplate item, int scrollGroup)
@@ -153,6 +196,21 @@ public class EnchantItemGroupsData implements IXmlReader
 	public EnchantScrollGroup getScrollGroup(int id)
 	{
 		return _scrollGroups.get(id);
+	}
+	
+	public int getMaxWeaponEnchant()
+	{
+		return _maxWeaponEnchant;
+	}
+	
+	public int getMaxArmorEnchant()
+	{
+		return _maxArmorEnchant;
+	}
+	
+	public int getMaxAccessoryEnchant()
+	{
+		return _maxAccessoryEnchant;
 	}
 	
 	public static EnchantItemGroupsData getInstance()
