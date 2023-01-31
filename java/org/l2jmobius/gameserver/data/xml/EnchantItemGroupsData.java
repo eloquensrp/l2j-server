@@ -62,9 +62,9 @@ public class EnchantItemGroupsData implements IXmlReader
 		
 		if (Config.OVER_ENCHANT_PROTECTION)
 		{
-			LOGGER.info(getClass().getSimpleName() + ": Maximum weapon enchant is set to " + _maxWeaponEnchant + ".");
-			LOGGER.info(getClass().getSimpleName() + ": Maximum armor enchant is set to " + _maxArmorEnchant + ".");
-			LOGGER.info(getClass().getSimpleName() + ": Maximum accessory enchant is set to " + _maxAccessoryEnchant + ".");
+			LOGGER.info(getClass().getSimpleName() + ": Max weapon enchant is set to " + _maxWeaponEnchant + ".");
+			LOGGER.info(getClass().getSimpleName() + ": Max armor enchant is set to " + _maxArmorEnchant + ".");
+			LOGGER.info(getClass().getSimpleName() + ": Max accessory enchant is set to " + _maxAccessoryEnchant + ".");
 		}
 	}
 	
@@ -111,26 +111,23 @@ public class EnchantItemGroupsData implements IXmlReader
 								// Try to get a generic max value.
 								if (chance > 0)
 								{
-									if (name.endsWith("WEAPON_GROUP"))
+									if (name.contains("WEAPON"))
 									{
 										if (_maxWeaponEnchant < max)
 										{
 											_maxWeaponEnchant = max;
 										}
 									}
-									else if (name.endsWith("ARMOR_GROUP"))
-									{
-										if (_maxArmorEnchant < max)
-										{
-											_maxArmorEnchant = max;
-										}
-									}
-									else if (name.contains("ACCESSORIES"))
+									else if (name.contains("ACCESSORIES") || name.contains("RING") || name.contains("EARRING") || name.contains("NECK"))
 									{
 										if (_maxAccessoryEnchant < max)
 										{
 											_maxAccessoryEnchant = max;
 										}
+									}
+									else if (_maxArmorEnchant < max)
+									{
+										_maxArmorEnchant = max;
 									}
 								}
 							}
@@ -179,6 +176,11 @@ public class EnchantItemGroupsData implements IXmlReader
 		{
 			_maxAccessoryEnchant = _maxArmorEnchant;
 		}
+		
+		// Max enchant values are set to current max enchant + 1.
+		_maxWeaponEnchant += 1;
+		_maxArmorEnchant += 1;
+		_maxAccessoryEnchant += 1;
 	}
 	
 	public EnchantItemGroup getItemGroup(ItemTemplate item, int scrollGroup)
