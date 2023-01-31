@@ -77,7 +77,7 @@ public class MoveBackwardToLocation implements ClientPacket
 		}
 		
 		// Check for possible door logout and move over exploit. Also checked at ValidatePosition.
-		if (DoorData.getInstance().checkIfDoorsBetween(player.getX(), player.getY(), player.getZ(), _targetX, _targetY, _targetZ, player.getInstanceId(), false))
+		if (DoorData.getInstance().checkIfDoorsBetween(player.getLastServerPosition(), player.getLocation(), player.getInstanceId()))
 		{
 			player.stopMove(player.getLastServerPosition());
 			player.sendPacket(ActionFailed.STATIC_PACKET);
