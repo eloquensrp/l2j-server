@@ -67,16 +67,19 @@ public class BuilderUtil
 	 */
 	public static boolean setHiding(Player player, boolean hide)
 	{
-		if (player.isInvisible() && hide)
+		if (player.hasEnteredWorld())
 		{
-			// already hiding
-			return false;
-		}
-		
-		if (!player.isInvisible() && !hide)
-		{
-			// already visible
-			return false;
+			if (player.isInvisible() && hide)
+			{
+				// already hiding
+				return false;
+			}
+			
+			if (!player.isInvisible() && !hide)
+			{
+				// already visible
+				return false;
+			}
 		}
 		
 		player.setSilenceMode(hide);
