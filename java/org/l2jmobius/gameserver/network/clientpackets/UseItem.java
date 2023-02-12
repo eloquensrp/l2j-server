@@ -301,7 +301,7 @@ public class UseItem implements ClientPacket
 			if (Config.OVER_ENCHANT_PROTECTION && !player.isGM() //
 				&& ((item.isWeapon() && (item.getEnchantLevel() > EnchantItemGroupsData.getInstance().getMaxWeaponEnchant())) //
 					|| ((item.getTemplate().getType2() == ItemTemplate.TYPE2_ACCESSORY) && (item.getEnchantLevel() > EnchantItemGroupsData.getInstance().getMaxAccessoryEnchant())) //
-					|| (item.getEnchantLevel() > EnchantItemGroupsData.getInstance().getMaxArmorEnchant())))
+					|| (item.isArmor() && (item.getTemplate().getType2() != ItemTemplate.TYPE2_ACCESSORY) && (item.getEnchantLevel() > EnchantItemGroupsData.getInstance().getMaxArmorEnchant()))))
 			{
 				player.getInventory().destroyItem("Over-enchant protection", item, player, null);
 				PacketLogger.info("Over-enchanted " + item + " has been removed from " + player);
