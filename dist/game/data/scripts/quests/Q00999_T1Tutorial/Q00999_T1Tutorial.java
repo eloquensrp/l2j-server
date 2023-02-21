@@ -415,6 +415,7 @@ public class Q00999_T1Tutorial extends Quest
 		{
 			((Monster) npc).dropItem(player, BLUE_GEM, 1);
 			playSound(player, "ItemSound.quest_tutorial");
+			st.set("step", "1");
 		}
 		return null;
 	}
