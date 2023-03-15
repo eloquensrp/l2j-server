@@ -900,6 +900,7 @@ public class Config
 	public static boolean TCP_NO_DELAY;
 	public static int CONNECTION_TIMEOUT;
 	public static boolean PACKET_ENCRYPTION;
+	public static boolean FAILED_DECRYPTION_LOGGED;
 	public static String DATABASE_DRIVER;
 	public static String DATABASE_URL;
 	public static String DATABASE_LOGIN;
@@ -1393,6 +1394,7 @@ public class Config
 			TCP_NO_DELAY = serverConfig.getBoolean("TcpNoDelay", true);
 			CONNECTION_TIMEOUT = serverConfig.getInt("ConnectionTimeout", 800);
 			PACKET_ENCRYPTION = serverConfig.getBoolean("PacketEncryption", false);
+			FAILED_DECRYPTION_LOGGED = serverConfig.getBoolean("FailedDecryptionLogged", true);
 			REQUEST_ID = serverConfig.getInt("RequestServerID", 0);
 			ACCEPT_ALTERNATE_ID = serverConfig.getBoolean("AcceptAlternateID", true);
 			DATABASE_DRIVER = serverConfig.getString("Driver", "org.mariadb.jdbc.Driver");

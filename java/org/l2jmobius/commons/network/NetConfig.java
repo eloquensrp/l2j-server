@@ -13,6 +13,7 @@ public class NetConfig
 	private boolean _packetFloodDisconnect = false;
 	private boolean _packetFloodDrop = false;
 	private boolean _packetFloodLogged = true;
+	private boolean _failedDecryptionLogged = true;
 	private boolean _tcpNoDelay = true;
 	
 	/**
@@ -132,6 +133,23 @@ public class NetConfig
 	public void setPacketFloodLogged(boolean packetFloodLogged)
 	{
 		_packetFloodLogged = packetFloodLogged;
+	}
+	
+	/**
+	 * @return if failed decryption is logged.
+	 */
+	public boolean isFailedDecryptionLogged()
+	{
+		return _failedDecryptionLogged;
+	}
+	
+	/**
+	 * Sets if failed decryption is logged.
+	 * @param failedDecryptionLogged
+	 */
+	public void setFailedDecryptionLogged(boolean failedDecryptionLogged)
+	{
+		_failedDecryptionLogged = failedDecryptionLogged;
 	}
 	
 	/**

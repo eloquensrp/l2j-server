@@ -58,8 +58,11 @@ public class ExecuteThread<E extends NetClient> implements Runnable
 						}
 						catch (Exception e)
 						{
-							LOGGER.warning("ExecuteThread: Problem with " + client + " data decryption.");
-							LOGGER.warning(CommonUtil.getStackTrace(e));
+							if (client.getNetConfig().isFailedDecryptionLogged())
+							{
+								LOGGER.warning("ExecuteThread: Problem with " + client + " data decryption.");
+								LOGGER.warning(CommonUtil.getStackTrace(e));
+							}
 							client.disconnect();
 							continue ITERATE;
 						}

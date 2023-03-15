@@ -139,6 +139,7 @@ public class LoginServer
 		server.getNetConfig().setExecutePoolSize(2000);
 		server.getNetConfig().setPacketQueueLimit(10);
 		server.getNetConfig().setPacketFloodDisconnect(true);
+		server.getNetConfig().setFailedDecryptionLogged(false);
 		server.start();
 	}
 	
