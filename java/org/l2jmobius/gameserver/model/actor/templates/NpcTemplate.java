@@ -696,158 +696,178 @@ public class NpcTemplate extends CreatureTemplate implements IIdentifiable
 		final double levelGapChanceToDropAdena = Util.map(levelDifference, -Config.DROP_ADENA_MAX_LEVEL_DIFFERENCE, -Config.DROP_ADENA_MIN_LEVEL_DIFFERENCE, Config.DROP_ADENA_MIN_LEVEL_GAP_CHANCE, 100d);
 		final double levelGapChanceToDrop = Util.map(levelDifference, -Config.DROP_ITEM_MAX_LEVEL_DIFFERENCE, -Config.DROP_ITEM_MIN_LEVEL_DIFFERENCE, Config.DROP_ITEM_MIN_LEVEL_GAP_CHANCE, 100d);
 		
-		int dropOccurrenceCounter = victim.isRaid() ? Config.DROP_MAX_OCCURRENCES_RAIDBOSS : Config.DROP_MAX_OCCURRENCES_NORMAL;
 		List<ItemHolder> calculatedDrops = null;
-		for (DropGroupHolder group : _dropGroups)
+		int dropOccurrenceCounter = victim.isRaid() ? Config.DROP_MAX_OCCURRENCES_RAIDBOSS : Config.DROP_MAX_OCCURRENCES_NORMAL;
+		if (dropOccurrenceCounter > 0)
 		{
-			if (dropOccurrenceCounter <= 0)
+			List<ItemHolder> randomDrops = null;
+			ItemHolder cachedItem = null;
+			double totalChance; // total group chance is 100
+			for (DropGroupHolder group : _dropGroups)
 			{
-				break;
-			}
-			
-			double groupRate = 1;
-			final List<DropHolder> groupDrops = group.getDropList();
-			for (DropHolder dropItem : groupDrops)
-			{
-				final int itemId = dropItem.getItemId();
-				final ItemTemplate item = ItemTable.getInstance().getTemplate(itemId);
-				final boolean champion = victim.isChampion();
-				
-				// chance
-				double rateChance = 1;
-				final Float itemChance = Config.RATE_DROP_CHANCE_BY_ID.get(itemId);
-				if (itemChance != null)
+				totalChance = 0;
+				GROUP_DROP: for (DropHolder dropItem : group.getDropList())
 				{
-					if (itemChance <= 0)
-					{
-						continue;
-					}
+					final int itemId = dropItem.getItemId();
+					final ItemTemplate item = ItemTable.getInstance().getTemplate(itemId);
+					final boolean champion = victim.isChampion();
 					
-					rateChance *= itemChance;
-					if (champion && (itemId == Inventory.ADENA_ID))
+					// chance
+					double rateChance = 1;
+					if (Config.RATE_DROP_CHANCE_BY_ID.get(itemId) != null)
 					{
-						rateChance *= Config.CHAMPION_ADENAS_REWARDS_CHANCE;
-					}
-				}
-				else if (item.hasExImmediateEffect())
-				{
-					rateChance *= Config.RATE_HERB_DROP_CHANCE_MULTIPLIER;
-				}
-				else if (victim.isRaid())
-				{
-					rateChance *= Config.RATE_RAID_DROP_CHANCE_MULTIPLIER;
-				}
-				else
-				{
-					rateChance *= Config.RATE_DEATH_DROP_CHANCE_MULTIPLIER * (champion ? Config.CHAMPION_REWARDS_CHANCE : 1);
-				}
-				
-				// premium chance
-				if (Config.PREMIUM_SYSTEM_ENABLED && (killer.getActingPlayer() != null) && killer.getActingPlayer().hasPremiumStatus())
-				{
-					if (Config.PREMIUM_RATE_DROP_CHANCE_BY_ID.get(itemId) != null)
-					{
-						rateChance *= Config.PREMIUM_RATE_DROP_CHANCE_BY_ID.get(itemId);
+						rateChance *= Config.RATE_DROP_CHANCE_BY_ID.get(itemId);
+						if (champion && (itemId == Inventory.ADENA_ID))
+						{
+							rateChance *= Config.CHAMPION_ADENAS_REWARDS_CHANCE;
+						}
 					}
 					else if (item.hasExImmediateEffect())
 					{
-						// TODO: Premium herb chance? :)
+						rateChance *= Config.RATE_HERB_DROP_CHANCE_MULTIPLIER;
 					}
 					else if (victim.isRaid())
 					{
-						// TODO: Premium raid chance? :)
+						rateChance *= Config.RATE_RAID_DROP_CHANCE_MULTIPLIER;
 					}
 					else
 					{
-						rateChance *= Config.PREMIUM_RATE_DROP_CHANCE;
-					}
-				}
-				
-				// keep lowest to avoid chance by id configuration conflicts
-				groupRate = Math.min(groupRate, rateChance);
-			}
-			
-			if ((Rnd.nextDouble() * 100) < (group.getChance() * groupRate))
-			{
-				double totalChance = 0; // total group chance is 100
-				final double dropChance = Rnd.nextDouble() * 100;
-				GROUP_DROP: for (DropHolder dropItem : groupDrops)
-				{
-					if (dropOccurrenceCounter <= 0)
-					{
-						break;
+						rateChance *= Config.RATE_DEATH_DROP_CHANCE_MULTIPLIER * (champion ? Config.CHAMPION_REWARDS_CHANCE : 1);
 					}
 					
-					// calculate if item will drop
-					totalChance += dropItem.getChance();
-					if (dropChance >= totalChance)
+					// premium chance
+					if (Config.PREMIUM_SYSTEM_ENABLED && (killer.getActingPlayer() != null) && killer.getActingPlayer().hasPremiumStatus())
 					{
-						continue;
+						if (Config.PREMIUM_RATE_DROP_CHANCE_BY_ID.get(itemId) != null)
+						{
+							rateChance *= Config.PREMIUM_RATE_DROP_CHANCE_BY_ID.get(itemId);
+						}
+						else if (item.hasExImmediateEffect())
+						{
+							// TODO: Premium herb chance? :)
+						}
+						else if (victim.isRaid())
+						{
+							// TODO: Premium raid chance? :)
+						}
+						else
+						{
+							rateChance *= Config.PREMIUM_RATE_DROP_CHANCE;
+						}
+					}
+					
+					// only use total chance on x1, custom rates break this logic because total chance is more than 100%
+					if (rateChance == 1)
+					{
+						totalChance += dropItem.getChance();
+					}
+					else
+					{
+						totalChance = dropItem.getChance();
+					}
+					final double groupItemChance = totalChance * (group.getChance() / 100) * rateChance;
+					
+					// check if maximum drop occurrences have been reached
+					// items that have 100% drop chance without server rate multipliers drop normally
+					if ((dropOccurrenceCounter == 0) && (groupItemChance < 100) && (randomDrops != null) && (calculatedDrops != null))
+					{
+						if ((rateChance == 1) && !randomDrops.isEmpty()) // custom rates break this logic because total chance is more than 100%
+						{
+							// remove highest chance item (temporarily if no other item replaces it)
+							cachedItem = randomDrops.remove(0);
+							calculatedDrops.remove(cachedItem);
+						}
+						dropOccurrenceCounter = 1;
 					}
 					
 					// check level gap that may prevent to drop item
 					if ((Rnd.nextDouble() * 100) > (dropItem.getItemId() == Inventory.ADENA_ID ? levelGapChanceToDropAdena : levelGapChanceToDrop))
 					{
-						continue;
+						continue GROUP_DROP;
 					}
 					
-					// skip zero chance drops
-					final Float itemChance = Config.RATE_DROP_CHANCE_BY_ID.get(dropItem.getItemId());
-					if ((itemChance != null) && (itemChance <= 0))
+					// calculate chances
+					final ItemHolder drop = calculateGroupDrop(group, dropItem, victim, killer, groupItemChance);
+					if (drop == null)
 					{
-						continue;
+						continue GROUP_DROP;
 					}
 					
-					// create the drop
-					final ItemHolder drop = calculateGroupDrop(dropItem, victim, killer);
-					
-					// create list
+					// create lists
+					if (randomDrops == null)
+					{
+						randomDrops = new ArrayList<>(dropOccurrenceCounter);
+					}
 					if (calculatedDrops == null)
 					{
 						calculatedDrops = new ArrayList<>(dropOccurrenceCounter);
 					}
 					
 					// finally
+					final Float itemChance = Config.RATE_DROP_CHANCE_BY_ID.get(dropItem.getItemId());
 					if (itemChance != null)
 					{
-						if ((dropItem.getChance() * itemChance) < 100)
+						if ((groupItemChance * itemChance) < 100)
 						{
 							dropOccurrenceCounter--;
+							if (rateChance == 1) // custom rates break this logic because total chance is more than 100%
+							{
+								randomDrops.add(drop);
+							}
 						}
 					}
-					else if (dropItem.getChance() < 100)
+					else if (groupItemChance < 100)
 					{
 						dropOccurrenceCounter--;
+						if (rateChance == 1) // custom rates break this logic because total chance is more than 100%
+						{
+							randomDrops.add(drop);
+						}
 					}
 					calculatedDrops.add(drop);
 					
-					// no more drops from this group
-					break GROUP_DROP;
+					// no more drops from this group, only use on x1, custom rates break this logic because total chance is more than 100%
+					if (rateChance == 1)
+					{
+						break GROUP_DROP;
+					}
 				}
 			}
-		}
-		
-		// champion extra drop
-		if (victim.isChampion())
-		{
-			if ((victim.getLevel() < killer.getLevel()) && (Rnd.get(100) < Config.CHAMPION_REWARD_LOWER_LEVEL_ITEM_CHANCE))
+			
+			// add temporarily removed item when not replaced
+			if ((dropOccurrenceCounter > 0) && (cachedItem != null) && (calculatedDrops != null))
 			{
-				return calculatedDrops;
+				calculatedDrops.add(cachedItem);
 			}
-			if ((victim.getLevel() > killer.getLevel()) && (Rnd.get(100) < Config.CHAMPION_REWARD_HIGHER_LEVEL_ITEM_CHANCE))
+			// clear random drops
+			if (randomDrops != null)
 			{
-				return calculatedDrops;
+				randomDrops.clear();
+				randomDrops = null;
 			}
 			
-			// create list
-			if (calculatedDrops == null)
+			// champion extra drop
+			if (victim.isChampion())
 			{
-				calculatedDrops = new ArrayList<>();
-			}
-			
-			if (!calculatedDrops.containsAll(Config.CHAMPION_REWARD_ITEMS))
-			{
-				calculatedDrops.addAll(Config.CHAMPION_REWARD_ITEMS);
+				if ((victim.getLevel() < killer.getLevel()) && (Rnd.get(100) < Config.CHAMPION_REWARD_LOWER_LEVEL_ITEM_CHANCE))
+				{
+					return calculatedDrops;
+				}
+				if ((victim.getLevel() > killer.getLevel()) && (Rnd.get(100) < Config.CHAMPION_REWARD_HIGHER_LEVEL_ITEM_CHANCE))
+				{
+					return calculatedDrops;
+				}
+				
+				// create list
+				if (calculatedDrops == null)
+				{
+					calculatedDrops = new ArrayList<>();
+				}
+				
+				if (!calculatedDrops.containsAll(Config.CHAMPION_REWARD_ITEMS))
+				{
+					calculatedDrops.addAll(Config.CHAMPION_REWARD_ITEMS);
+				}
 			}
 		}
 		
@@ -962,63 +982,71 @@ public class NpcTemplate extends CreatureTemplate implements IIdentifiable
 	}
 	
 	/**
+	 * @param group
 	 * @param dropItem
 	 * @param victim
 	 * @param killer
+	 * @param chance
 	 * @return ItemHolder
 	 */
-	private ItemHolder calculateGroupDrop(DropHolder dropItem, Creature victim, Creature killer)
+	private ItemHolder calculateGroupDrop(DropGroupHolder group, DropHolder dropItem, Creature victim, Creature killer, double chance)
 	{
 		final int itemId = dropItem.getItemId();
 		final ItemTemplate item = ItemTable.getInstance().getTemplate(itemId);
 		final boolean champion = victim.isChampion();
 		
-		// calculate amount
-		double rateAmount = 1;
-		if (Config.RATE_DROP_AMOUNT_BY_ID.get(itemId) != null)
+		// calculate if item will drop
+		if ((Rnd.nextDouble() * 100) < chance)
 		{
-			rateAmount *= Config.RATE_DROP_AMOUNT_BY_ID.get(itemId);
-			if (champion && (itemId == Inventory.ADENA_ID))
+			// amount is calculated after chance returned success
+			double rateAmount = 1;
+			if (Config.RATE_DROP_AMOUNT_BY_ID.get(itemId) != null)
 			{
-				rateAmount *= Config.CHAMPION_ADENAS_REWARDS_AMOUNT;
-			}
-		}
-		else if (item.hasExImmediateEffect())
-		{
-			rateAmount *= Config.RATE_HERB_DROP_AMOUNT_MULTIPLIER;
-		}
-		else if (victim.isRaid())
-		{
-			rateAmount *= Config.RATE_RAID_DROP_AMOUNT_MULTIPLIER;
-		}
-		else
-		{
-			rateAmount *= Config.RATE_DEATH_DROP_AMOUNT_MULTIPLIER * (champion ? Config.CHAMPION_REWARDS_AMOUNT : 1);
-		}
-		
-		// premium amount
-		if (Config.PREMIUM_SYSTEM_ENABLED && (killer.getActingPlayer() != null) && killer.getActingPlayer().hasPremiumStatus())
-		{
-			if (Config.PREMIUM_RATE_DROP_AMOUNT_BY_ID.get(itemId) != null)
-			{
-				rateAmount *= Config.PREMIUM_RATE_DROP_AMOUNT_BY_ID.get(itemId);
+				rateAmount *= Config.RATE_DROP_AMOUNT_BY_ID.get(itemId);
+				if (champion && (itemId == Inventory.ADENA_ID))
+				{
+					rateAmount *= Config.CHAMPION_ADENAS_REWARDS_AMOUNT;
+				}
 			}
 			else if (item.hasExImmediateEffect())
 			{
-				// TODO: Premium herb amount? :)
+				rateAmount *= Config.RATE_HERB_DROP_AMOUNT_MULTIPLIER;
 			}
 			else if (victim.isRaid())
 			{
-				// TODO: Premium raid amount? :)
+				rateAmount *= Config.RATE_RAID_DROP_AMOUNT_MULTIPLIER;
 			}
 			else
 			{
-				rateAmount *= Config.PREMIUM_RATE_DROP_AMOUNT;
+				rateAmount *= Config.RATE_DEATH_DROP_AMOUNT_MULTIPLIER * (champion ? Config.CHAMPION_REWARDS_AMOUNT : 1);
 			}
+			
+			// premium amount
+			if (Config.PREMIUM_SYSTEM_ENABLED && (killer.getActingPlayer() != null) && killer.getActingPlayer().hasPremiumStatus())
+			{
+				if (Config.PREMIUM_RATE_DROP_AMOUNT_BY_ID.get(itemId) != null)
+				{
+					rateAmount *= Config.PREMIUM_RATE_DROP_AMOUNT_BY_ID.get(itemId);
+				}
+				else if (item.hasExImmediateEffect())
+				{
+					// TODO: Premium herb amount? :)
+				}
+				else if (victim.isRaid())
+				{
+					// TODO: Premium raid amount? :)
+				}
+				else
+				{
+					rateAmount *= Config.PREMIUM_RATE_DROP_AMOUNT;
+				}
+			}
+			
+			// finally
+			return new ItemHolder(itemId, (long) (Rnd.get(dropItem.getMin(), dropItem.getMax()) * rateAmount));
 		}
 		
-		// finally
-		return new ItemHolder(itemId, (long) (Rnd.get(dropItem.getMin(), dropItem.getMax()) * rateAmount));
+		return null;
 	}
 	
 	/**
