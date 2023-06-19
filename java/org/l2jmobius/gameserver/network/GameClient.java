@@ -16,8 +16,6 @@
  */
 package org.l2jmobius.gameserver.network;
 
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -206,30 +204,11 @@ public class GameClient extends NetClient
 		_pendingPackets.add(packet);
 		synchronized (_pendingPackets)
 		{
-			final SocketChannel channel = getChannel();
-			if ((channel != null) && channel.isConnected())
-			{
-				final ServerPacket sendPacket = _pendingPackets.poll();
-				final ByteBuffer byteBuffer = sendPacket.getSendableByteBuffer(_encryption);
-				if (byteBuffer != null)
-				{
-					// Send the packet data.
-					try
-					{
-						// Loop while there are remaining bytes in the buffer.
-						while (byteBuffer.hasRemaining())
-						{
-							channel.write(byteBuffer);
-						}
-					}
-					catch (Exception ignored)
-					{
-					}
-					
-					// Run packet implementation.
-					sendPacket.run(_player);
-				}
-			}
+			// Send the packet data.
+			super.sendPacket(packet);
+			
+			// Run packet implementation.
+			packet.run(_player);
 		}
 	}
 	

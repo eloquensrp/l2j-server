@@ -26,19 +26,15 @@ public class ExecuteThread<E extends NetClient> implements Runnable
 	@Override
 	public void run()
 	{
-		long executionStart;
-		long currentTime;
 		while (true)
 		{
-			executionStart = System.currentTimeMillis();
-			
 			// No need to iterate when pool is empty.
 			if (!_pool.isEmpty())
 			{
 				// Iterate client pool.
 				ITERATE: for (E client : _pool)
 				{
-					if (client.getChannel() == null)
+					if (client.getSocket() == null)
 					{
 						_pool.remove(client);
 						continue ITERATE;
@@ -72,16 +68,12 @@ public class ExecuteThread<E extends NetClient> implements Runnable
 			}
 			
 			// Prevent high CPU caused by repeatedly looping.
-			currentTime = System.currentTimeMillis();
-			if ((currentTime - executionStart) < 1)
+			try
 			{
-				try
-				{
-					Thread.sleep(1);
-				}
-				catch (Exception ignored)
-				{
-				}
+				Thread.sleep(1);
+			}
+			catch (Exception ignored)
+			{
 			}
 		}
 	}

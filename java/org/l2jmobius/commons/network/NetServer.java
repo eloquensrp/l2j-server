@@ -1,8 +1,8 @@
 package org.l2jmobius.commons.network;
 
 import java.net.InetSocketAddress;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -105,30 +105,26 @@ public class NetServer<E extends NetClient>
 		public void run()
 		{
 			// Create server and bind port.
-			try (ServerSocketChannel server = ServerSocketChannel.open())
+			try (ServerSocket server = new ServerSocket())
 			{
+				server.setReuseAddress(true);
 				server.bind(new InetSocketAddress(_hostname, _port));
-				server.configureBlocking(false); // Non-blocking I/O.
+				server.setSoTimeout(0); // Non-blocking I/O.
 				
 				// Listen for new connections.
 				LOGGER.info(_name + ": Listening on port " + _port + " for incoming connections.");
-				long executionStart;
-				long currentTime;
 				while (true)
 				{
-					executionStart = System.currentTimeMillis();
-					
-					final SocketChannel channel = server.accept();
-					if (channel != null)
+					final Socket socket = server.accept();
+					if (socket != null)
 					{
 						// Configure channel.
-						channel.socket().setTcpNoDelay(_netConfig.isTcpNoDelay());
-						channel.socket().setSoTimeout(_netConfig.getConnectionTimeout());
-						channel.configureBlocking(false); // Non-blocking I/O.
+						socket.setTcpNoDelay(_netConfig.isTcpNoDelay());
+						socket.setSoTimeout(0); // Non-blocking I/O.
 						
 						// Create client.
 						final E client = _clientSupplier.get();
-						client.init(channel, _netConfig);
+						client.init(socket, _netConfig);
 						
 						// Add to read pool.
 						
@@ -190,11 +186,7 @@ public class NetServer<E extends NetClient>
 					}
 					
 					// Prevent high CPU caused by repeatedly polling the channel.
-					currentTime = System.currentTimeMillis();
-					if ((currentTime - executionStart) < 1)
-					{
-						Thread.sleep(1);
-					}
+					Thread.sleep(1);
 				}
 			}
 			catch (Exception e)

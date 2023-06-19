@@ -1,7 +1,8 @@
 package org.l2jmobius.commons.network;
 
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
@@ -15,27 +16,30 @@ public class NetClient
 	protected static final Logger LOGGER = Logger.getLogger(NetClient.class.getName());
 	
 	private String _ip;
-	private SocketChannel _channel;
+	private Socket _socket;
+	private InputStream _inputStream;
+	private OutputStream _outputStream;
 	private NetConfig _netConfig;
-	private Queue<byte[]> _pendingPacketData;
-	private ByteBuffer _pendingByteBuffer;
+	private Queue<byte[]> _packetData;
+	private byte[] _pendingData;
 	private int _pendingPacketSize;
 	
 	/**
 	 * Initialize the client.
-	 * @param channel
+	 * @param socket
 	 * @param netConfig
 	 */
-	public void init(SocketChannel channel, NetConfig netConfig)
+	public void init(Socket socket, NetConfig netConfig)
 	{
-		_channel = channel;
+		_socket = socket;
 		_netConfig = netConfig;
-		_pendingPacketData = new ConcurrentLinkedQueue<>();
+		_packetData = new ConcurrentLinkedQueue<>();
+		_ip = socket.getInetAddress().toString().substring(1); // Trim out /127.0.0.1
 		
 		try
 		{
-			_ip = _channel.getRemoteAddress().toString();
-			_ip = _ip.substring(1, _ip.lastIndexOf(':')); // Trim out /127.0.0.1:12345
+			_inputStream = _socket.getInputStream();
+			_outputStream = _socket.getOutputStream();
 		}
 		catch (Exception ignored)
 		{
@@ -64,26 +68,28 @@ public class NetClient
 	 */
 	public void disconnect()
 	{
-		if (_channel != null)
+		if (_socket != null)
 		{
 			try
 			{
-				_channel.close();
-				_channel = null;
+				_socket.close();
+				_socket = null;
+				_inputStream = null;
+				_outputStream = null;
 			}
 			catch (Exception ignored)
 			{
 			}
 		}
 		
-		if (_pendingPacketData != null)
+		if (_packetData != null)
 		{
-			_pendingPacketData.clear();
+			_packetData.clear();
 		}
 		
-		if (_pendingByteBuffer != null)
+		if (_pendingData != null)
 		{
-			_pendingByteBuffer = null;
+			_pendingData = null;
 		}
 	}
 	
@@ -94,7 +100,7 @@ public class NetClient
 	public void addPacketData(byte[] data)
 	{
 		// Check packet flooding.
-		final int size = _pendingPacketData.size();
+		final int size = _packetData.size();
 		if (size >= _netConfig.getPacketQueueLimit())
 		{
 			if (_netConfig.isPacketFloodDisconnect())
@@ -121,7 +127,7 @@ public class NetClient
 		}
 		
 		// Add to queue.
-		_pendingPacketData.add(data);
+		_packetData.add(data);
 	}
 	
 	/**
@@ -129,24 +135,24 @@ public class NetClient
 	 */
 	public Queue<byte[]> getPacketData()
 	{
-		return _pendingPacketData;
+		return _packetData;
 	}
 	
 	/**
-	 * @return the pending read ByteBuffer.
+	 * @return the pending read <b>byte[]</b>.
 	 */
-	public ByteBuffer getPendingByteBuffer()
+	public byte[] getPendingData()
 	{
-		return _pendingByteBuffer;
+		return _pendingData;
 	}
 	
 	/**
-	 * Set the pending read ByteBuffer.
-	 * @param pendingByteBuffer the pending read ByteBuffer.
+	 * Set the pending read <b>byte[]</b>.
+	 * @param pendingData the pending read <b>byte[]</b>.
 	 */
-	public void setPendingByteBuffer(ByteBuffer pendingByteBuffer)
+	public void setPendingData(byte[] pendingData)
 	{
-		_pendingByteBuffer = pendingByteBuffer;
+		_pendingData = pendingData;
 	}
 	
 	/**
@@ -167,6 +173,36 @@ public class NetClient
 	}
 	
 	/**
+	 * Sends a packet over the network using the default encryption.
+	 * @param packet The packet to send.
+	 */
+	public void sendPacket(WritablePacket packet)
+	{
+		if ((_socket == null) || !_socket.isConnected())
+		{
+			return;
+		}
+		
+		final byte[] sendableBytes = packet.getSendableBytes(getEncryption());
+		if (sendableBytes == null)
+		{
+			return;
+		}
+		
+		try
+		{
+			synchronized (this)
+			{
+				_outputStream.write(sendableBytes);
+				_outputStream.flush();
+			}
+		}
+		catch (Exception ignored)
+		{
+		}
+	}
+	
+	/**
 	 * @return the Encryption of this client.
 	 */
 	public EncryptionInterface getEncryption()
@@ -175,11 +211,27 @@ public class NetClient
 	}
 	
 	/**
-	 * @return the SocketChannel of this client.
+	 * @return the Socket of this client.
 	 */
-	public SocketChannel getChannel()
+	public Socket getSocket()
 	{
-		return _channel;
+		return _socket;
+	}
+	
+	/**
+	 * @return the InputStream of this client.
+	 */
+	public InputStream getInputStream()
+	{
+		return _inputStream;
+	}
+	
+	/**
+	 * @return the OutputStream of this client.
+	 */
+	public OutputStream getOutputStream()
+	{
+		return _outputStream;
 	}
 	
 	/**

@@ -1,8 +1,7 @@
 package org.l2jmobius.commons.network;
 
+import java.io.InputStream;
 import java.net.SocketTimeoutException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
 import java.util.Set;
 
 /**
@@ -12,9 +11,9 @@ import java.util.Set;
  */
 public class ReadThread<E extends NetClient> implements Runnable
 {
-	private final ByteBuffer _sizeBuffer = ByteBuffer.allocate(2); // Reusable size buffer.
-	private final ByteBuffer _pendingSizeBuffer = ByteBuffer.allocate(1); // Reusable pending size buffer.
 	private final Set<E> _pool;
+	private final byte[] _sizeBuffer = new byte[2]; // Reusable size buffer.
+	private final byte[] _pendingSizeBuffer = new byte[1]; // Reusable pending size buffer.
 	
 	public ReadThread(Set<E> pool)
 	{
@@ -24,12 +23,8 @@ public class ReadThread<E extends NetClient> implements Runnable
 	@Override
 	public void run()
 	{
-		long executionStart;
-		long currentTime;
 		while (true)
 		{
-			executionStart = System.currentTimeMillis();
-			
 			// No need to iterate when pool is empty.
 			if (!_pool.isEmpty())
 			{
@@ -38,22 +33,29 @@ public class ReadThread<E extends NetClient> implements Runnable
 				{
 					try
 					{
-						final SocketChannel channel = client.getChannel();
-						if (channel == null) // Unexpected disconnection?
+						final InputStream inputStream = client.getInputStream();
+						if (inputStream == null) // Unexpected disconnection?
 						{
-							// Null SocketChannel: client
+							// Null InputStream: client
 							onDisconnection(client);
 							continue ITERATE;
 						}
 						
-						// Continue read if there is a pending ByteBuffer.
-						final ByteBuffer pendingByteBuffer = client.getPendingByteBuffer();
-						if (pendingByteBuffer != null)
+						// Continue when there are no bytes that can be read.
+						if (inputStream.available() < 1)
 						{
-							// Allocate an additional ByteBuffer based on pending packet size.
+							continue ITERATE;
+						}
+						
+						// Continue read if there is a pending byte array.
+						final byte[] pendingData = client.getPendingData();
+						if (pendingData != null)
+						{
+							// Allocate an additional byte array based on pending packet size.
 							final int pendingPacketSize = client.getPendingPacketSize();
-							final ByteBuffer additionalData = ByteBuffer.allocate(pendingPacketSize - pendingByteBuffer.position());
-							switch (channel.read(additionalData))
+							final byte[] additionalData = new byte[pendingPacketSize - pendingData.length];
+							final int bytesRead = inputStream.read(additionalData);
+							switch (bytesRead)
 							{
 								// Disconnected.
 								case -1:
@@ -70,15 +72,21 @@ public class ReadThread<E extends NetClient> implements Runnable
 								default:
 								{
 									// Merge additional read data.
-									pendingByteBuffer.put(pendingByteBuffer.position(), additionalData, 0, additionalData.position());
-									pendingByteBuffer.position(pendingByteBuffer.position() + additionalData.position());
+									final int currentSize = pendingData.length + bytesRead;
+									final byte[] mergedData = new byte[currentSize];
+									System.arraycopy(pendingData, 0, mergedData, 0, pendingData.length);
+									System.arraycopy(additionalData, 0, mergedData, pendingData.length, bytesRead);
 									
 									// Read was complete.
-									if (pendingByteBuffer.position() >= pendingPacketSize)
+									if (currentSize >= pendingPacketSize)
 									{
 										// Add packet data to client.
-										client.addPacketData(pendingByteBuffer.array());
-										client.setPendingByteBuffer(null);
+										client.addPacketData(mergedData);
+										client.setPendingData(null);
+									}
+									else
+									{
+										client.setPendingData(mergedData);
 									}
 								}
 							}
@@ -86,8 +94,8 @@ public class ReadThread<E extends NetClient> implements Runnable
 						}
 						
 						// Read incoming packet size (short).
-						_sizeBuffer.clear();
-						switch (channel.read(_sizeBuffer))
+						boolean sizeRead = false;
+						switch (inputStream.read(_sizeBuffer))
 						{
 							// Disconnected.
 							case -1:
@@ -103,8 +111,8 @@ public class ReadThread<E extends NetClient> implements Runnable
 							// Need to read two bytes to calculate size.
 							case 1:
 							{
-								int attempt = 0; // Keep it under 10 attempts (100ms).
-								COMPLETE_SIZE_READ: while ((attempt++ < 10) && (_sizeBuffer.position() < 2))
+								// Keep it under 10 attempts (100ms).
+								COMPLETE_SIZE_READ: for (int attempt = 0; attempt < 10; attempt++)
 								{
 									// Wait for pending data.
 									try
@@ -116,8 +124,8 @@ public class ReadThread<E extends NetClient> implements Runnable
 									}
 									
 									// Try to read the missing extra byte.
-									_pendingSizeBuffer.clear();
-									switch (channel.read(_pendingSizeBuffer))
+									_pendingSizeBuffer[0] = 0;
+									switch (inputStream.read(_pendingSizeBuffer))
 									{
 										// Disconnected.
 										case -1:
@@ -133,14 +141,15 @@ public class ReadThread<E extends NetClient> implements Runnable
 										// Merge additional read byte.
 										default:
 										{
-											_sizeBuffer.put(1, _pendingSizeBuffer, 0, 1);
-											_sizeBuffer.position(2);
+											_sizeBuffer[1] = _pendingSizeBuffer[0];
+											sizeRead = true;
+											break COMPLETE_SIZE_READ;
 										}
 									}
 								}
 								
 								// Read failed.
-								if (_sizeBuffer.position() < 2)
+								if (!sizeRead)
 								{
 									onDisconnection(client);
 									continue ITERATE;
@@ -151,10 +160,11 @@ public class ReadThread<E extends NetClient> implements Runnable
 							// Read actual packet bytes.
 							default:
 							{
-								// Allocate a new ByteBuffer based on packet size read.
+								// Allocate a new byte array based on packet size read.
 								final int packetSize = calculatePacketSize();
-								final ByteBuffer packetByteBuffer = ByteBuffer.allocate(packetSize);
-								switch (channel.read(packetByteBuffer))
+								final byte[] packetData = new byte[packetSize];
+								final int bytesRead = inputStream.read(packetData);
+								switch (bytesRead)
 								{
 									// Disconnected.
 									case -1:
@@ -171,14 +181,16 @@ public class ReadThread<E extends NetClient> implements Runnable
 									default:
 									{
 										// Read was not complete.
-										if (packetByteBuffer.position() < packetSize)
+										if (bytesRead < packetSize)
 										{
-											client.setPendingByteBuffer(packetByteBuffer);
+											final byte[] pendindBytes = new byte[bytesRead];
+											System.arraycopy(packetData, 0, pendindBytes, 0, bytesRead);
+											client.setPendingData(pendindBytes);
 											client.setPendingPacketSize(packetSize);
 										}
 										else // Add packet data to client.
 										{
-											client.addPacketData(packetByteBuffer.array());
+											client.addPacketData(packetData);
 										}
 									}
 								}
@@ -197,24 +209,19 @@ public class ReadThread<E extends NetClient> implements Runnable
 			}
 			
 			// Prevent high CPU caused by repeatedly looping.
-			currentTime = System.currentTimeMillis();
-			if ((currentTime - executionStart) < 1)
+			try
 			{
-				try
-				{
-					Thread.sleep(1);
-				}
-				catch (Exception ignored)
-				{
-				}
+				Thread.sleep(1);
+			}
+			catch (Exception ignored)
+			{
 			}
 		}
 	}
 	
 	private int calculatePacketSize()
 	{
-		_sizeBuffer.rewind();
-		return ((_sizeBuffer.get() & 0xff) | ((_sizeBuffer.get() << 8) & 0xffff)) - 2;
+		return ((_sizeBuffer[0] & 0xff) | ((_sizeBuffer[1] << 8) & 0xffff)) - 2;
 	}
 	
 	private void onDisconnection(E client)

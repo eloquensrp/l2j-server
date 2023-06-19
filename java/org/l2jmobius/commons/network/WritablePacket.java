@@ -1,6 +1,5 @@
 package org.l2jmobius.commons.network;
 
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -13,7 +12,6 @@ public abstract class WritablePacket
 {
 	private byte[] _data;
 	private byte[] _sendableBytes;
-	private ByteBuffer _byteBuffer;
 	private int _position = 2; // Allocate space for size (max length 65535 - size header).
 	
 	/**
@@ -251,38 +249,6 @@ public abstract class WritablePacket
 		
 		// Return the data.
 		return _sendableBytes;
-	}
-	
-	/**
-	 * @return ByteBuffer of the sendable packet data, including a size header.
-	 */
-	public ByteBuffer getSendableByteBuffer()
-	{
-		return getSendableByteBuffer(null);
-	}
-	
-	/**
-	 * @param encryption if EncryptionInterface is used.
-	 * @return ByteBuffer of the sendable packet data, including a size header.
-	 */
-	public synchronized ByteBuffer getSendableByteBuffer(EncryptionInterface encryption)
-	{
-		// Generate sendable ByteBuffer.
-		if ((_byteBuffer == null /* Not processed */) || (encryption != null /* Encryption can change */))
-		{
-			final byte[] bytes = getSendableBytes(encryption);
-			if (bytes != null) // Data was actually written.
-			{
-				_byteBuffer = ByteBuffer.wrap(bytes);
-			}
-		}
-		else // Rewind the buffer.
-		{
-			_byteBuffer.rewind();
-		}
-		
-		// Return the buffer.
-		return _byteBuffer;
 	}
 	
 	/**

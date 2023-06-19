@@ -8,7 +8,6 @@ public class NetConfig
 {
 	private int _readPoolSize = 100;
 	private int _executePoolSize = 50;
-	private int _connectionTimeout = 800;
 	private int _packetQueueLimit = 80;
 	private boolean _packetFloodDisconnect = false;
 	private boolean _packetFloodDrop = false;
@@ -48,23 +47,6 @@ public class NetConfig
 	public void setExecutePoolSize(int executePoolSize)
 	{
 		_executePoolSize = executePoolSize;
-	}
-	
-	/**
-	 * @return the timeout until a connection is established.
-	 */
-	public int getConnectionTimeout()
-	{
-		return _connectionTimeout;
-	}
-	
-	/**
-	 * Sets the timeout until a connection is established.
-	 * @param connectionTimeout
-	 */
-	public void setConnectionTimeout(int connectionTimeout)
-	{
-		_connectionTimeout = connectionTimeout;
 	}
 	
 	/**

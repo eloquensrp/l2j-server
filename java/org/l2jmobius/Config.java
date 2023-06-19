@@ -898,7 +898,6 @@ public class Config
 	public static boolean PACKET_FLOOD_DROP;
 	public static boolean PACKET_FLOOD_LOGGED;
 	public static boolean TCP_NO_DELAY;
-	public static int CONNECTION_TIMEOUT;
 	public static boolean PACKET_ENCRYPTION;
 	public static boolean FAILED_DECRYPTION_LOGGED;
 	public static String DATABASE_DRIVER;
@@ -1392,7 +1391,6 @@ public class Config
 			PACKET_FLOOD_DROP = serverConfig.getBoolean("PacketFloodDrop", false);
 			PACKET_FLOOD_LOGGED = serverConfig.getBoolean("PacketFloodLogged", true);
 			TCP_NO_DELAY = serverConfig.getBoolean("TcpNoDelay", true);
-			CONNECTION_TIMEOUT = serverConfig.getInt("ConnectionTimeout", 800);
 			PACKET_ENCRYPTION = serverConfig.getBoolean("PacketEncryption", false);
 			FAILED_DECRYPTION_LOGGED = serverConfig.getBoolean("FailedDecryptionLogged", true);
 			REQUEST_ID = serverConfig.getInt("RequestServerID", 0);

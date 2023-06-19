@@ -16,6 +16,8 @@
  */
 package org.l2jmobius.loginserver.network;
 
+import java.io.OutputStream;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -145,20 +147,26 @@ public class LoginClient extends NetClient
 		return _connectionStartTime;
 	}
 	
+	@Override
 	public void sendPacket(WritablePacket packet)
 	{
-		if ((packet == null))
+		final Socket socket = getSocket();
+		if ((socket != null) && socket.isConnected())
 		{
-			return;
-		}
-		
-		// Write into the channel.
-		if ((getChannel() != null) && getChannel().isConnected())
-		{
+			final byte[] sendableBytes = packet.getSendableBytes();
+			if (sendableBytes == null)
+			{
+				return;
+			}
+			
 			try
 			{
-				// Send the packet data.
-				getChannel().write(packet.getSendableByteBuffer());
+				final OutputStream outputStream = getOutputStream();
+				synchronized (this)
+				{
+					outputStream.write(sendableBytes);
+					outputStream.flush();
+				}
 			}
 			catch (Exception ignored)
 			{
