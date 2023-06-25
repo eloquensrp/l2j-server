@@ -33,9 +33,13 @@ public class TutorialCloseHtml extends ServerPacket
 	}
 	
 	@Override
-	public void run(Player player)
+	public void run()
 	{
-		player.clearHtmlActions(HtmlActionScope.TUTORIAL_HTML);
+		final Player player = getPlayer();
+		if (player != null)
+		{
+			player.clearHtmlActions(HtmlActionScope.TUTORIAL_HTML);
+		}
 	}
 	
 	@Override

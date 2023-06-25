@@ -131,12 +131,14 @@ public abstract class AbstractHtmlPacket extends ServerPacket
 	}
 	
 	@Override
-	public void run(Player player)
+	public void run()
 	{
+		final Player player = getPlayer();
 		if (player != null)
 		{
 			player.clearHtmlActions(getScope());
 		}
+		
 		if (_disabledValidation)
 		{
 			return;

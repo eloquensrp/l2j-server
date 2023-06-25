@@ -207,6 +207,14 @@ public abstract class WritablePacket
 	}
 	
 	/**
+	 * Method that runs after packet is sent.
+	 */
+	public void run()
+	{
+		// Overridden by server implementation.
+	}
+	
+	/**
 	 * @return <b>byte[]</b> of the sendable packet data, including a size header.
 	 */
 	public byte[] getSendableBytes()
