@@ -7,6 +7,7 @@ package org.l2jmobius.commons.network;
 public class NetConfig
 {
 	private int _readPoolSize = 100;
+	private int _sendPoolSize = 25;
 	private int _executePoolSize = 50;
 	private int _packetQueueLimit = 80;
 	private boolean _packetFloodDisconnect = false;
@@ -30,6 +31,23 @@ public class NetConfig
 	public void setReadPoolSize(int clientPoolSize)
 	{
 		_readPoolSize = clientPoolSize;
+	}
+	
+	/**
+	 * @return the NetClient pool size for sending server packets.
+	 */
+	public int getSendPoolSize()
+	{
+		return _sendPoolSize;
+	}
+	
+	/**
+	 * Sets the NetClient pool size for sending server packets.
+	 * @param clientPoolSize
+	 */
+	public void setSendPoolSize(int clientPoolSize)
+	{
+		_sendPoolSize = clientPoolSize;
 	}
 	
 	/**

@@ -136,6 +136,7 @@ public class LoginServer
 		final NetServer<LoginClient> server = new NetServer<>(Config.LOGIN_BIND_ADDRESS, Config.PORT_LOGIN, new LoginPacketHandler(), LoginClient::new);
 		server.setName(getClass().getSimpleName());
 		server.getNetConfig().setReadPoolSize(2000);
+		server.getNetConfig().setSendPoolSize(2000);
 		server.getNetConfig().setExecutePoolSize(2000);
 		server.getNetConfig().setPacketQueueLimit(10);
 		server.getNetConfig().setPacketFloodDisconnect(true);

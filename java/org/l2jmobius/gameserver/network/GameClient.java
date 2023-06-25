@@ -20,8 +20,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +55,6 @@ public class GameClient extends NetClient
 {
 	protected static final Logger LOGGER_ACCOUNTING = Logger.getLogger("accounting");
 	
-	private final Queue<ServerPacket> _pendingPackets = new ConcurrentLinkedQueue<>();
 	private final FloodProtectors _floodProtectors = new FloodProtectors(this);
 	private final ReentrantLock _playerLock = new ReentrantLock();
 	private ConnectionState _connectionState = ConnectionState.CONNECTED;
@@ -200,16 +197,11 @@ public class GameClient extends NetClient
 			}
 		}
 		
-		// Keep the order of packets if sent by multiple threads.
-		_pendingPackets.add(packet);
-		synchronized (_pendingPackets)
-		{
-			// Send the packet data.
-			super.sendPacket(packet);
-			
-			// Run packet implementation.
-			packet.run(_player);
-		}
+		// Used by packet run() implementation.
+		packet.setPlayer(_player);
+		
+		// Send the packet data.
+		super.sendPacket(packet);
 	}
 	
 	public void sendPacket(SystemMessageId systemMessageId)

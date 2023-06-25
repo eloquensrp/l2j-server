@@ -56,8 +56,12 @@ public class ItemList extends AbstractItemPacket
 	}
 	
 	@Override
-	public void run(Player player)
+	public void run()
 	{
-		player.sendPacket(new ExQuestItemList(_player));
+		final Player player = getPlayer();
+		if (player != null)
+		{
+			player.sendPacket(new ExQuestItemList(_player));
+		}
 	}
 }

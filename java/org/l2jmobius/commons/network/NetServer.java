@@ -20,6 +20,7 @@ public class NetServer<E extends NetClient>
 	protected static final Logger LOGGER = Logger.getLogger(NetServer.class.getName());
 	
 	protected final List<Set<E>> _clientReadPools = new LinkedList<>();
+	protected final List<Set<E>> _clientSendPools = new LinkedList<>();
 	protected final List<Set<E>> _clientExecutePools = new LinkedList<>();
 	protected final NetConfig _netConfig = new NetConfig();
 	protected final String _hostname;
@@ -153,6 +154,35 @@ public class NetServer<E extends NetClient>
 							readThread.start();
 							// Add the new pool to the pool list.
 							_clientReadPools.add(newReadPool);
+						}
+						
+						// Add to send pool.
+						
+						// Find a pool that is not full.
+						boolean sendPoolFound = false;
+						SEND_POOLS: for (Set<E> pool : _clientSendPools)
+						{
+							if (pool.size() < _netConfig.getSendPoolSize())
+							{
+								pool.add(client);
+								sendPoolFound = true;
+								break SEND_POOLS;
+							}
+						}
+						
+						// All pools are full.
+						if (!sendPoolFound)
+						{
+							// Create a new client pool.
+							final Set<E> newSendPool = ConcurrentHashMap.newKeySet(_netConfig.getSendPoolSize());
+							newSendPool.add(client);
+							// Create a new task for the new pool.
+							final Thread sendThread = new Thread(new SendThread<>(newSendPool), _name + ": Packet send thread " + _clientSendPools.size());
+							sendThread.setPriority(Thread.MAX_PRIORITY);
+							sendThread.setDaemon(true);
+							sendThread.start();
+							// Add the new pool to the pool list.
+							_clientSendPools.add(newSendPool);
 						}
 						
 						// Add to execute pool.

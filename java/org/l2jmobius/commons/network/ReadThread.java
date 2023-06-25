@@ -14,6 +14,7 @@ public class ReadThread<E extends NetClient> implements Runnable
 	private final Set<E> _pool;
 	private final byte[] _sizeBuffer = new byte[2]; // Reusable size buffer.
 	private final byte[] _pendingSizeBuffer = new byte[1]; // Reusable pending size buffer.
+	private boolean _idle;
 	
 	public ReadThread(Set<E> pool)
 	{
@@ -28,6 +29,8 @@ public class ReadThread<E extends NetClient> implements Runnable
 			// No need to iterate when pool is empty.
 			if (!_pool.isEmpty())
 			{
+				_idle = true;
+				
 				// Iterate client pool.
 				ITERATE: for (E client : _pool)
 				{
@@ -80,14 +83,16 @@ public class ReadThread<E extends NetClient> implements Runnable
 									// Read was complete.
 									if (currentSize >= pendingPacketSize)
 									{
-										// Add packet data to client.
-										client.addPacketData(mergedData);
+										// Add received data to client.
+										client.addReceivedData(mergedData);
 										client.setPendingData(null);
 									}
 									else
 									{
 										client.setPendingData(mergedData);
 									}
+									
+									_idle = false;
 								}
 							}
 							continue ITERATE;
@@ -188,10 +193,12 @@ public class ReadThread<E extends NetClient> implements Runnable
 											client.setPendingData(pendindBytes);
 											client.setPendingPacketSize(packetSize);
 										}
-										else // Add packet data to client.
+										else // Add received data to client.
 										{
-											client.addPacketData(packetData);
+											client.addReceivedData(packetData);
 										}
+										
+										_idle = false;
 									}
 								}
 							}
@@ -206,15 +213,26 @@ public class ReadThread<E extends NetClient> implements Runnable
 						onDisconnection(client);
 					}
 				}
+				
+				// Prevent high CPU caused by repeatedly looping.
+				try
+				{
+					Thread.sleep(_idle ? 10 : 1);
+				}
+				catch (Exception ignored)
+				{
+				}
 			}
-			
-			// Prevent high CPU caused by repeatedly looping.
-			try
+			else // Remain idle for 1 second.
 			{
-				Thread.sleep(1);
-			}
-			catch (Exception ignored)
-			{
+				// Prevent high CPU caused by repeatedly looping.
+				try
+				{
+					Thread.sleep(1000);
+				}
+				catch (Exception ignored)
+				{
+				}
 			}
 		}
 	}

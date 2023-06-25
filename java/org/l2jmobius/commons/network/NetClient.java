@@ -15,12 +15,15 @@ public class NetClient
 {
 	protected static final Logger LOGGER = Logger.getLogger(NetClient.class.getName());
 	
+	private final Queue<byte[]> _receivedData = new ConcurrentLinkedQueue<>();
+	private final Queue<WritablePacket> _sendPacketQueue = new ConcurrentLinkedQueue<>();
+	
 	private String _ip;
 	private Socket _socket;
 	private InputStream _inputStream;
 	private OutputStream _outputStream;
 	private NetConfig _netConfig;
-	private Queue<byte[]> _packetData;
+	
 	private byte[] _pendingData;
 	private int _pendingPacketSize;
 	
@@ -33,7 +36,6 @@ public class NetClient
 	{
 		_socket = socket;
 		_netConfig = netConfig;
-		_packetData = new ConcurrentLinkedQueue<>();
 		_ip = socket.getInetAddress().toString().substring(1); // Trim out /127.0.0.1
 		
 		try
@@ -82,10 +84,8 @@ public class NetClient
 			}
 		}
 		
-		if (_packetData != null)
-		{
-			_packetData.clear();
-		}
+		_receivedData.clear();
+		_sendPacketQueue.clear();
 		
 		if (_pendingData != null)
 		{
@@ -97,10 +97,10 @@ public class NetClient
 	 * Add packet data to the queue.
 	 * @param data
 	 */
-	public void addPacketData(byte[] data)
+	public void addReceivedData(byte[] data)
 	{
 		// Check packet flooding.
-		final int size = _packetData.size();
+		final int size = _receivedData.size();
 		if (size >= _netConfig.getPacketQueueLimit())
 		{
 			if (_netConfig.isPacketFloodDisconnect())
@@ -127,15 +127,15 @@ public class NetClient
 		}
 		
 		// Add to queue.
-		_packetData.add(data);
+		_receivedData.add(data);
 	}
 	
 	/**
-	 * @return the pending packet data.
+	 * @return the pending received data.
 	 */
-	public Queue<byte[]> getPacketData()
+	public Queue<byte[]> getReceivedData()
 	{
-		return _packetData;
+		return _receivedData;
 	}
 	
 	/**
@@ -173,33 +173,20 @@ public class NetClient
 	}
 	
 	/**
+	 * @return the writable packet queue waiting to be sent.
+	 */
+	public Queue<WritablePacket> getSendPacketQueue()
+	{
+		return _sendPacketQueue;
+	}
+	
+	/**
 	 * Sends a packet over the network using the default encryption.
 	 * @param packet The packet to send.
 	 */
 	public void sendPacket(WritablePacket packet)
 	{
-		if ((_socket == null) || !_socket.isConnected())
-		{
-			return;
-		}
-		
-		final byte[] sendableBytes = packet.getSendableBytes(getEncryption());
-		if (sendableBytes == null)
-		{
-			return;
-		}
-		
-		try
-		{
-			synchronized (this)
-			{
-				_outputStream.write(sendableBytes);
-				_outputStream.flush();
-			}
-		}
-		catch (Exception ignored)
-		{
-		}
+		_sendPacketQueue.add(packet);
 	}
 	
 	/**

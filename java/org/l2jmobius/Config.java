@@ -892,6 +892,7 @@ public class Config
 	public static int LOGIN_BLOCK_AFTER_BAN;
 	public static String GAMESERVER_HOSTNAME;
 	public static int CLIENT_READ_POOL_SIZE;
+	public static int CLIENT_SEND_POOL_SIZE;
 	public static int CLIENT_EXECUTE_POOL_SIZE;
 	public static int PACKET_QUEUE_LIMIT;
 	public static boolean PACKET_FLOOD_DISCONNECT;
@@ -1385,6 +1386,7 @@ public class Config
 			GAME_SERVER_LOGIN_PORT = serverConfig.getInt("LoginPort", 9014);
 			GAME_SERVER_LOGIN_HOST = serverConfig.getString("LoginHost", "127.0.0.1");
 			CLIENT_READ_POOL_SIZE = serverConfig.getInt("ClientReadPoolSize", 100);
+			CLIENT_SEND_POOL_SIZE = serverConfig.getInt("ClientSendPoolSize", 25);
 			CLIENT_EXECUTE_POOL_SIZE = serverConfig.getInt("ClientExecutePoolSize", 50);
 			PACKET_QUEUE_LIMIT = serverConfig.getInt("PacketQueueLimit", 80);
 			PACKET_FLOOD_DISCONNECT = serverConfig.getBoolean("PacketFloodDisconnect", false);
