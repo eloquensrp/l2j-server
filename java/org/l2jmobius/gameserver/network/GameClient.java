@@ -28,6 +28,7 @@ import org.l2jmobius.Config;
 import org.l2jmobius.commons.database.DatabaseFactory;
 import org.l2jmobius.commons.network.EncryptionInterface;
 import org.l2jmobius.commons.network.NetClient;
+import org.l2jmobius.commons.threads.ThreadPool;
 import org.l2jmobius.gameserver.LoginServerThread;
 import org.l2jmobius.gameserver.LoginServerThread.SessionKey;
 import org.l2jmobius.gameserver.data.sql.CharNameTable;
@@ -96,21 +97,18 @@ public class GameClient extends NetClient
 	
 	public void close(ServerPacket packet)
 	{
-		if (packet != null)
+		if (packet == null)
 		{
+			closeNow();
+		}
+		else
+		{
+			// Send the close packet.
 			sendPacket(packet);
 			
 			// Wait for packet to be sent.
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e)
-			{
-			}
+			ThreadPool.schedule(this::closeNow, 1000);
 		}
-		
-		closeNow();
 	}
 	
 	public byte[] enableCrypt()
