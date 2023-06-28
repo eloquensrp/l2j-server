@@ -96,7 +96,20 @@ public class GameClient extends NetClient
 	
 	public void close(ServerPacket packet)
 	{
-		sendPacket(packet);
+		if (packet != null)
+		{
+			sendPacket(packet);
+			
+			// Wait for packet to be sent.
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch (InterruptedException e)
+			{
+			}
+		}
+		
 		closeNow();
 	}
 	
