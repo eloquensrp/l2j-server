@@ -78,6 +78,8 @@ public class SendThread<E extends NetClient> implements Runnable
 					}
 					catch (Exception ignored)
 					{
+						_pool.remove(client);
+						client.onDisconnection();
 					}
 				}
 				

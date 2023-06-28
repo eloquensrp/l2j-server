@@ -1,7 +1,6 @@
 package org.l2jmobius.commons.network;
 
 import java.io.InputStream;
-import java.net.SocketTimeoutException;
 import java.util.Set;
 
 /**
@@ -203,10 +202,6 @@ public class ReadThread<E extends NetClient> implements Runnable
 								}
 							}
 						}
-					}
-					catch (SocketTimeoutException e)
-					{
-						onDisconnection(client);
 					}
 					catch (Exception e) // Unexpected disconnection?
 					{
