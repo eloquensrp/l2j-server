@@ -70,14 +70,36 @@ public class NetClient
 	 */
 	public void disconnect()
 	{
+		if (_inputStream != null)
+		{
+			try
+			{
+				_inputStream.close();
+				_inputStream = null;
+			}
+			catch (Exception ignored)
+			{
+			}
+		}
+		
+		if (_outputStream != null)
+		{
+			try
+			{
+				_outputStream.close();
+				_outputStream = null;
+			}
+			catch (Exception ignored)
+			{
+			}
+		}
+		
 		if (_socket != null)
 		{
 			try
 			{
 				_socket.close();
 				_socket = null;
-				_inputStream = null;
-				_outputStream = null;
 			}
 			catch (Exception ignored)
 			{
