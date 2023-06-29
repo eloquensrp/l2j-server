@@ -11,7 +11,7 @@ on:
       RESTART_TIME:
         description: 'Restarts server in given seconds'
   push:
-    branches: [ master, develop ]
+    branches: [ main ]
 
 jobs:
   build:
