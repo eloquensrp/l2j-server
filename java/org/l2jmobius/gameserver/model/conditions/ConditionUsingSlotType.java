@@ -18,6 +18,7 @@ package org.l2jmobius.gameserver.model.conditions;
 
 import org.l2jmobius.gameserver.model.actor.Creature;
 import org.l2jmobius.gameserver.model.item.ItemTemplate;
+import org.l2jmobius.gameserver.model.item.Weapon;
 import org.l2jmobius.gameserver.model.skill.Skill;
 
 /**
@@ -35,6 +36,17 @@ public class ConditionUsingSlotType extends Condition
 	@Override
 	public boolean testImpl(Creature effector, Creature effected, Skill skill, ItemTemplate item)
 	{
-		return (effector != null) && effector.isPlayer() && ((effector.getActiveWeaponItem().getBodyPart() & _mask) != 0);
+		if ((effector == null) || !effector.isPlayer())
+		{
+			return false;
+		}
+		
+		final Weapon activeWeapon = effector.getActiveWeaponItem();
+		if (activeWeapon == null)
+		{
+			return false;
+		}
+		
+		return (activeWeapon.getBodyPart() & _mask) != 0;
 	}
 }
