@@ -34,25 +34,25 @@ jobs:
         retention-days: 7
         if-no-files-found: error
         
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-    environment: production
-    needs: build
-    steps:
-      - name: Download Build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: build
-      - name: Renaming bundle to commit SHA
-        run: mv *.zip ${{ github.sha }}.zip
-      - name: Deploy to Server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-rlgoDzvc -i"
-          REMOTE_HOST: ${{ secrets.HOST }}
-          REMOTE_USER: ${{ secrets.USER }}
-          TARGET: ${{ secrets.TARGET }}
-          SCRIPT_AFTER: |
-            echo $RSYNC_STDOUT
+  # deploy:
+  #   name: Deploy
+  #   runs-on: ubuntu-latest
+  #   environment: production
+  #   needs: build
+  #   steps:
+  #     - name: Download Build artifacts
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: build
+  #     - name: Renaming bundle to commit SHA
+  #       run: mv *.zip ${{ github.sha }}.zip
+  #     - name: Deploy to Server
+  #       uses: easingthemes/ssh-deploy@main
+  #       env:
+  #         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+  #         ARGS: "-rlgoDzvc -i"
+  #         REMOTE_HOST: ${{ secrets.HOST }}
+  #         REMOTE_USER: ${{ secrets.USER }}
+  #         TARGET: ${{ secrets.TARGET }}
+  #         SCRIPT_AFTER: |
+  #           echo $RSYNC_STDOUT
